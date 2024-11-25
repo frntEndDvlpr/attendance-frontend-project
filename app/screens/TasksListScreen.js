@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList } from "react-native";
+import { Button, FlatList } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -37,8 +37,11 @@ function TasksListScreen({ navigation }) {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
 
+  const openCamera = () => {};
+
   return (
     <>
+      <Button title="Open Camera" onPress={openCamera} />
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id.toString()}
