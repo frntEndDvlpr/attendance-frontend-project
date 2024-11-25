@@ -13,39 +13,40 @@ const BottomTap = createBottomTabNavigator();
 
 const AppNavigator = () => (
   <BottomTap.Navigator>
-  <BottomTap.Screen
-  name="Account"
-  component={AccountScreen}
-  options={{
-    title: () => <AppText>Account</AppText>,
-    headerShown: false,
-    tabBarIcon: ({ color, size }) => (
-      <MaterialCommunityIcons
-      name="account"
-      color={colors.primary}
-      size={size}
-      />
-    ),
-  }}
-      />
-  <BottomTap.Screen
-    name="TasksListings"
-    component={TaskNavigator}
-    options={{
-      title: () => <AppText>Attendance</AppText>,
-      headerShown: false,
-      tabBarIcon: ({ color, size }) => (
-        <View style={styles.container}>
-        <MaterialCommunityIcons
-        name="plus-circle"
-        color={colors.white}
-        size={35}
-        /></View>
-      ),
-    }}
-  />
     <BottomTap.Screen
-    name="settings"
+      name="Account"
+      component={AccountScreen}
+      options={{
+        title: () => <AppText>Account</AppText>,
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons
+            name="account"
+            color={colors.primary}
+            size={size}
+          />
+        ),
+      }}
+    />
+    <BottomTap.Screen
+      name="TasksListings"
+      component={TaskNavigator}
+      options={{
+        title: () => <AppText>Attendance</AppText>,
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <View style={styles.container}>
+            <MaterialCommunityIcons
+              name="plus-circle"
+              color={colors.white}
+              size={35}
+            />
+          </View>
+        ),
+      }}
+    />
+    <BottomTap.Screen
+      name="settings"
       component={SettingsNavigator}
       options={{
         title: () => <AppText>Settings</AppText>,
