@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Button, FlatList } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -37,11 +45,39 @@ function TasksListScreen({ navigation }) {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
 
-  const openCamera = () => {};
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [isCameraReady, setIsCameraReady] = useState(false);
+
+  const requestCameraPermission = async () => {
+    const { status } = await Camera.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
+
+  const handleCameraReady = () => {
+    setIsCameraReady(true);
+  };
+
+  const openCamera = async () => {
+    if (hasPermission === null) {
+      await requestCameraPermission();
+    }
+    if (hasPermission === false) {
+      Alert.alert("Permission to access camera is required!");
+    }
+  };
 
   return (
     <>
-      <Button title="Open Camera" onPress={openCamera} />
+      <View style={styles.container}>
+        {hasPermission && (
+          <Camera
+            style={styles.camera}
+            ref={(ref) => setCameraRef(ref)}
+            onCameraReady={handleCameraReady}
+          />
+        )}
+      </View>
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id.toString()}
@@ -74,9 +110,32 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton onPress={() => navigation.navigate("TaskForm")} />
+      <AddTaskButton onPress={openCamera} />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  camera: {
+    flex: 1,
+    width: "100%",
+  },
+  button: {
+    position: "absolute",
+    bottom: 20,
+    backgroundColor: "#1E90FF",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+  },
+});
 
 export default TasksListScreen;
