@@ -1,13 +1,6 @@
-import React, { useState, useRef } from "react";
-import {
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import React, { useState } from "react";
+import { FlatList, View, Button, Text } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -45,39 +38,35 @@ function TasksListScreen({ navigation }) {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
 
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraRef, setCameraRef] = useState(null);
-  const [isCameraReady, setIsCameraReady] = useState(false);
+  function OpenCamera() {
+    const [facing, setFacing] = useState < CameraType > "back";
+    const [permission, requestPermission] = useCameraPermissions();
 
-  const requestCameraPermission = async () => {
-    const { status } = await Camera.requestPermissionsAsync();
-    setHasPermission(status === "granted");
-  };
-
-  const handleCameraReady = () => {
-    setIsCameraReady(true);
-  };
-
-  const openCamera = async () => {
-    if (hasPermission === null) {
-      await requestCameraPermission();
+    if (!permission) {
+      // Camera permissions are still loading.
+      return <View />;
     }
-    if (hasPermission === false) {
-      Alert.alert("Permission to access camera is required!");
+
+    if (!permission.granted) {
+      // Camera permissions are not granted yet.
+      return (
+        <View style={styles.container}>
+          <Text style={styles.message}>
+            We need your permission to show the camera
+          </Text>
+          <Button onPress={requestPermission} title="grant permission" />
+        </View>
+      );
     }
-  };
+    return (
+      <View style={styles.container}>
+        <CameraView style={styles.camera} facing={facing}></CameraView>
+      </View>
+    );
+  }
 
   return (
     <>
-      <View style={styles.container}>
-        {hasPermission && (
-          <Camera
-            style={styles.camera}
-            ref={(ref) => setCameraRef(ref)}
-            onCameraReady={handleCameraReady}
-          />
-        )}
-      </View>
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id.toString()}
@@ -110,7 +99,7 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton onPress={openCamera} />
+      <AddTaskButton />
     </>
   );
 }
@@ -119,22 +108,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 10,
   },
   camera: {
     flex: 1,
-    width: "100%",
   },
-  button: {
-    position: "absolute",
-    bottom: 20,
-    backgroundColor: "#1E90FF",
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
   },
 });
 
