@@ -1,4 +1,3 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import React, { useState } from "react";
 import { FlatList, View, Button, Text, StyleSheet } from "react-native";
 
@@ -6,6 +5,7 @@ import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../navigation/AddTaskButton";
+import OpenCamera from "../screens/OpenCamera";
 
 const initialTasks = [
   {
@@ -34,36 +34,13 @@ function TasksListScreen({ navigation }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [refreshing, setRefreshing] = useState(false);
 
+  const handleOpenCamera = () => {
+    navigation.navigate("OpenCamera"); // Navigate to the camera screen
+  };
+
   const handleDelete = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
-
-  function OpenCamera() {
-    const [facing, setFacing] = useState < CameraType > "back";
-    const [permission, requestPermission] = useCameraPermissions();
-
-    if (!permission) {
-      // Camera permissions are still loading.
-      return <View />;
-    }
-
-    if (!permission.granted) {
-      // Camera permissions are not granted yet.
-      return (
-        <View style={styles.container}>
-          <Text style={styles.message}>
-            We need your permission to show the camera
-          </Text>
-          <Button onPress={requestPermission} title="grant permission" />
-        </View>
-      );
-    }
-    return (
-      <View style={styles.container}>
-        <CameraView style={styles.camera} facing={facing}></CameraView>
-      </View>
-    );
-  }
 
   return (
     <>
@@ -99,7 +76,7 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton />
+      <AddTaskButton onPress={handleOpenCamera} />
     </>
   );
 }
