@@ -34,10 +34,6 @@ function TasksListScreen({ navigation }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [refreshing, setRefreshing] = useState(false);
 
-  const handleOpenCamera = () => {
-    navigation.navigate("OpenCamera"); // Navigate to the camera screen
-  };
-
   const handleDelete = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
@@ -76,7 +72,7 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton onPress={handleOpenCamera} />
+      <AddTaskButton onPress={OpenCamera} />
     </>
   );
 }
