@@ -1,6 +1,6 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import React, { useState } from "react";
-import { FlatList, View, Button, Text } from "react-native";
+import { FlatList, View, Button, Text, StyleSheet } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
