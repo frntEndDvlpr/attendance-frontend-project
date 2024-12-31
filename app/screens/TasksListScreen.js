@@ -72,7 +72,7 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton onPress={OpenCamera} />
+      <AddTaskButton />
     </>
   );
 }
