@@ -1,77 +1,73 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
-import { Camera, useCameraPermissions } from "expo-camera";
-import * as MediaLibrary from "expo-media-library";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useRef, useState } from "react";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import TakePhotoButton from "../components/TakePhotoButton";
+import AppIcon from "../components/AppIcon";
+import colors from "../config/colors";
 
-export default function OpenCamera() {
-  const [permission, requestPermission] = useCameraPermissions();
-  const [mediaPermission, requestMediaPermission] =
-    MediaLibrary.usePermissions();
+export default function App() {
   const [facing, setFacing] = useState("front");
-  const [faceDetected, setFaceDetected] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
 
-  if (!permission || !mediaPermission) {
+  if (!permission) {
+    // Camera permissions are still loading.
     return <View />;
   }
 
-  if (!permission.granted || !mediaPermission.granted) {
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
-          We need your permission to use the camera and save photos.
+          We need your permission to show the camera
         </Text>
-        <Button
-          onPress={() => {
-            requestPermission();
-            requestMediaPermission();
-          }}
-          title="Grant Permissions"
-        />
+        <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
   }
 
-  async function handleFaceDetection({ faces }) {
-    if (faceDetected || !cameraRef.current || faces.length === 0) return;
-    setFaceDetected(true);
-
-    try {
-      const photo = await cameraRef.current.takePictureAsync();
-      await MediaLibrary.createAssetAsync(photo.uri);
-      alert("Photo captured and saved!");
-    } catch (error) {
-      console.error("Error taking photo:", error);
-    } finally {
-      setTimeout(() => setFaceDetected(false), 5000);
-    }
-  }
-
   function toggleCameraFacing() {
-    setFacing((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
+    setFacing((current) => (current === "back" ? "front" : "back"));
   }
+
+  const capturePhoto = async (cameraRef) => {
+    if (cameraRef.current) {
+      try {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 1, // Set the quality (0 to 1)
+          base64: false, // Include base64 string (optional, set true if needed)
+          skipProcessing: true, // Skip post-processing for speed
+        });
+        console.log("Photo captured:", photo);
+        return photo; // Return the photo object
+      } catch (error) {
+        console.error("Error capturing photo:", error);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={styles.camera}
-        type={facing}
-        ref={cameraRef}
-        onFacesDetected={handleFaceDetection}
-        faceDetectorSettings={{
-          mode: "fast",
-          detectLandmarks: "none",
-          runClassifications: "none",
-        }}
-      >
-        <View style={styles.buttonContainer}>
+      <CameraView flash autofocus style={styles.camera} facing={facing}>
+        <View style={styles.cameraIcons}>
+          <TouchableOpacity style={styles.button}>
+            <AppIcon
+              name={"close-thick"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
+          </TouchableOpacity>
+          <TakePhotoButton onPress={() => capturePhoto(cameraRef)} />
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
+            <AppIcon
+              name={"camera-flip-outline"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
           </TouchableOpacity>
         </View>
-      </Camera>
+      </CameraView>
     </View>
   );
 }
@@ -79,7 +75,6 @@ export default function OpenCamera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
   },
   message: {
     textAlign: "center",
@@ -87,21 +82,13 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+    justifyContent: "flex-end",
   },
-  buttonContainer: {
-    flex: 1,
+  cameraIcons: {
+    height: "150",
+    //backgroundColor: "black",
+    justifyContent: "space-around",
     flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
     alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
   },
 });
