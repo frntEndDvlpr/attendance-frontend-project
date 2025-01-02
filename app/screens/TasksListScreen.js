@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { FlatList, View, Button, Text, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../navigation/AddTaskButton";
-import OpenCamera from "../screens/OpenCamera";
 
 const initialTasks = [
   {
