@@ -72,7 +72,7 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton />
+      <AddTaskButton onPress={() => navigation.navigate("OpenCamera")} />
     </>
   );
 }
