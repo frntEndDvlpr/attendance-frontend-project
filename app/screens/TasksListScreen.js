@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -71,9 +71,28 @@ function TasksListScreen({ navigation }) {
           ]);
         }}
       />
-      <AddTaskButton onPress={() => navigation.navigate("TaskForm")} />
+      <AddTaskButton onPress={() => navigation.navigate("OpenCamera")} />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 10,
+  },
+  camera: {
+    flex: 1,
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+  },
+});
 
 export default TasksListScreen;

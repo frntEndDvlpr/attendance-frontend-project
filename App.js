@@ -12,9 +12,9 @@ import SettingsScreen from "./app/screens/SettingsScreen";
 import SettingsNavigator from "./app/navigation/SettingsNavigator";
 
 export default function App() {
- return (
-   <NavigationContainer theme={NavigationTheme}>
-     <AuthNavigator />
-   </NavigationContainer>
- );
+  return (
+    <NavigationContainer theme={NavigationTheme}>
+      <AuthNavigator />
+    </NavigationContainer>
+  );
 }

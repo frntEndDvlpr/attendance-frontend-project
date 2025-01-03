@@ -16,7 +16,9 @@ function WellcomeScreen({ navigation }) {
           style={styles.welcomeLogo}
           source={require("../assets/SOMS-logo.png")}
         />
-        <Text style={styles.tagLine}>rgister and track all tasks and jobs</Text>
+        <Text style={styles.tagLine}>
+          register and track all tasks and jobs
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <AppButton
