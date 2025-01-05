@@ -1,9 +1,15 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
+import {
+  Camera,
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+} from "expo-camera";
 import { useRef, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TakePhotoButton from "../components/TakePhotoButton";
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
+import * as MediaLibrary from "expo-media-library";
 
 export default function App() {
   const [facing, setFacing] = useState("front");
@@ -31,21 +37,13 @@ export default function App() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  const capturePhoto = async (cameraRef) => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePictureAsync({
-          quality: 1, // Set the quality (0 to 1)
-          base64: false, // Include base64 string (optional, set true if needed)
-          skipProcessing: true, // Skip post-processing for speed
-        });
-        console.log("Photo captured:", photo);
-        return photo; // Return the photo object
-      } catch (error) {
-        console.error("Error capturing photo:", error);
-      }
-    }
-  };
+  async function takePhoto() {
+    try {
+      let photo = await cameraRef.current.takePictureAsync();
+      const asset = await MediaLibrary.createAssetAsync(photo.uri);
+      await MediaLibrary.createAlbumAsync("ExpoProject", asset, false);
+    } catch (error) {}
+  }
 
   return (
     <View style={styles.container}>
@@ -58,7 +56,7 @@ export default function App() {
               backgroundColor={colors.primaryTransparency}
             />
           </TouchableOpacity>
-          <TakePhotoButton onPress={() => capturePhoto(cameraRef)} />
+          <TakePhotoButton />
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <AppIcon
               name={"camera-flip-outline"}

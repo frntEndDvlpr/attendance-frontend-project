@@ -28,7 +28,15 @@ const TaskNavigator = () => (
         headerBackTitleStyle: { color: colors.danger },
       }}
     />
-    <Stak.Screen name="OpenCamera" component={OpenCamera} />
+    <Stak.Screen
+      name="OpenCamera"
+      component={OpenCamera}
+      options={{
+        headerTitle: (props) => <AppText>New Attendace Log</AppText>,
+        headerBackTitle: "Dismiss",
+        headerBackTitleStyle: { color: colors.danger },
+      }}
+    />
   </Stak.Navigator>
 );
 
