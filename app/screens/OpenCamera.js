@@ -38,13 +38,15 @@ export default function App() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  async function takePicture() {
-    if (cameraRef && cameraRef.current) {
-      const data = await cameraRef.current.takePictureAsync();
-      setCapturedPhoto(data.uri);
-      console.log(setCapturedPhoto);
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 1, base64: false }; // No need for base64 if not displaying it
+      const photo = await cameraRef.current.takePictureAsync(options);
+
+      console.log("Photo URI:", photo.uri); // Log the URI to the console
+      setPhoto(photo); // Save the photo for further use or display
     }
-  }
+  };
 
   return (
     <View style={styles.container}>

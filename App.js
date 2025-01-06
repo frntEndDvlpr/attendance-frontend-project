@@ -1,4 +1,4 @@
-/* import "react-native-gesture-handler";
+import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 
 import AuthNavigator from "./app/navigation/AuthNavigator";
@@ -16,15 +16,5 @@ export default function App() {
     <NavigationContainer theme={NavigationTheme}>
       <AuthNavigator />
     </NavigationContainer>
-  );
-} */
-
-import { Text, View } from "react-native";
-
-export default function App() {
-  return (
-    <View>
-      <Text>Edit your App</Text>
-    </View>
   );
 }
