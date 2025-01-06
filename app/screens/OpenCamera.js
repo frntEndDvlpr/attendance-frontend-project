@@ -1,10 +1,20 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import { useState } from "react";
+import {
+  Camera,
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+} from "expo-camera";
+import { useRef, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import TakePhotoButton from "../components/TakePhotoButton";
+import AppIcon from "../components/AppIcon";
+import colors from "../config/colors";
 
 export default function App() {
-  const [facing, setFacing] = useState < CameraType > "back";
+  const [facing, setFacing] = useState("front");
   const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef(null);
+  const [Photo, setCPhoto] = useState(null);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -27,12 +37,33 @@ export default function App() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 1, base64: true };
+      const photo = await takePictureAsync(options);
+      console.console.log("Photo URI", photo.uri);
+      setCPhoto(photo);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
-        <View style={styles.buttonContainer}>
+      <CameraView flash autofocus style={styles.camera} facing={facing}>
+        <View style={styles.cameraIcons}>
+          <TouchableOpacity style={styles.button}>
+            <AppIcon
+              name={"close-thick"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
+          </TouchableOpacity>
+          <TakePhotoButton onPress={takePicture} />
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
+            <AppIcon
+              name={"camera-flip-outline"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
           </TouchableOpacity>
         </View>
       </CameraView>
@@ -43,7 +74,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
   },
   message: {
     textAlign: "center",
@@ -51,21 +81,13 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+    justifyContent: "flex-end",
   },
-  buttonContainer: {
-    flex: 1,
+  cameraIcons: {
+    height: "150",
+    //backgroundColor: "black",
+    justifyContent: "space-around",
     flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
     alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
   },
 });
