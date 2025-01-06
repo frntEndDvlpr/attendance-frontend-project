@@ -15,6 +15,7 @@ export default function App() {
   const [facing, setFacing] = useState("front");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -37,12 +38,12 @@ export default function App() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  async function takePhoto() {
-    try {
-      let photo = await cameraRef.current.takePictureAsync();
-      const asset = await MediaLibrary.createAssetAsync(photo.uri);
-      await MediaLibrary.createAlbumAsync("ExpoProject", asset, false);
-    } catch (error) {}
+  async function takePicture() {
+    if (cameraRef && cameraRef.current) {
+      const data = await cameraRef.current.takePictureAsync();
+      setCapturedPhoto(data.uri);
+      console.log(setCapturedPhoto);
+    }
   }
 
   return (
@@ -56,7 +57,7 @@ export default function App() {
               backgroundColor={colors.primaryTransparency}
             />
           </TouchableOpacity>
-          <TakePhotoButton />
+          <TakePhotoButton onPress={takePicture} />
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <AppIcon
               name={"camera-flip-outline"}
