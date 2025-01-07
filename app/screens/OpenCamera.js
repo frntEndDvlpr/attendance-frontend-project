@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, Image, Alert, Text } from "react-native";
+import {
+  View,
+  Button,
+  Image,
+  Alert,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraView } from "expo-camera";
+import AppIcon from "../components/AppIcon";
+import colors from "../config/colors";
+import TakePhotoButton from "../components/TakePhotoButton";
 
 export default function OpenCamera() {
+  const [facing, setFacing] = useState("front");
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
@@ -21,11 +33,16 @@ export default function OpenCamera() {
     })();
   }, []);
 
+  function toggleCameraFacing() {
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  }
+
   const takePicture = async () => {
     if (camera) {
       const photoData = await camera.takePictureAsync();
       setPhoto(photoData.uri);
       savePhotoToCameraRoll(photoData.uri);
+      console.log(photoData.uri);
     }
   };
 
@@ -51,16 +68,23 @@ export default function OpenCamera() {
 
   return (
     <View style={{ flex: 1 }}>
-      <CameraView style={{ flex: 1 }} ref={setCamera}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginBottom: 20,
-          }}
-        >
-          <Button title="Take Picture" onPress={takePicture} />
+      <CameraView style={styles.camera} ref={setCamera} facing={facing}>
+        <View style={styles.cameraIcons}>
+          <TouchableOpacity style={styles.button}>
+            <AppIcon
+              name={"close-thick"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
+          </TouchableOpacity>
+          <TakePhotoButton onPress={takePicture} />
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <AppIcon
+              name={"camera-flip-outline"}
+              size={60}
+              backgroundColor={colors.primaryTransparency}
+            />
+          </TouchableOpacity>
         </View>
       </CameraView>
 
@@ -73,3 +97,24 @@ export default function OpenCamera() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 10,
+  },
+  camera: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  cameraIcons: {
+    height: "150",
+    //backgroundColor: "black",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
