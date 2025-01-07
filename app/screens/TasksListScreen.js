@@ -213,7 +213,7 @@ const initialTasks = [
   },
   {
     id: 3,
-    title: "Task 3",
+    title: "Task 10",
     date: "7/19/2024",
     assignee: "Ali",
     project: "Project 3",
@@ -231,7 +231,7 @@ function TasksListScreen({ navigation }) {
   return (
     <>
       <GetCheckLocation />
-      <AppText style={styles.title}>Attendace Log</AppText>
+      <AppText style={styles.title}>My Attendace Log</AppText>
       <FlatList
         data={tasks}
         keyExtractor={(task) => task.id.toString()}
@@ -243,6 +243,7 @@ function TasksListScreen({ navigation }) {
             project={item.project}
             customer={item.customer}
             image={item.image}
+            anies={item.anies}
             onPress={() => navigation.navigate("TaskForm", item)}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => handleDelete(item)} />
@@ -257,17 +258,28 @@ function TasksListScreen({ navigation }) {
               id: 2,
               title: "Present",
               date: "6/19/2024",
-              assignee: "Ahmed",
+              assignee: "HO Location",
               project: "07:30:30",
               customer: "14:30:50",
+              anies: "09:00 hrs",
             },
             {
               id: 2,
               title: "Absent",
               date: "6/19/2024",
-              assignee: "Ahmed",
+              assignee: "Branch",
               project: "07:30:30",
               customer: "14:30:50",
+              anies: "10:08 hrs",
+            },
+            {
+              id: 2,
+              title: "Absent",
+              date: "6/19/2024",
+              assignee: "Branch",
+              project: "07:30:30",
+              customer: "14:30:50",
+              anies: "08:50 hrs",
             },
           ]);
         }}

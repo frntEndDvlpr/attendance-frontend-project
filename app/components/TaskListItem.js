@@ -15,6 +15,7 @@ function TaskListItem({
   assignee,
   project,
   customer,
+  anies,
   onPress,
   renderRightActions,
 }) {
@@ -30,10 +31,14 @@ function TaskListItem({
               <View style={styles.innerContainer}>
                 {assignee && (
                   <AppText style={styles.assignee}>
-                    <TaskListIcon name="account" iconColor={colors.blue} />
+                    <TaskListIcon
+                      name="map-marker-outline"
+                      iconColor={colors.blue}
+                    />
                     {assignee}
                   </AppText>
                 )}
+
                 {project && (
                   <AppText style={styles.project}>
                     <TaskListIcon name="login-variant" />
@@ -44,9 +49,18 @@ function TaskListItem({
                   <AppText style={styles.customer}>
                     <TaskListIcon
                       name="logout-variant"
-                      iconColor={colors.danger}
+                      iconColor={colors.red}
                     />
                     {customer}
+                  </AppText>
+                )}
+                {anies && (
+                  <AppText style={styles.assignee}>
+                    <TaskListIcon
+                      name="timer-outline"
+                      iconColor={colors.secondary}
+                    />
+                    {anies}
                   </AppText>
                 )}
               </View>
@@ -63,38 +77,33 @@ function TaskListItem({
 
 const styles = StyleSheet.create({
   assignee: {
-    color: colors.gray,
-    paddingRight: 30,
+    color: colors.darkGrey,
   },
-  customer: {
-    color: colors.gray,
-  },
+  customer: {},
   innerContainer: {
     flexDirection: "row",
+    justifyContent: "space-between",
   },
   date: {
-    paddingRight: 20,
     fontWeight: "bold",
+    color: colors.black,
   },
   itemTitle: {
     fontWeight: "bold",
+    color: colors.black,
   },
   image: {
     width: 50,
     height: 50,
     borderRadius: 35,
   },
-  listContainer: {
-    marginHorizontal: 20,
-    marginVertical: 7,
-    flexDirection: "row",
-    alignItems: "center",
+  listContainer: {},
+  listDetailsContainer: {
+    marginHorizontal: 15,
+    height: 80,
+    justifyContent: "flex-end",
   },
-  listDetailsContainer: { marginLeft: 20 },
-  project: {
-    color: colors.gray,
-    paddingRight: 30,
-  },
+  project: {},
 });
 
 export default TaskListItem;

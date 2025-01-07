@@ -11,7 +11,8 @@ const validationSchema = Yup.object().shape({
   department: Yup.string().label("Department"),
   designation: Yup.string().label("Designation"),
   email: Yup.string().label("Email"),
-  Phone: Yup.string().label("Phone"),
+  phone: Yup.string().label("Phone"),
+  location: Yup.string().label("Location"),
 });
 
 function EmployeeFormScreen(props) {
@@ -46,6 +47,11 @@ function EmployeeFormScreen(props) {
             placeholder="Phone"
             icon="phone"
             keyboardType="phone-pad"
+          />
+          <AppFormField
+            name="Location"
+            placeholder="Location"
+            icon="map-marker-outline"
           />
           <SubmitButton title="Save" />
         </AppForm>

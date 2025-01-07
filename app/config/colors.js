@@ -10,5 +10,6 @@ export default {
   secondary: "#4ecdc4",
   white: "#fff",
   blue: "#5f91ed",
+  red: "#cc3939",
   primaryTransparency: "#00000055",
 };
