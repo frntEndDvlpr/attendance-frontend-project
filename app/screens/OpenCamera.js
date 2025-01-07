@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Button,
   Image,
   Alert,
   Text,
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
   },
   cameraIcons: {
     height: "150",
-    //backgroundColor: "black",
     justifyContent: "space-around",
     flexDirection: "row",
     alignItems: "center",
