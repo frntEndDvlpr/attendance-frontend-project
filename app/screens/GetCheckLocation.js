@@ -16,7 +16,7 @@ import {
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 
-export default function App() {
+export default function GetCheckLocation() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [targetLat, setTargetLat] = useState("");
   const [targetLon, setTargetLon] = useState("");
@@ -144,7 +144,7 @@ export default function App() {
           <Text>Fetching current location...</Text>
         )}
 
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           style={styles.inputContainer}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
@@ -172,7 +172,7 @@ export default function App() {
             />
             <Button title="Check Range" onPress={checkInRange} />
           </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView> */}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 10,
     borderRadius: 5,
-    marginTop: 50,
   },
   coordText: {
     fontSize: 16,

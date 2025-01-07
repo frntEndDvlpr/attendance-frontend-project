@@ -27,7 +27,6 @@ function TaskListItem({
             {image && <Image style={styles.image} source={image} />}
             <View style={styles.listDetailsContainer}>
               {date && <AppText style={styles.date}>{date}</AppText>}
-              <AppText style={styles.itemTitle}>{title}</AppText>
               <View style={styles.innerContainer}>
                 {assignee && (
                   <AppText style={styles.assignee}>
@@ -37,19 +36,22 @@ function TaskListItem({
                 )}
                 {project && (
                   <AppText style={styles.project}>
-                    <TaskListIcon name="folder-pound-outline" />
+                    <TaskListIcon name="login-variant" />
                     {project}
                   </AppText>
                 )}
                 {customer && (
                   <AppText style={styles.customer}>
                     <TaskListIcon
-                      name="city-variant-outline"
+                      name="logout-variant"
                       iconColor={colors.danger}
                     />
                     {customer}
                   </AppText>
                 )}
+              </View>
+              <View>
+                <AppText style={styles.itemTitle}>{title}</AppText>
               </View>
             </View>
           </View>
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   },
   date: {
     paddingRight: 20,
-    color: colors.gray,
+    fontWeight: "bold",
   },
   itemTitle: {
     fontWeight: "bold",

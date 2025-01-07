@@ -10,12 +10,12 @@ import NavigationTheme from "./app/navigation/NavigationTheme";
 import TaskNavigator from "./app/navigation/TaskNavigator";
 import SettingsScreen from "./app/screens/SettingsScreen";
 import SettingsNavigator from "./app/navigation/SettingsNavigator";
-import CheckLocation from "./app/screens/CheckLocation";
+import GetCheckLocation from "./app/screens/GetCheckLocation";
 
 export default function App() {
   return (
     <NavigationContainer theme={NavigationTheme}>
-      <CheckLocation />
+      <AuthNavigator />
     </NavigationContainer>
   );
 }
