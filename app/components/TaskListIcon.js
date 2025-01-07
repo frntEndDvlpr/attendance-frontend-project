@@ -17,7 +17,7 @@ function TaskListIcon({ name, size = 40, iconColor = colors.primary }) {
 }
 
 const styles = StyleSheet.create({
-  iconStyle: { paddingRight: 5 },
+  iconStyle: { paddingRight: 1, marginBottom:-4 },
 });
 
 export default TaskListIcon;

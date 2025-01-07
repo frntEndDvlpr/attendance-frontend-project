@@ -6,15 +6,17 @@ import colors from "../config/colors";
 
 function AddTaskButton({ onPress }) {
   return (
-    <TouchableOpacity style={styles.outerContainer} onPress={onPress}>
-      <View style={styles.container}>
-        <MaterialCommunityIcons
-          name="plus-circle"
-          color={colors.white}
-          size={35}
-        />
-      </View>
-    </TouchableOpacity>
+    <View style={styles.upper}>
+      <TouchableOpacity style={styles.outerContainer} onPress={onPress}>
+        <View style={styles.container}>
+          <MaterialCommunityIcons
+            name="plus-circle"
+            color={colors.white}
+            size={35}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -23,14 +25,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.primary,
     borderRadius: 30,
-    margin: 30,
+    margin: 0,
     borderColor: colors.lightGreen,
     borderWidth: 5,
     height: 60,
     justifyContent: "center",
     width: 60,
+    marginRight: 30,
   },
-  outerContainer: { alignItems: "flex-end" },
+  outerContainer: {
+    alignItems: "flex-end",
+    width: "60",
+    alignSelf: "flex-end",
+  },
+  upper: { borderTopWidth: 1, borderTopColor: colors.lightGrey },
 });
 
 export default AddTaskButton;

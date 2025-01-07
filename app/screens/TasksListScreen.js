@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -230,62 +230,95 @@ function TasksListScreen({ navigation }) {
 
   return (
     <>
-      <GetCheckLocation />
-      <AppText style={styles.title}>My Attendace Log</AppText>
-      <FlatList
-        data={tasks}
-        keyExtractor={(task) => task.id.toString()}
-        renderItem={({ item }) => (
-          <TaskListItem
-            title={item.title}
-            date={item.date}
-            assignee={item.assignee}
-            project={item.project}
-            customer={item.customer}
-            image={item.image}
-            anies={item.anies}
-            onPress={() => navigation.navigate("TaskForm", item)}
-            renderRightActions={() => (
-              <ListItemDeleteAction onPress={() => handleDelete(item)} />
-            )}
-          />
-        )}
-        ItemSeparatorComponent={ListItemSeparator}
-        refreshing={refreshing}
-        onRefresh={() => {
-          setTasks([
-            {
-              id: 2,
-              title: "Present",
-              date: "6/19/2024",
-              assignee: "HO Location",
-              project: "07:30:30",
-              customer: "14:30:50",
-              anies: "09:00 hrs",
-            },
-            {
-              id: 2,
-              title: "Absent",
-              date: "6/19/2024",
-              assignee: "Branch",
-              project: "07:30:30",
-              customer: "14:30:50",
-              anies: "10:08 hrs",
-            },
-            {
-              id: 2,
-              title: "Absent",
-              date: "6/19/2024",
-              assignee: "Branch",
-              project: "07:30:30",
-              customer: "14:30:50",
-              anies: "08:50 hrs",
-            },
-          ]);
-        }}
-      />
-
-      <AddTaskButton onPress={() => navigation.navigate("OpenCamera")} />
+      <View style={styles.container}>
+        <View style={styles.map}>
+          <GetCheckLocation />
+        </View>
+        <AppText style={styles.title}>My Attendace Log</AppText>
+        <FlatList
+          data={tasks}
+          keyExtractor={(task) => task.id.toString()}
+          renderItem={({ item }) => (
+            <TaskListItem
+              title={item.title}
+              date={item.date}
+              assignee={item.assignee}
+              project={item.project}
+              customer={item.customer}
+              image={item.image}
+              anies={item.anies}
+              onPress={() => navigation.navigate("TaskForm", item)}
+              renderRightActions={() => (
+                <ListItemDeleteAction onPress={() => handleDelete(item)} />
+              )}
+            />
+          )}
+          ItemSeparatorComponent={ListItemSeparator}
+          refreshing={refreshing}
+          onRefresh={() => {
+            setTasks([
+              {
+                id: 2,
+                title: "Present",
+                date: "6/19/2024",
+                assignee: "HO",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "09:00 Hrs",
+              },
+              {
+                id: 2,
+                title: "Absent",
+                date: "6/19/2024",
+                assignee: "Branch",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "10:08 Hrs",
+              },
+              {
+                id: 2,
+                title: "Absent",
+                date: "6/19/2024",
+                assignee: "Branch",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "08:50 Hrs",
+              },
+              {
+                id: 2,
+                title: "Present",
+                date: "6/19/2024",
+                assignee: "HO",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "09:00 Hrs",
+              },
+              {
+                id: 2,
+                title: "Absent",
+                date: "6/19/2024",
+                assignee: "Branch",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "08:50 Hrs",
+              },
+              {
+                id: 2,
+                title: "Present",
+                date: "6/19/2024",
+                assignee: "HO",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "09:00 Hrs",
+              },
+            ]);
+          }}
+        />
+        <AddTaskButton
+          style={styles.camreabtn}
+          onPress={() => navigation.navigate("OpenCamera")}
+        />
+      </View>
     </>
   );
 }
@@ -293,8 +326,8 @@ function TasksListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
   },
+  map: { height: 250 },
   message: {
     textAlign: "center",
     paddingBottom: 10,
@@ -302,6 +335,7 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
+  camreabtn: { margin: 0 },
   text: {
     fontSize: 24,
     fontWeight: "bold",

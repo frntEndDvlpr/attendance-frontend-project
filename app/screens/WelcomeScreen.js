@@ -17,7 +17,7 @@ function WellcomeScreen({ navigation }) {
           source={require("../assets/SOMS-logo.png")}
         />
         <Text style={styles.tagLine}>
-          register and track all tasks and jobs
+        Effortless, Intelligent Attendance Tracking
         </Text>
       </View>
       <View style={styles.buttonContainer}>
