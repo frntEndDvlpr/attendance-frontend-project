@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -7,6 +7,8 @@ import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../navigation/AddTaskButton";
 import GetCheckLocation from "../screens/GetCheckLocation";
 import AppText from "../components/AppText";
+import AppIcon from "../components/AppIcon";
+import colors from "../config/colors";
 
 const initialTasks = [
   {
@@ -314,7 +316,17 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        <AddTaskButton onPress={() => navigation.navigate("OpenCamera")} />
+        {/* <TouchableOpacity
+          style={styles.CamreaBtn}
+          onPress={() => navigation.navigate("OpenCamera")}
+        >
+          <AppIcon
+            name="camera-outline"
+            size={55}
+            backgroundColor={colors.secondary}
+            iconColor={colors.black}
+          />
+        </TouchableOpacity> */}
       </View>
     </>
   );
@@ -325,12 +337,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: { height: 250 },
+
   title: {
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 18,
-    marginTop: 10,
+    marginTop: 5,
   },
+  CamreaBtn: { alignItems: "flex-end", margin: 10 },
 });
 
 export default TasksListScreen;
