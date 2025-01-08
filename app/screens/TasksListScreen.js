@@ -314,10 +314,7 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        <AddTaskButton
-          style={styles.camreabtn}
-          onPress={() => navigation.navigate("OpenCamera")}
-        />
+        <AddTaskButton onPress={() => navigation.navigate("OpenCamera")} />
       </View>
     </>
   );
@@ -328,19 +325,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: { height: 250 },
-  message: {
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  camreabtn: { margin: 0 },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
   title: {
     textAlign: "center",
     fontWeight: "bold",
