@@ -316,7 +316,7 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={styles.CamreaBtn}
           onPress={() => navigation.navigate("OpenCamera")}
         >
@@ -326,7 +326,7 @@ function TasksListScreen({ navigation }) {
             backgroundColor={colors.secondary}
             iconColor={colors.black}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -344,7 +344,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 5,
   },
-  CamreaBtn: { alignItems: "flex-end", margin: 10 },
+  CamreaBtn: {
+    alignItems: "flex-end",
+    margin: 10,
+    width: 60,
+    alignItems: "center",
+    position: "absolute",
+    alignSelf: "flex-end",
+    paddingRight: 30,
+  },
 });
 
 export default TasksListScreen;

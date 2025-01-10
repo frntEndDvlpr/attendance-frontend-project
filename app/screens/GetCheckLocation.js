@@ -12,11 +12,14 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import AppIcon from "../components/AppIcon";
+import colors from "../config/colors";
 
-export default function GetCheckLocation() {
+export default function GetCheckLocation({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [targetLat, setTargetLat] = useState("");
   const [targetLon, setTargetLon] = useState("");
@@ -219,5 +222,11 @@ const styles = StyleSheet.create({
   error: {
     color: "red",
     marginBottom: 20,
+  },
+  CamreaBtn: {
+    position: "absolute",
+    top: 10,
+    alignSelf: "flex-end",
+    paddingRight: 20,
   },
 });

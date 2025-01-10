@@ -8,6 +8,7 @@ export default {
   lightGreen: "#eaf0d8",
   primary: "#a5d028",
   secondary: "#4ecdc4",
+  secondaryTransparency: "#4ecdc499",
   white: "#fff",
   blue: "#5f91ed",
   red: "#cc3939",
