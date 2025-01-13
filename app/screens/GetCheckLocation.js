@@ -176,6 +176,17 @@ export default function GetCheckLocation({ navigation }) {
             <Button title="Check Range" onPress={checkInRange} />
           </ScrollView>
         </KeyboardAvoidingView> */}
+        <TouchableOpacity
+          style={styles.CamreaBtn}
+          onPress={() => navigation.navigate("CameranNavigator")}
+        >
+          <AppIcon
+            name="camera-outline"
+            size={55}
+            backgroundColor={colors.secondary}
+            iconColor={colors.black}
+          />
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );

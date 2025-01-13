@@ -316,7 +316,7 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.CamreaBtn}
           onPress={() => navigation.navigate("OpenCamera")}
         >
@@ -326,7 +326,7 @@ function TasksListScreen({ navigation }) {
             backgroundColor={colors.secondary}
             iconColor={colors.black}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </>
   );
