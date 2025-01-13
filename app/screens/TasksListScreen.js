@@ -255,7 +255,7 @@ function TasksListScreen({ navigation }) {
               )}
             />
           )}
-          ItemSeparatorComponent={ListItemSeparator}
+          /* ItemSeparatorComponent={ListItemSeparator} */
           refreshing={refreshing}
           onRefresh={() => {
             setTasks([
@@ -335,6 +335,7 @@ function TasksListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.lightGrey,
   },
   map: { height: 250 },
 

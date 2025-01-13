@@ -22,8 +22,12 @@ function TaskListItem({
   return (
     <GestureHandlerRootView>
       <Swipeable renderRightActions={renderRightActions}>
-        <TouchableHighlight onPress={onPress} underlayColor={colors.lightGreen}>
-          <View style={styles.listContainer}>
+        <TouchableHighlight
+          style={styles.listContainer}
+          onPress={onPress}
+          underlayColor={colors.lightGreen}
+        >
+          <View style={styles.innerContainre}>
             {ImageComponent}
             {image && <Image style={styles.image} source={image} />}
             <View style={styles.listDetailsContainer}>
@@ -87,22 +91,26 @@ const styles = StyleSheet.create({
   date: {
     fontWeight: "bold",
     color: colors.black,
+    paddingLeft: 5,
   },
   itemTitle: {
     fontWeight: "bold",
     color: colors.black,
+    paddingLeft: 5,
   },
   image: {
     width: 50,
     height: 50,
     borderRadius: 35,
   },
-  listContainer: {},
-  listDetailsContainer: {
-    marginHorizontal: 15,
+  listContainer: {
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    margin: 7,
     height: 80,
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
+  listDetailsContainer: { paddingHorizontal: 30 },
   project: {},
 });
 
