@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import TaskFormScreen from "../screens/TaskFormScreen";
 import TasksListScreen from "../screens/TasksListScreen";
-import OpenCamera from "../screens/OpenCamera";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 
@@ -24,15 +23,6 @@ const TaskNavigator = () => (
       component={TaskFormScreen}
       options={{
         headerTitle: (props) => <AppText>New Task</AppText>,
-        headerBackTitle: "Dismiss",
-        headerBackTitleStyle: { color: colors.danger },
-      }}
-    />
-    <Stak.Screen
-      name="OpenCamera"
-      component={OpenCamera}
-      options={{
-        headerTitle: (props) => <AppText>New Attendace Log</AppText>,
         headerBackTitle: "Dismiss",
         headerBackTitleStyle: { color: colors.danger },
       }}

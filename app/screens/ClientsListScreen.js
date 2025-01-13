@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import AddTaskButton from "../navigation/AddTaskButton";
+import AddTaskButton from "../components/AddTaskButton";
 
 const initialClients = [
   {
