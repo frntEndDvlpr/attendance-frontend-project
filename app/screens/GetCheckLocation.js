@@ -204,8 +204,7 @@ export default function GetCheckLocation({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -246,10 +245,5 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 20,
   },
-  CamreaBtn: {
-    alignSelf: "flex-end",
-    position: "relative",
-    bottom: 190,
-    right: 30,
-  },
+  CamreaBtn: { margin: 10 },
 });

@@ -19,6 +19,7 @@ export default function OpenCamera() {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -39,9 +40,21 @@ export default function OpenCamera() {
 
   const takePicture = async () => {
     if (camera) {
-      const photoData = await camera.takePictureAsync();
+      const photoData = await camera.takePictureAsync({ exif: true });
       setPhoto(photoData.uri);
       savePhotoToCameraRoll(photoData.uri);
+
+      if (photoData.exif) {
+        const { DateTimeOriginal } = photoData.exif;
+        if (DateTimeOriginal) {
+          console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
+        } else {
+          console.log("Date and time metadata not available in EXIF");
+        }
+      } else {
+        console.log("No EXIF metadata available");
+      }
+
       console.log(photoData.uri);
     }
   };
