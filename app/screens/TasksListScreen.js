@@ -9,6 +9,7 @@ import GetCheckLocation from "../screens/GetCheckLocation";
 import AppText from "../components/AppText";
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
+import CameraNavigator from "../navigation/CameraNavigator";
 
 const initialTasks = [
   {
@@ -234,7 +235,7 @@ function TasksListScreen({ navigation }) {
     <>
       <View style={styles.container}>
         <View style={styles.map}>
-          <GetCheckLocation />
+          <CameraNavigator />
         </View>
         <AppText style={styles.title}>My Attendace Log</AppText>
         <FlatList

@@ -16,8 +16,11 @@ import {
 } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import { useNavigation } from "@react-navigation/native";
+
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
+import AddTaskButton from "../navigation/AddTaskButton";
 
 export default function GetCheckLocation({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -25,6 +28,7 @@ export default function GetCheckLocation({ navigation }) {
   const [targetLon, setTargetLon] = useState("");
   const [range, setRange] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
+  /* const navigation = useNavigation(); */
 
   useEffect(() => {
     (async () => {
@@ -137,8 +141,14 @@ export default function GetCheckLocation({ navigation }) {
             </MapView>
 
             <View style={styles.coordinates}>
+              <AppIcon
+                name="crosshairs-gps"
+                size={70}
+                backgroundColor="false"
+                iconColor={colors.black}
+              />
               <Text style={styles.coordText}>
-                Current Location: {currentLocation.latitude.toFixed(5)},{" "}
+                {currentLocation.latitude.toFixed(5)},{" "}
                 {currentLocation.longitude.toFixed(5)}
               </Text>
             </View>
@@ -146,7 +156,17 @@ export default function GetCheckLocation({ navigation }) {
         ) : (
           <Text>Fetching current location...</Text>
         )}
-
+        <TouchableOpacity
+          style={styles.CamreaBtn}
+          onPress={() => navigation.navigate("Camera")} // Ensure name matches stack
+        >
+          <AppIcon
+            name="camera-outline"
+            size={55}
+            backgroundColor={colors.secondary}
+            iconColor={colors.black}
+          />
+        </TouchableOpacity>
         {/* <KeyboardAvoidingView
           style={styles.inputContainer}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -176,17 +196,6 @@ export default function GetCheckLocation({ navigation }) {
             <Button title="Check Range" onPress={checkInRange} />
           </ScrollView>
         </KeyboardAvoidingView> */}
-        <TouchableOpacity
-          style={styles.CamreaBtn}
-          onPress={() => navigation.navigate("CameranNavigator")}
-        >
-          <AppIcon
-            name="camera-outline"
-            size={55}
-            backgroundColor={colors.secondary}
-            iconColor={colors.black}
-          />
-        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -225,6 +234,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(104, 214, 104, 0.68)",
     padding: 10,
     borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 40,
   },
   coordText: {
     fontSize: 16,
@@ -235,6 +247,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   CamreaBtn: {
-    paddingRight: 20,
+    alignSelf: "flex-end",
+    position: "relative",
+    bottom: 190,
+    right: 30,
   },
 });
