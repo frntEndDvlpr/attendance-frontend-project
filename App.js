@@ -7,15 +7,13 @@ import ClientNavigator from "./app/navigation/ClientNavigator";
 import AppNavigator from "./app/navigation/AppNavigator";
 import ProjectNavigator from "./app/navigation/ProjectNavigator";
 import NavigationTheme from "./app/navigation/NavigationTheme";
-import TaskNavigator from "./app/navigation/TaskNavigator";
 import SettingsScreen from "./app/screens/SettingsScreen";
-import SettingsNavigator from "./app/navigation/SettingsNavigator";
 import GetCheckLocation from "./app/screens/GetCheckLocation";
 
 export default function App() {
   return (
     <NavigationContainer theme={NavigationTheme}>
-      <AuthNavigator />
+      <GetCheckLocation />
     </NavigationContainer>
   );
 }

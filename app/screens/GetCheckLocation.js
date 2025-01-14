@@ -235,9 +235,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   CamreaBtn: {
-    position: "absolute",
-    top: 10,
-    alignSelf: "flex-end",
     paddingRight: 20,
   },
 });
