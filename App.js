@@ -14,7 +14,7 @@ import CameraNavigator from "./app/navigation/CameraNavigator";
 export default function App() {
   return (
     <NavigationContainer theme={NavigationTheme}>
-      <AuthNavigator />
+      <CameraNavigator />
     </NavigationContainer>
   );
 }

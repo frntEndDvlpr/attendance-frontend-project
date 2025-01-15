@@ -9,18 +9,15 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
 } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
-import { useNavigation } from "@react-navigation/native";
 
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
-import AddTaskButton from "../navigation/AddTaskButton";
 
 export default function GetCheckLocation({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -167,7 +164,7 @@ export default function GetCheckLocation({ navigation }) {
             iconColor={colors.black}
           />
         </TouchableOpacity>
-        {/* <KeyboardAvoidingView
+        <KeyboardAvoidingView
           style={styles.inputContainer}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
@@ -195,7 +192,7 @@ export default function GetCheckLocation({ navigation }) {
             />
             <Button title="Check Range" onPress={checkInRange} />
           </ScrollView>
-        </KeyboardAvoidingView> */}
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
