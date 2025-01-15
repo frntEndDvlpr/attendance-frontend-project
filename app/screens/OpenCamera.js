@@ -19,6 +19,7 @@ export default function OpenCamera() {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
 
   // Getting permission to access the camera and media library
   useEffect(() => {
@@ -42,10 +43,22 @@ export default function OpenCamera() {
   // Capturing a photo
   const takePicture = async () => {
     if (camera) {
-      const photoData = await camera.takePictureAsync();
+      const photoData = await camera.takePictureAsync({ exif: true });
       setPhoto(photoData.uri);
+
       savePhotoToCameraRoll(photoData.uri);
       console.log(photoData.uri);
+
+      if (photoData.exif) {
+        const { DateTimeOriginal } = photoData.exif;
+        if (DateTimeOriginal) {
+          console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
+        } else {
+          console.log("Date and time metadata not available in EXIF");
+        }
+      } else {
+        console.log("No EXIF metadata available");
+      }
     }
   };
 
@@ -63,7 +76,7 @@ export default function OpenCamera() {
     }
   };
 
-  // Insuring all access rights have been granted
+  // Insuring all required access rights have been granted
   if (hasPermission === null) {
     return <View />;
   }
