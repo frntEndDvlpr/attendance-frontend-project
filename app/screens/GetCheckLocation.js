@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
@@ -123,7 +124,7 @@ export default function GetCheckLocation({ navigation }) {
                 />
               )}
 
-              {/* Circle for range */}
+              {/* Circle around the range */}
               {targetLat && targetLon && range && (
                 <Circle
                   center={{
@@ -155,7 +156,7 @@ export default function GetCheckLocation({ navigation }) {
         )}
         <TouchableOpacity
           style={styles.CamreaBtn}
-          onPress={() => navigation.navigate("Camera")} // Ensure name matches stack
+          onPress={() => navigation.navigate("Camera")}
         >
           <AppIcon
             name="camera-outline"
@@ -164,7 +165,7 @@ export default function GetCheckLocation({ navigation }) {
             iconColor={colors.black}
           />
         </TouchableOpacity>
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           style={styles.inputContainer}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
@@ -192,7 +193,7 @@ export default function GetCheckLocation({ navigation }) {
             />
             <Button title="Check Range" onPress={checkInRange} />
           </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAvoidingView> */}
       </View>
     </TouchableWithoutFeedback>
   );

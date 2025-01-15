@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
-import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import AddTaskButton from "../navigation/AddTaskButton";
-import GetCheckLocation from "../screens/GetCheckLocation";
 import AppText from "../components/AppText";
-import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
 
@@ -317,17 +313,6 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        {/* <TouchableOpacity
-          style={styles.CamreaBtn}
-          onPress={() => navigation.navigate("OpenCamera")}
-        >
-          <AppIcon
-            name="camera-outline"
-            size={55}
-            backgroundColor={colors.secondary}
-            iconColor={colors.black}
-          />
-        </TouchableOpacity> */}
       </View>
     </>
   );
