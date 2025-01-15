@@ -19,7 +19,6 @@ export default function OpenCamera() {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const [dateTime, setDateTime] = useState(null);
 
   // Getting permission to access the camera and media library
   useEffect(() => {
