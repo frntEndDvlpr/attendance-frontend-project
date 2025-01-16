@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, ActivityIndicator } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -7,8 +7,6 @@ import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../navigation/AddTaskButton";
 import employeesApi from "../api/employees";
 import AppText from "../components/AppText";
-import AppButton from "../components/AppButton";
-import ActivityIndicator from "../components/ActivityIndicator";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
@@ -39,12 +37,11 @@ function EmployeesListScreen({ navigation }) {
     <>
       {error && (
         <>
-          <AppText>Could not fetch data</AppText>
-          <AppButton title="Retry" onPress={loadEmployees} />
+          <AppText>Could not fetch data!</AppText>
         </>
       )}
-      <ActivityIndicator visible={true} />
-      {/* <FlatList
+      {loading && <ActivityIndicator visible={true} size={"large"} />}
+      <FlatList
         data={employees}
         keyExtractor={(employee) => employee.id.toString()}
         renderItem={({ item }) => (
@@ -66,16 +63,9 @@ function EmployeesListScreen({ navigation }) {
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
         onRefresh={() => {
-          setEmployees([
-            {
-              id: 2,
-              name: "Company 2",
-              contactPerson: "Person 2",
-              contactcreated_on: "6568646",
-            },
-          ]);
+          loadEmployees();
         }}
-      /> */}
+      />
       <AddTaskButton onPress={() => navigation.navigate("EmployeeForm")} />
     </>
   );
