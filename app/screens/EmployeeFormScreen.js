@@ -1,9 +1,8 @@
-import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import * as Yup from "yup";
-
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
+import employeesApi from "../api/employees";
+import * as Yup from "yup";
+import { ScrollView, StyleSheet } from "react-native";
 
 const validationSchema = Yup.object().shape({
   employeeCode: Yup.string().required().label("Employee Code"),
@@ -16,6 +15,12 @@ const validationSchema = Yup.object().shape({
 });
 
 function EmployeeFormScreen(props) {
+  const handleSubmit = async (employee) => {
+    const result = await employeesApi.addEmployee(employee);
+    if (!result.ok) return console.log(result.problem);
+    alert("Employee saved successfully.");
+  };
+
   return (
     <AppScreen style={styles.container}>
       <ScrollView>
@@ -28,7 +33,7 @@ function EmployeeFormScreen(props) {
             email: "",
             Phone: "",
           }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <AppFormField
@@ -53,7 +58,7 @@ function EmployeeFormScreen(props) {
             placeholder="Location"
             icon="map-marker-outline"
           />
-          <SubmitButton title="Save" />
+          <SubmitButton title="Post" />
         </AppForm>
       </ScrollView>
     </AppScreen>
