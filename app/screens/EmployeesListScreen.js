@@ -6,22 +6,25 @@ import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../navigation/AddTaskButton";
 import employeesApi from "../api/employees";
+import AppText from "../components/AppText";
+import AppButton from "../components/AppButton";
+import ActivityIndicator from "../components/ActivityIndicator";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const loadEmployees = async () => {
+    setLoading(true);
     const response = await employeesApi.getEmployees(); // Pass the endpoint relative to baseURL
+    setLoading(false);
 
-    if (response.ok) {
-      console.log("Employees Data:", response.data); // Successfully fetched data
-      setEmployees(response.data);
-    } else {
-      console.Alert("Error fetching employees:", response.problem);
-      return null;
-    }
+    if (!response.ok) return setError(true);
+
+    setError(false);
+    setEmployees(response.data);
   };
 
   useEffect(() => {
@@ -34,7 +37,14 @@ function EmployeesListScreen({ navigation }) {
 
   return (
     <>
-      <FlatList
+      {error && (
+        <>
+          <AppText>Could not fetch data</AppText>
+          <AppButton title="Retry" onPress={loadEmployees} />
+        </>
+      )}
+      <ActivityIndicator visible={true} />
+      {/* <FlatList
         data={employees}
         keyExtractor={(employee) => employee.id.toString()}
         renderItem={({ item }) => (
@@ -65,7 +75,7 @@ function EmployeesListScreen({ navigation }) {
             },
           ]);
         }}
-      />
+      /> */}
       <AddTaskButton onPress={() => navigation.navigate("EmployeeForm")} />
     </>
   );
