@@ -1,7 +1,7 @@
-import client from "./client";
+import apiClient from "./client";
 
 const endPoint = "/employees";
 
-const getEmployees = () => client.get(endPoint);
+const getEmployees = () => apiClient.get(endPoint);
 
 export default { getEmployees };

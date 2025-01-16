@@ -10,15 +10,23 @@ import employeesApi from "../api/employees";
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    loadEmployees;
-  }, []);
+  const [loading, setLoading] = useState(true);
 
   const loadEmployees = async () => {
-    const response = await employeesApi.getEmployees();
-    setEmployees(response.data);
+    const response = await employeesApi.getEmployees(); // Pass the endpoint relative to baseURL
+
+    if (response.ok) {
+      console.log("Employees Data:", response.data); // Successfully fetched data
+      setEmployees(response.data);
+    } else {
+      console.Alert("Error fetching employees:", response.problem);
+      return null;
+    }
   };
+
+  useEffect(() => {
+    loadEmployees();
+  }, []);
 
   const handleDelete = (employee) => {
     setEmployees(employees.filter((e) => e.id !== employee.id));
@@ -32,11 +40,13 @@ function EmployeesListScreen({ navigation }) {
         renderItem={({ item }) => (
           <TaskListItem
             employeeCode={item.employeeCode}
-            title={item.title}
+            name={item.name}
             department={item.department}
             designation={item.department}
+            employee_code={item.employee_code}
             email={item.department}
             Phone={item.department}
+            created_on={item.created_on}
             onPress={() => console.log("Employee Selected", item)}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => handleDelete(item)} />
@@ -49,9 +59,9 @@ function EmployeesListScreen({ navigation }) {
           setEmployees([
             {
               id: 2,
-              title: "Company 2",
+              name: "Company 2",
               contactPerson: "Person 2",
-              contactPhone: "6568646",
+              contactcreated_on: "6568646",
             },
           ]);
         }}
