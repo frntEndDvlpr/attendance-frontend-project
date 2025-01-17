@@ -5,7 +5,6 @@ import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../components/AddTaskButton";
-import AddTaskButton from "../navigation/AddTaskButton";
 import employeesApi from "../api/employees";
 import AppText from "../components/AppText";
 

@@ -99,17 +99,6 @@ function TasksListScreen({ navigation }) {
             ]);
           }}
         />
-        {/* <TouchableOpacity
-          style={styles.CamreaBtn}
-          onPress={() => navigation.navigate("OpenCamera")}
-        >
-          <AppIcon
-            name="camera-outline"
-            size={55}
-            backgroundColor={colors.secondary}
-            iconColor={colors.black}
-          />
-        </TouchableOpacity> */}
       </View>
     </>
   );
