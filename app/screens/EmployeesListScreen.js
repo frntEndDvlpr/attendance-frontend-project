@@ -16,13 +16,16 @@ function EmployeesListScreen({ navigation }) {
 
   const loadEmployees = async () => {
     setLoading(true);
-    const response = await employeesApi.getEmployees(); // Pass the endpoint relative to baseURL
+    const response = await employeesApi.getEmployees();
     setLoading(false);
 
-    if (!response.ok) return setError(true);
-
-    setError(false);
-    setEmployees(response.data);
+    if (!response.ok) {
+      setError(true);
+      console.log(response.problem);
+    } else {
+      setError(false);
+      setEmployees(response.data);
+    }
   };
 
   useEffect(() => {
