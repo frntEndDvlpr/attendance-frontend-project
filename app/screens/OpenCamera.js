@@ -20,6 +20,7 @@ export default function OpenCamera() {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
 
+  // Getting permission to access the camera and media library
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -33,19 +34,34 @@ export default function OpenCamera() {
     })();
   }, []);
 
+  // Toggling between the front and back camera
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
+  // Capturing a photo
   const takePicture = async () => {
     if (camera) {
-      const photoData = await camera.takePictureAsync();
+      const photoData = await camera.takePictureAsync({ exif: true });
       setPhoto(photoData.uri);
+
       savePhotoToCameraRoll(photoData.uri);
       console.log(photoData.uri);
+
+      if (photoData.exif) {
+        const { DateTimeOriginal } = photoData.exif;
+        if (DateTimeOriginal) {
+          console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
+        } else {
+          console.log("Date and time metadata not available in EXIF");
+        }
+      } else {
+        console.log("No EXIF metadata available");
+      }
     }
   };
 
+  // Saving the photo to the camera roll
   const savePhotoToCameraRoll = async (uri) => {
     try {
       await MediaLibrary.saveToLibraryAsync(uri);
@@ -59,6 +75,7 @@ export default function OpenCamera() {
     }
   };
 
+  // Insuring all required access rights have been granted
   if (hasPermission === null) {
     return <View />;
   }

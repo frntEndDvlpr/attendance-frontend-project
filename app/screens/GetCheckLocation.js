@@ -9,13 +9,14 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 
@@ -25,6 +26,7 @@ export default function GetCheckLocation({ navigation }) {
   const [targetLon, setTargetLon] = useState("");
   const [range, setRange] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
+  /* const navigation = useNavigation(); */
 
   useEffect(() => {
     (async () => {
@@ -122,7 +124,7 @@ export default function GetCheckLocation({ navigation }) {
                 />
               )}
 
-              {/* Circle for range */}
+              {/* Circle around the range */}
               {targetLat && targetLon && range && (
                 <Circle
                   center={{
@@ -137,8 +139,14 @@ export default function GetCheckLocation({ navigation }) {
             </MapView>
 
             <View style={styles.coordinates}>
+              <AppIcon
+                name="crosshairs-gps"
+                size={70}
+                backgroundColor="false"
+                iconColor={colors.black}
+              />
               <Text style={styles.coordText}>
-                Current Location: {currentLocation.latitude.toFixed(5)},{" "}
+                {currentLocation.latitude.toFixed(5)},{" "}
                 {currentLocation.longitude.toFixed(5)}
               </Text>
             </View>
@@ -192,8 +200,7 @@ export default function GetCheckLocation({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -222,6 +229,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(104, 214, 104, 0.68)",
     padding: 10,
     borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 40,
   },
   coordText: {
     fontSize: 16,
@@ -231,10 +241,5 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 20,
   },
-  CamreaBtn: {
-    position: "absolute",
-    top: 10,
-    alignSelf: "flex-end",
-    paddingRight: 20,
-  },
+  CamreaBtn: { margin: 10 },
 });

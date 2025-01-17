@@ -5,13 +5,16 @@ import OpenCamera from "../screens/OpenCamera";
 import GetCheckLocation from "../screens/GetCheckLocation";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
+import OpenCamera from "../screens/OpenCamera";
+import AppText from "../components/AppText"; // Ensure AppText is imported correctly
+import GetCheckLocation from "../screens/GetCheckLocation";
 
-const Stak = createStackNavigator();
+const Stack = createStackNavigator();
 
 const CameraNavigation = () => (
-  <Stak.Navigator screenOptions={{ presentation: "modal" }}>
-    <Stak.Screen
-      name="OpenCamera"
+  <Stack.Navigator screenOptions={{ presentation: "modal" }}>
+    <Stack.Screen
+      name="Camera"
       component={OpenCamera}
       options={{
         headerTitle: (props) => <AppText>New Attendace Log</AppText>,
@@ -19,14 +22,14 @@ const CameraNavigation = () => (
         headerBackTitleStyle: { color: colors.danger },
       }}
     />
-    <Stak.Screen
+    <Stack.Screen
       name="GetLocation"
       component={GetCheckLocation}
       options={{
         headerTitle: (props) => <AppText>Location</AppText>,
       }}
     />
-  </Stak.Navigator>
+  </Stack.Navigator>
 );
 
 export default CameraNavigation;

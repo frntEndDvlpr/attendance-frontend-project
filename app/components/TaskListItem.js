@@ -10,9 +10,9 @@ import TaskListIcon from "./TaskListIcon";
 function TaskListItem({
   image,
   ImageComponent,
-  title,
-  date,
-  assignee,
+  name,
+  created_on,
+  employee_code,
   project,
   customer,
   anies,
@@ -31,15 +31,17 @@ function TaskListItem({
             {ImageComponent}
             {image && <Image style={styles.image} source={image} />}
             <View style={styles.listDetailsContainer}>
-              {date && <AppText style={styles.date}>{date}</AppText>}
+              {created_on && (
+                <AppText style={styles.date}>{created_on}</AppText>
+              )}
               <View style={styles.innerContainer}>
-                {assignee && (
+                {employee_code && (
                   <AppText style={styles.assignee}>
                     <TaskListIcon
                       name="map-marker-outline"
                       iconColor={colors.blue}
                     />
-                    {assignee}
+                    {employee_code}
                   </AppText>
                 )}
 
@@ -69,7 +71,7 @@ function TaskListItem({
                 )}
               </View>
               <View>
-                <AppText style={styles.itemTitle}>{title}</AppText>
+                <AppText style={styles.itemTitle}>{name}</AppText>
               </View>
             </View>
           </View>

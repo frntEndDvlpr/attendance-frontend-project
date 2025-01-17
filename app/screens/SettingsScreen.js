@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: colors.lightGrey,
     flex: 1,
-    marginTop: Platform.OS === "android" ? 50 : 0,
+    /* marginTop: Platform.OS === "android" ? 50 : 0, */
   },
   titl: { fontWeight: "bold" },
   innerContainer: { marginLeft: 10, width: "70%" },
