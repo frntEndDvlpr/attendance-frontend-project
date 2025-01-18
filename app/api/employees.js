@@ -7,7 +7,7 @@ const getEmployees = () => apiClient.get(endPoint);
 const addEmployee = (employee) => {
   const data = new FormData();
   data.append("name", employee.name);
-  data.append("employeeCode", employee.employee_code);
+  data.append("employeeCode", employee.employeeCode);
   data.append("department", employee.department);
   data.append("designation", employee.designation);
   data.append("email", employee.email);
@@ -19,4 +19,6 @@ const addEmployee = (employee) => {
   return apiClient.post(endPoint, data);
 };
 
-export default { getEmployees, addEmployee };
+const deleteEmployee = (id) => apiClient.delete(endPoint + id);
+
+export default { getEmployees, addEmployee, deleteEmployee };

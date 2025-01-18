@@ -25,6 +25,7 @@ function EmployeesListScreen({ navigation }) {
     } else {
       setError(false);
       setEmployees(response.data);
+      console.log("Success:", response.data);
     }
   };
 
@@ -33,6 +34,11 @@ function EmployeesListScreen({ navigation }) {
   }, []);
 
   const handleDelete = (employee) => {
+    const response = employeesApi.deleteEmployee(employee.id);
+    if (!response.ok) {
+      console.log(response.problem);
+      return;
+    }
     setEmployees(employees.filter((e) => e.id !== employee.id));
   };
 
@@ -69,7 +75,11 @@ function EmployeesListScreen({ navigation }) {
           loadEmployees();
         }}
       />
-      <AddTaskButton onPress={() => navigation.navigate("EmployeeForm")} />
+      <AddTaskButton
+        onPress={() =>
+          navigation.navigate("EmployeeForm", { onGoBack: loadEmployees })
+        }
+      />
     </>
   );
 }
