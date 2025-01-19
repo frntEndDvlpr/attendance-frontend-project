@@ -15,6 +15,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function EmployeeFormScreen({ navigation, route }) {
+  // Add an employee to the database
   const handleSubmit = async (employee) => {
     const result = await employeesApi.addEmployee(employee);
     if (!result.ok) return console.log(result.problem);

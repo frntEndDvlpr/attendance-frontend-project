@@ -21,9 +21,9 @@ function AddTaskButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: colors.primary,
+    backgroundColor: colors.secondary,
     borderRadius: 30,
-    borderColor: colors.lightGreen,
+    borderColor: colors.lightGrey,
     borderWidth: 5,
     height: 60,
     justifyContent: "center",

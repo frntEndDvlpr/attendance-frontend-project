@@ -7,7 +7,12 @@ function ActivityIndicator({ visible = false }) {
     <LottieView
       autoPlay
       loop
-      source={require("../assets/animations/Loading")}
+      style={{
+        height: 20,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      source={require("../assets/animations/Animation - 1737282243268 (1).json")}
     />
   );
 }

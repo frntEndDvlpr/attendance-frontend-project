@@ -19,6 +19,6 @@ const addEmployee = (employee) => {
   return apiClient.post(endPoint, data);
 };
 
-const deleteEmployee = (id) => apiClient.delete(endPoint + id);
+const deleteEmployee = (id) => apiClient.delete(endPoint + id + "/");
 
 export default { getEmployees, addEmployee, deleteEmployee };
