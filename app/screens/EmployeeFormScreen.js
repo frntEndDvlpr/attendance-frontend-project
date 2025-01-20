@@ -7,23 +7,25 @@ import AppScreen from "../components/AppScreen";
 import employeesApi from "../api/employees";
 
 const validationSchema = Yup.object().shape({
+  name: Yup.string().required().label("Name"),
   employeeCode: Yup.string().required().label("Employee Code"),
-  name: Yup.string().required().label("Full Name"),
-  department: Yup.string().label("Department"),
-  designation: Yup.string().label("Designation"),
   email: Yup.string().label("Email"),
   phone: Yup.string().label("Phone"),
+  designation: Yup.string().label("Designation"),
+  department: Yup.string().label("Department"),
+  date_of_joining: Yup.date().label("Date of Joining"),
 });
 
 function EmployeeFormScreen({ navigation, route }) {
   const employee = route.params?.employee;
   const initialValues = {
-    employeeCode: employee?.employeeCode || "",
     name: employee?.name || "",
-    department: employee?.department || "",
-    designation: employee?.designation || "",
+    employeeCode: employee?.employeeCode || "",
     email: employee?.email || "",
     phone: employee?.phone || "",
+    designation: employee?.designation || "",
+    department: employee?.department || "",
+    date_of_joining: employee?.date_of_joining || "",
   };
   console.log("Employee data:", employee);
   console.log("Initial values:", initialValues);
@@ -56,21 +58,35 @@ function EmployeeFormScreen({ navigation, route }) {
           validationSchema={validationSchema}
         >
           <AppFormField
-            name="employeeCode"
-            placeholder="Employee Code"
+            name="name"
+            placeholder="Full Name"
             maxLength={100}
             autoFocus
-            icon="city-variant-outline"
           />
-          <AppFormField name="name" placeholder="Full Name" maxLength={100} />
-          <AppFormField name="department" placeholder="Department" />
-          <AppFormField name="designation" placeholder="Designation" />
-          <AppFormField name="email" placeholder="Email" />
+          <AppFormField
+            name="employeeCode"
+            placeholder="Employee Code"
+            maxLength={10}
+            icon="account"
+          />
+          <AppFormField
+            name="email"
+            placeholder="Email"
+            keyboardType="email-address"
+            icon="email"
+          />
           <AppFormField
             name="Phone"
             placeholder="Phone"
             icon="phone"
             keyboardType="phone-pad"
+          />
+          <AppFormField name="designation" placeholder="Designation" />
+          <AppFormField name="department" placeholder="Department" />
+          <AppFormField
+            name="date_of_joining"
+            placeholder="Date of Joining"
+            icon="calendar-blank-outline"
           />
 
           <SubmitButton title={employee ? "Update" : "Save"} />
