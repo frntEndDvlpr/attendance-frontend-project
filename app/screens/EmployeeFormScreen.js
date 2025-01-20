@@ -1,3 +1,4 @@
+import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 
@@ -15,11 +16,33 @@ const validationSchema = Yup.object().shape({
 });
 
 function EmployeeFormScreen({ navigation, route }) {
-  // Add an employee to the database
-  const handleSubmit = async (employee) => {
-    const result = await employeesApi.addEmployee(employee);
+  const employee = route.params?.employee;
+  const initialValues = {
+    employeeCode: employee?.employeeCode || "",
+    name: employee?.name || "",
+    department: employee?.department || "",
+    designation: employee?.designation || "",
+    email: employee?.email || "",
+    phone: employee?.phone || "",
+  };
+  console.log("Employee data:", employee);
+  console.log("Initial values:", initialValues);
+
+  // Add or update an employee in the database
+  const handleSubmit = async (employeeData) => {
+    let result;
+    if (employee) {
+      result = await employeesApi.updateEmployee(employee.id, employeeData);
+    } else {
+      result = await employeesApi.addEmployee(employeeData);
+    }
+
     if (!result.ok) return console.log(result.problem);
-    alert("Employee saved successfully.");
+    alert(
+      employee
+        ? "Employee updated successfully."
+        : "Employee saved successfully."
+    );
     if (route.params?.onGoBack) route.params.onGoBack();
     navigation.goBack();
   };
@@ -28,14 +51,7 @@ function EmployeeFormScreen({ navigation, route }) {
     <AppScreen style={styles.container}>
       <ScrollView>
         <AppForm
-          initialValues={{
-            employeeCode: "",
-            name: "",
-            department: "",
-            designation: "",
-            email: "",
-            Phone: "",
-          }}
+          initialValues={initialValues}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
@@ -57,7 +73,7 @@ function EmployeeFormScreen({ navigation, route }) {
             keyboardType="phone-pad"
           />
 
-          <SubmitButton title="Post" />
+          <SubmitButton title={employee ? "Update" : "Save"} />
         </AppForm>
       </ScrollView>
     </AppScreen>

@@ -94,7 +94,12 @@ function EmployeesListScreen({ navigation }) {
             email={item.department}
             Phone={item.department}
             created_on={item.created_on}
-            onPress={() => console.log("Employee Selected", item)}
+            onPress={() =>
+              navigation.navigate("EmployeeForm", {
+                employee: item,
+                onGoBack: loadEmployees,
+              })
+            }
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}
