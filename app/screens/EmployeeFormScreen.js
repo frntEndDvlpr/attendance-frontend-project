@@ -13,7 +13,6 @@ const validationSchema = Yup.object().shape({
   phone: Yup.string().label("Phone"),
   designation: Yup.string().label("Designation"),
   department: Yup.string().label("Department"),
-  date_of_joining: Yup.date().label("Date of Joining"),
 });
 
 function EmployeeFormScreen({ navigation, route }) {
@@ -25,10 +24,9 @@ function EmployeeFormScreen({ navigation, route }) {
     phone: employee?.phone || "",
     designation: employee?.designation || "",
     department: employee?.department || "",
-    date_of_joining: employee?.date_of_joining || "",
   };
-  console.log("Employee data:", employee);
-  console.log("Initial values:", initialValues);
+  //console.log("Employee data:", employee);
+  //console.log("Initial values:", initialValues);
 
   // Add or update an employee in the database
   const handleSubmit = async (employeeData) => {
@@ -83,11 +81,6 @@ function EmployeeFormScreen({ navigation, route }) {
           />
           <AppFormField name="designation" placeholder="Designation" />
           <AppFormField name="department" placeholder="Department" />
-          <AppFormField
-            name="date_of_joining"
-            placeholder="Date of Joining"
-            icon="calendar-blank-outline"
-          />
 
           <SubmitButton title={employee ? "Update" : "Save"} />
         </AppForm>

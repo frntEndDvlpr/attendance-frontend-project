@@ -96,6 +96,24 @@ function TasksListScreen({ navigation }) {
                 customer: "14:30:50",
                 anies: "08:50 Hrs",
               },
+              {
+                id: 7,
+                title: "Absent",
+                date: "6/19/2024",
+                assignee: "Branch",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "08:50 Hrs",
+              },
+              {
+                id: 8,
+                title: "Absent",
+                date: "6/19/2024",
+                assignee: "Branch",
+                project: "07:30:30",
+                customer: "14:30:50",
+                anies: "08:50 Hrs",
+              },
             ]);
           }}
         />

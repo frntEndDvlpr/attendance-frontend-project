@@ -19,6 +19,7 @@ import * as Location from "expo-location";
 
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
+import AppText from "../components/AppText";
 
 export default function GetCheckLocation({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -141,14 +142,14 @@ export default function GetCheckLocation({ navigation }) {
             <View style={styles.coordinates}>
               <AppIcon
                 name="crosshairs-gps"
-                size={70}
+                size={40}
                 backgroundColor="false"
                 iconColor={colors.black}
               />
-              <Text style={styles.coordText}>
+              <AppText style={styles.coordText}>
                 {currentLocation.latitude.toFixed(5)},{" "}
                 {currentLocation.longitude.toFixed(5)}
-              </Text>
+              </AppText>
             </View>
           </>
         ) : (
@@ -200,7 +201,10 @@ export default function GetCheckLocation({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-end",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -223,23 +227,19 @@ const styles = StyleSheet.create({
     height: 30,
   },
   coordinates: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    backgroundColor: "rgba(104, 214, 104, 0.68)",
-    padding: 10,
+    backgroundColor: "rgba(104, 214, 104, 0.77)",
     borderRadius: 5,
     flexDirection: "row",
     alignItems: "center",
-    height: 40,
   },
   coordText: {
-    fontSize: 16,
     fontWeight: "bold",
+    color: colors.black,
+    marginRight: 10,
   },
   error: {
     color: "red",
     marginBottom: 20,
   },
-  CamreaBtn: { margin: 10 },
+  CamreaBtn: {},
 });

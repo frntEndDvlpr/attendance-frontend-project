@@ -15,12 +15,17 @@ function EmployeesListScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [deleteloading, setDeleteLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [employeesList, setEmployeesList] = useState(false);
 
   // Get employees list from the server
   const loadEmployees = async () => {
     setLoading(true); // Start loading
     const response = await employeesApi.getEmployees(); // Get employees
     setLoading(false); // Stop loading
+
+    if (response.data) {
+      setEmployeesList(true);
+    }
 
     if (!response.ok) {
       setError(true);
@@ -46,7 +51,7 @@ function EmployeesListScreen({ navigation }) {
       return;
     }
     setEmployees(employees.filter((e) => e.id !== employee.id));
-    console.log("Employee deleted successfully:", employee);
+    //console.log("Employee deleted successfully:", employee);
   };
 
   // Confirm before deleting an employee
@@ -79,6 +84,10 @@ function EmployeesListScreen({ navigation }) {
         <AppText style={{ margin: 10 }}>
           Server Error: Could not fetch data!
         </AppText>
+      )}
+
+      {employeesList && (
+        <AppText style={{ margin: 10 }}>No employees found!</AppText>
       )}
 
       <FlatList

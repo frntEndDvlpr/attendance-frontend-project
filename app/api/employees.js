@@ -10,28 +10,29 @@ const addEmployee = (employee) => {
   const data = new FormData();
   data.append("name", employee.name);
   data.append("employeeCode", employee.employeeCode);
-  data.append("department", employee.department);
-  data.append("designation", employee.designation);
   data.append("email", employee.email);
   data.append("phone", employee.phone);
-  data.append("location", employee.location);
+  data.append("designation", employee.designation);
+  data.append("department", employee.department);
 
-  console.log("Sending data to server:", data);
+  //console.log("Sending data to server:", data);
 
-  return apiClient.post(endPoint, data);
+  return apiClient.post(endPoint, data, {
+    onUploadProgress: (progress) => console.log(progress),
+  });
 };
 
 // Updating an employee in the server API
 const updateEmployee = (id, employee) => {
   const data = new FormData();
-  data.append("employeeCode", employee.employeeCode);
   data.append("name", employee.name);
-  data.append("department", employee.department);
-  data.append("designation", employee.designation);
+  data.append("employeeCode", employee.employeeCode);
   data.append("email", employee.email);
   data.append("phone", employee.phone);
+  data.append("designation", employee.designation);
+  data.append("department", employee.department);
 
-  console.log("Updating data to server:", data);
+  //console.log("Updating data to server:", data);
 
   return apiClient.put(endPoint + id + "/", data);
 };

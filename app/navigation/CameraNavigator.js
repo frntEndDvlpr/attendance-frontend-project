@@ -13,9 +13,7 @@ const CameraNavigation = () => (
     <Stack.Screen
       name="GetLocation"
       component={GetCheckLocation}
-      options={{
-        headerTitle: (props) => <AppText>Location</AppText>,
-      }}
+      options={{ headerShown: false }}
     />
     <Stack.Screen
       name="Camera"
