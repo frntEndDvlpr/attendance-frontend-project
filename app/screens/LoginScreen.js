@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 
 import colors from "../config/colors";
-
-import { AppFormField, AppForm } from "../components/forms";
+import { AppFormField, AppForm, AppErrorMasage } from "../components/forms";
 import AppButton from "../components/AppButton";
+import AuthApi from "../api/auth";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -14,6 +14,15 @@ const validationSchema = Yup.object().shape({
 });
 
 function LoginScreen({ navigation }) {
+  const [loginFailed, setLoginFailed] = useState(false);
+
+  handelSubmit = async ({ email, password }) => {
+    const result = await AuthApi.login(email, password);
+    if (!result.ok) return setLoginFailed(true);
+    setLoginFailed(false);
+    console.log(result.data);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.icon}>
@@ -26,9 +35,13 @@ function LoginScreen({ navigation }) {
 
       <AppForm
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handelSubmit}
         validationSchema={validationSchema}
       >
+        <AppErrorMasage
+          error="Invalid email or password."
+          visible={loginFailed}
+        />
         <AppFormField
           autoFocus
           autoCapitalize="none"
@@ -48,10 +61,7 @@ function LoginScreen({ navigation }) {
           secureTextEntry
           textContentType="password"
         />
-        <AppButton
-          title="login"
-          onPress={() => navigation.navigate("appnavigation")}
-        />
+        <AppButton title="login" />
       </AppForm>
       <Button title="Forgot Your Password?" />
     </View>
