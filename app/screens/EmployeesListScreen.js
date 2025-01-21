@@ -15,7 +15,7 @@ function EmployeesListScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [deleteloading, setDeleteLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [employeesList, setEmployeesList] = useState(false);
+  const [response, setResponse] = useState(false);
 
   // Get employees list from the server
   const loadEmployees = async () => {
@@ -23,13 +23,10 @@ function EmployeesListScreen({ navigation }) {
     const response = await employeesApi.getEmployees(); // Get employees
     setLoading(false); // Stop loading
 
-    if (response.data) {
-      setEmployeesList(true);
-    }
-
     if (!response.ok) {
       setError(true);
       console.log(response.problem);
+      setResponse(response.problem);
     } else {
       setError(false);
       setEmployees(response.data);
@@ -78,18 +75,20 @@ function EmployeesListScreen({ navigation }) {
       {/* Display loading spinner while data is being fetched from the server */}
       {loading && <ActivityIndicator visible={true} />}
       {deleteloading && <ActivityIndicator visible={true} />}
-
       {/* Display error message if data could not be fetched from the server */}
-      {error && !loading && (
+
+      {error && !loading && response && (
         <AppText style={{ margin: 10 }}>
-          Server Error: Could not fetch data!
+          {response}. Couldn't retrieve the list of employees.
         </AppText>
       )}
 
-      {employeesList && (
-        <AppText style={{ margin: 10 }}>No employees found!</AppText>
+      {/* Display "No employees found!" message if there are no employees */}
+      {!loading && !error && employees.length === 0 && (
+        <AppText style={{ margin: 10 }}>
+          No employees! Click on the + button to add a new employee.
+        </AppText>
       )}
-
       <FlatList
         data={employees}
         keyExtractor={(employee) => employee.id.toString()}

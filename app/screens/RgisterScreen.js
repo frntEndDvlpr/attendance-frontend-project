@@ -42,7 +42,6 @@ function RgisterScreen(props) {
           name="password"
           placeholder="Password"
           icon="lock"
-          keyboardType="emai-address"
           secureTextEntry
           textContentType="password"
         />

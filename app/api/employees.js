@@ -6,7 +6,7 @@ const endPoint = "employees/";
 const getEmployees = () => apiClient.get(endPoint);
 
 // Adding an employee to the server API
-const addEmployee = (employee) => {
+const addEmployee = (employee, onUploadProgress) => {
   const data = new FormData();
   data.append("name", employee.name);
   data.append("employeeCode", employee.employeeCode);
@@ -18,7 +18,8 @@ const addEmployee = (employee) => {
   //console.log("Sending data to server:", data);
 
   return apiClient.post(endPoint, data, {
-    onUploadProgress: (progress) => console.log(progress),
+    onUploadProgress: (progress) =>
+      onUploadProgress(progress.loaded / progress.total),
   });
 };
 

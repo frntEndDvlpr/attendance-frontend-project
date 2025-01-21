@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
 import employeesApi from "../api/employees";
+import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -16,6 +17,8 @@ const validationSchema = Yup.object().shape({
 });
 
 function EmployeeFormScreen({ navigation, route }) {
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
   const employee = route.params?.employee;
   const initialValues = {
     name: employee?.name || "",
@@ -34,15 +37,18 @@ function EmployeeFormScreen({ navigation, route }) {
     if (employee) {
       result = await employeesApi.updateEmployee(employee.id, employeeData);
     } else {
-      result = await employeesApi.addEmployee(employeeData);
+      setProgress(0);
+      setUploadVisible(true);
+      result = await employeesApi.addEmployee(employeeData, (progress) =>
+        setProgress(progress)
+      );
     }
 
-    if (!result.ok) return console.log(result.problem);
-    alert(
-      employee
-        ? "Employee updated successfully."
-        : "Employee saved successfully."
-    );
+    if (!result.ok) {
+      setUploadVisible(false);
+      return alert("Could not save the employee.");
+    }
+
     if (route.params?.onGoBack) route.params.onGoBack();
     navigation.goBack();
   };
@@ -50,6 +56,11 @@ function EmployeeFormScreen({ navigation, route }) {
   return (
     <AppScreen style={styles.container}>
       <ScrollView>
+        <UploadScreen
+          onDone={() => setUploadVisible(false)}
+          progress={progress}
+          visible={uploadVisible}
+        />
         <AppForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
