@@ -34,11 +34,16 @@ function EmployeeFormScreen({ navigation, route }) {
   // Add or update an employee in the database
   const handleSubmit = async (employeeData) => {
     let result;
+    setProgress(0);
+    setUploadVisible(true);
+
     if (employee) {
-      result = await employeesApi.updateEmployee(employee.id, employeeData);
+      result = await employeesApi.updateEmployee(
+        employee.id,
+        employeeData,
+        (progress) => setProgress(progress)
+      );
     } else {
-      setProgress(0);
-      setUploadVisible(true);
       result = await employeesApi.addEmployee(employeeData, (progress) =>
         setProgress(progress)
       );
@@ -51,8 +56,10 @@ function EmployeeFormScreen({ navigation, route }) {
 
     setProgress(1);
     if (route.params?.onGoBack) route.params.onGoBack();
-    setUploadVisible(false);
-    navigation.goBack();
+    setTimeout(() => {
+      setUploadVisible(false);
+      navigation.goBack();
+    }, 3000);
   };
 
   return (

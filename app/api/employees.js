@@ -26,7 +26,7 @@ const addEmployee = (employee, onUploadProgress) => {
 };
 
 // Updating an employee in the server API
-const updateEmployee = (id, employee) => {
+const updateEmployee = (id, employee, onUploadProgress) => {
   const data = new FormData();
   data.append("name", employee.name);
   data.append("employeeCode", employee.employeeCode);
@@ -37,7 +37,12 @@ const updateEmployee = (id, employee) => {
 
   //console.log("Updating data to server:", data);
 
-  return apiClient.put(endPoint + id + "/", data);
+  return apiClient.put(`${endPoint}${id}/`, data, {
+    onUploadProgress: (event) => {
+      const progress = event.loaded / event.total;
+      onUploadProgress(progress);
+    },
+  });
 };
 
 // Deleting an employee from the server API
