@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Alert, View } from "react-native";
+import { FlatList, Alert, View, StyleSheet } from "react-native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
 import TaskListItem from "../components/TaskListItem";
@@ -9,6 +9,7 @@ import AddTaskButton from "../components/AddTaskButton";
 import employeesApi from "../api/employees";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
+import AppIcon from "../components/AppIcon";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
@@ -79,9 +80,10 @@ function EmployeesListScreen({ navigation }) {
       {/* Display error message if data could not be fetched from the server */}
 
       {error && !loading && response && (
-        <View style={{ backgroundColor: colors.danger }}>
-          <AppText style={{ margin: 10 }}>
-            {response}. Couldn't retrieve or update the list of employees.
+        <View style={styles.bar}>
+          <AppIcon name="exclamation" size={70} backgroundColor={false} />
+          <AppText>
+            {response}. Couldn't retrieve or update the employees list.
           </AppText>
         </View>
       )}
@@ -130,5 +132,13 @@ function EmployeesListScreen({ navigation }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  bar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.danger,
+  },
+});
 
 export default EmployeesListScreen;
