@@ -49,7 +49,9 @@ function EmployeeFormScreen({ navigation, route }) {
       return alert("Could not save the employee.");
     }
 
+    setProgress(1);
     if (route.params?.onGoBack) route.params.onGoBack();
+    setUploadVisible(false);
     navigation.goBack();
   };
 
@@ -57,7 +59,9 @@ function EmployeeFormScreen({ navigation, route }) {
     <AppScreen style={styles.container}>
       <ScrollView>
         <UploadScreen
-          onDone={() => setUploadVisible(false)}
+          onDone={() => {
+            setUploadVisible(false);
+          }}
           progress={progress}
           visible={uploadVisible}
         />

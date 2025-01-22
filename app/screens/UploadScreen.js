@@ -12,7 +12,7 @@ function UploadScreen({ progress = 0, visible = false, onDone }) {
         ) : (
           <LottieView
             autoPlay
-            loop
+            loop={false}
             onAnimationFinish={onDone}
             source={require("../assets/animations/Done.json")}
             style={{ width: 150 }}

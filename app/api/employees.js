@@ -18,8 +18,10 @@ const addEmployee = (employee, onUploadProgress) => {
   //console.log("Sending data to server:", data);
 
   return apiClient.post(endPoint, data, {
-    onUploadProgress: (progress) =>
-      onUploadProgress(progress.loaded / progress.total),
+    onUploadProgress: (event) => {
+      const progress = event.loaded / event.total;
+      onUploadProgress(progress);
+    },
   });
 };
 
