@@ -10,6 +10,7 @@ import employeesApi from "../api/employees";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import AppIcon from "../components/AppIcon";
+import HeaderAlert from "../components/HeaderAlert";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
@@ -80,19 +81,28 @@ function EmployeesListScreen({ navigation }) {
       {/* Display error message if data could not be fetched from the server */}
 
       {error && !loading && response && (
-        <View style={styles.bar}>
-          <AppIcon name="exclamation" size={70} backgroundColor={false} />
-          <AppText>
-            {response}. Couldn't retrieve or update the employees list.
-          </AppText>
-        </View>
+        <HeaderAlert
+          error={
+            "NETWORK ERROR: Couldn't retrieve or update the employees list."
+          }
+          backgroundColor={colors.danger}
+          textStyle={{ color: colors.white }}
+          iconName={"alert-circle"}
+          iconSize={70}
+          iconColor={colors.white}
+        />
       )}
 
       {/* Display "No employees found!" message if there are no employees */}
       {!loading && !error && employees.length === 0 && (
-        <AppText style={{ margin: 10 }}>
-          No employees! Click on the + button to add a new employee.
-        </AppText>
+        <HeaderAlert
+          error="No employees! Click on the + button to add a new employee."
+          backgroundColor={colors.secondary}
+          textStyle={{ color: colors.white }}
+          iconName={"alert-circle"}
+          iconSize={70}
+          iconColor={colors.white}
+        />
       )}
       <FlatList
         data={employees}
