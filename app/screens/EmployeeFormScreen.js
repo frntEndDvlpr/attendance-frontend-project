@@ -60,7 +60,7 @@ function EmployeeFormScreen({ navigation, route }) {
     setTimeout(() => {
       setUploadVisible(false);
       navigation.goBack();
-    }, 3000);
+    }, 2000);
   };
 
   return (

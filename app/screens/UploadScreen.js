@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import * as Progress from "react-native-progress";
 import LottieView from "lottie-react-native";
 import colors from "../config/colors";
 
-function UploadScreen({ progress = 0, visible = false, onDone }) {
+function UploadScreen({
+  progress = 0,
+  visible = false,
+  onDone,
+  timeout = 9000,
+}) {
+  useEffect(() => {
+    if (progress >= 1) {
+      const timer = setTimeout(onDone, timeout);
+      return () => clearTimeout(timer);
+    }
+  }, [progress, onDone, timeout]);
+
   return (
     <Modal visible={visible}>
       <View style={styles.container}>

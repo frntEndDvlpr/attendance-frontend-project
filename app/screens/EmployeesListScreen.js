@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Alert, View, StyleSheet } from "react-native";
+import { FlatList, Alert } from "react-native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
 import TaskListItem from "../components/TaskListItem";
@@ -7,16 +7,16 @@ import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../components/AddTaskButton";
 import employeesApi from "../api/employees";
-import AppText from "../components/AppText";
 import colors from "../config/colors";
-import AppIcon from "../components/AppIcon";
 import HeaderAlert from "../components/HeaderAlert";
+import UploadScreen from "./UploadScreen";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [deleteloading, setDeleteLoading] = useState(false);
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState(false);
   const [response, setResponse] = useState(false);
 
@@ -43,15 +43,23 @@ function EmployeesListScreen({ navigation }) {
 
   // Delete an employee
   const handleDelete = async (employee) => {
-    setDeleteLoading(true);
-    const response = await employeesApi.deleteEmployee(employee.id);
-    setDeleteLoading(false);
+    setProgress(0);
+    setUploadVisible(true);
+    const response = await employeesApi.deleteEmployee(
+      employee.id,
+      (progress) => setProgress(progress)
+    );
+    setUploadVisible(false);
+
     if (!response.ok) {
-      console.log(response.problem);
-      return;
+      setUploadVisible(false);
+      return alert("Could not delete the employee.");
     }
+
+    setProgress(1);
+    setUploadVisible(false);
     setEmployees(employees.filter((e) => e.id !== employee.id));
-    //console.log("Employee deleted successfully:", employee);
+    employees.filter;
   };
 
   // Confirm before deleting an employee
@@ -77,17 +85,16 @@ function EmployeesListScreen({ navigation }) {
     <>
       {/* Display loading spinner while data is being fetched from the server */}
       {loading && <ActivityIndicator visible={true} />}
-      {deleteloading && <ActivityIndicator visible={true} />}
-      {/* Display error message if data could not be fetched from the server */}
 
-      {error && !loading && response && (
+      {/* Display error message if data could not be fetched from the server */}
+      {error && !loading && (
         <HeaderAlert
           error={
             "NETWORK ERROR: Couldn't retrieve or update the employees list."
           }
           backgroundColor={colors.danger}
           textStyle={{ color: colors.white }}
-          iconName={"alert-circle"}
+          iconName={"alert-circle-outline"}
           iconSize={70}
           iconColor={colors.white}
         />
@@ -99,11 +106,22 @@ function EmployeesListScreen({ navigation }) {
           error="No employees! Click on the + button to add a new employee."
           backgroundColor={colors.secondary}
           textStyle={{ color: colors.white }}
-          iconName={"alert-circle"}
+          iconName={"file-alert-outline"}
           iconSize={70}
           iconColor={colors.white}
         />
       )}
+
+      {/* Display the upload screen */}
+      <UploadScreen
+        onDone={() => {
+          setUploadVisible(false);
+        }}
+        progress={progress}
+        visible={uploadVisible}
+      />
+
+      {/* Display the list of employees */}
       <FlatList
         data={employees}
         keyExtractor={(employee) => employee.id.toString()}
@@ -140,13 +158,5 @@ function EmployeesListScreen({ navigation }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.danger,
-  },
-});
 
 export default EmployeesListScreen;
