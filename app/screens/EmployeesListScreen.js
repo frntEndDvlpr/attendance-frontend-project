@@ -103,10 +103,8 @@ function EmployeesListScreen({ navigation }) {
             name={item.name}
             department={item.department}
             designation={item.department}
-            employee_code={item.employee_code}
             email={item.department}
             Phone={item.department}
-            created_on={item.created_on}
             onPress={() =>
               navigation.navigate("EmployeeForm", {
                 employee: item,

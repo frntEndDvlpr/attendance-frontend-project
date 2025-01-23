@@ -12,7 +12,7 @@ function TaskListItem({
   ImageComponent,
   name,
   created_on,
-  employee_code,
+  employeeCode,
   project,
   customer,
   anies,
@@ -35,13 +35,13 @@ function TaskListItem({
                 <AppText style={styles.date}>{created_on}</AppText>
               )}
               <View style={styles.innerContainer}>
-                {employee_code && (
+                {employeeCode && (
                   <AppText style={styles.assignee}>
                     <TaskListIcon
                       name="map-marker-outline"
                       iconColor={colors.blue}
                     />
-                    {employee_code}
+                    {employeeCode}
                   </AppText>
                 )}
 

@@ -20,6 +20,7 @@ function EmployeeFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const employee = route.params?.employee;
+
   const initialValues = {
     name: employee?.name || "",
     employeeCode: employee?.employeeCode || "",
