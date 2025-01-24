@@ -4,7 +4,7 @@ import { Image, ImageBackground, StyleSheet, View, Text } from "react-native";
 import colors from "../config/colors";
 import AppButton from "../components/AppButton";
 
-function WellcomeScreen({ navigation }) {
+function WelcomeScreen({ navigation }) {
   return (
     <ImageBackground
       blurRadius={10}
@@ -17,7 +17,7 @@ function WellcomeScreen({ navigation }) {
           source={require("../assets/SOMS-logo.png")}
         />
         <Text style={styles.tagLine}>
-        Effortless, Intelligent Attendance Tracking
+          Effortless, Intelligent Attendance Tracking
         </Text>
       </View>
       <View style={styles.buttonContainer}>
@@ -46,16 +46,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
   },
-  loginButton: {
-    backgroundColor: colors.primary,
-    width: "100%",
-    height: 30,
-  },
-  registerButton: {
-    backgroundColor: colors.secondary,
-    width: "100%",
-    height: 30,
-  },
+
   welcomeLogo: {
     height: 100,
     resizeMode: "contain",
@@ -73,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WellcomeScreen;
+export default WelcomeScreen;

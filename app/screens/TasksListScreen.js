@@ -3,11 +3,10 @@ import { FlatList, StyleSheet, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import AddTaskButton from "../components/AddTaskButton";
-import GetCheckLocation from "../screens/GetCheckLocation";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
+import TextHeader from "../components/TextHeader";
 
 const initialTasks = [
   {
@@ -41,11 +40,11 @@ function TasksListScreen({ navigation }) {
   };
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.map}>
-          <CameraNavigator />
-        </View>
+    <View style={styles.container}>
+      <View style={styles.map}>
+        <CameraNavigator />
+      </View>
+      <View style={styles.list}>
         <AppText style={styles.title}>My Attendace Log</AppText>
         <FlatList
           data={tasks}
@@ -118,16 +117,16 @@ function TasksListScreen({ navigation }) {
           }}
         />
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.lightGrey,
   },
-  map: { height: 250 },
+
+  map: { flex: 1 },
 
   title: {
     textAlign: "center",
@@ -135,14 +134,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 5,
   },
-  CamreaBtn: {
-    alignItems: "flex-end",
-    margin: 10,
-    width: 60,
-    alignItems: "center",
-    position: "absolute",
-    alignSelf: "flex-end",
-    paddingRight: 30,
+
+  list: {
+    flex: 2,
+    backgroundColor: colors.lightGrey,
   },
 });
 

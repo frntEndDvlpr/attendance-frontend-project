@@ -10,11 +10,13 @@ import NavigationTheme from "./app/navigation/NavigationTheme";
 import SettingsScreen from "./app/screens/SettingsScreen";
 import GetCheckLocation from "./app/screens/GetCheckLocation";
 import CameraNavigator from "./app/navigation/CameraNavigator";
+import LoginScreen from "./app/screens/LoginScreen";
+import WelcomeScreen from "./app/screens/WelcomeScreen";
 
 export default function App() {
   return (
     <NavigationContainer theme={NavigationTheme}>
-      <AppNavigator />
+      <WelcomeScreen />
     </NavigationContainer>
   );
 }

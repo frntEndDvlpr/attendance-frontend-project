@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import LoginScreen from "../../app/screens/LoginScreen";
 import RgisterScreen from "../../app/screens/RgisterScreen";
-import WellcomeScreen from "../../app/screens/WelcomeScreen";
+import WelcomeScreen from "../../app/screens/WelcomeScreen";
 import AppNavigator from "./AppNavigator";
 
 const Stak = createNativeStackNavigator();
@@ -12,7 +12,7 @@ const AuthNavigator = () => (
   <Stak.Navigator>
     <Stak.Screen
       name="Welcome"
-      component={WellcomeScreen}
+      component={WelcomeScreen}
       options={{ headerShown: false }}
     />
     <Stak.Screen name="Login" component={LoginScreen} />

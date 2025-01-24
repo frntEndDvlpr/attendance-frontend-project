@@ -53,7 +53,10 @@ function EmployeesListScreen({ navigation }) {
 
     if (!response.ok) {
       setUploadVisible(false);
-      return alert("Could not delete the employee.");
+      return Alert.alert("Fail", "Faiel to delet the employee", [
+        { text: "Retry", onPress: () => handleDelete(employee) },
+        { text: "Cancel", style: "cancel" },
+      ]);
     }
 
     setProgress(1);
@@ -73,7 +76,7 @@ function EmployeesListScreen({ navigation }) {
           style: "cancel",
         },
         {
-          text: "OK",
+          text: "Yes",
           onPress: () => handleDelete(employee),
         },
       ],
