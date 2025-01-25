@@ -18,6 +18,7 @@ function TaskListItem({
   anies,
   onPress,
   renderRightActions,
+  title,
 }) {
   return (
     <GestureHandlerRootView>
@@ -27,53 +28,42 @@ function TaskListItem({
           onPress={onPress}
           underlayColor={colors.lightGreen}
         >
-          <View style={styles.innerContainre}>
+          <View style={styles.innerContainer}>
             {ImageComponent}
             {image && <Image style={styles.image} source={image} />}
-            <View style={styles.listDetailsContainer}>
-              {created_on && (
-                <AppText style={styles.date}>{created_on}</AppText>
-              )}
-              <View style={styles.innerContainer}>
-                {employeeCode && (
-                  <AppText style={styles.assignee}>
-                    <TaskListIcon
-                      name="map-marker-outline"
-                      iconColor={colors.blue}
-                    />
-                    {employeeCode}
-                  </AppText>
-                )}
+            {created_on && <AppText style={styles.date}>{created_on}</AppText>}
+            {employeeCode && (
+              <AppText style={styles.assignee}>
+                <TaskListIcon
+                  name="map-marker-outline"
+                  iconColor={colors.blue}
+                />
+                {employeeCode}
+              </AppText>
+            )}
 
-                {project && (
-                  <AppText style={styles.project}>
-                    <TaskListIcon name="login-variant" />
-                    {project}
-                  </AppText>
-                )}
-                {customer && (
-                  <AppText style={styles.customer}>
-                    <TaskListIcon
-                      name="logout-variant"
-                      iconColor={colors.red}
-                    />
-                    {customer}
-                  </AppText>
-                )}
-                {anies && (
-                  <AppText style={styles.assignee}>
-                    <TaskListIcon
-                      name="timer-outline"
-                      iconColor={colors.secondary}
-                    />
-                    {anies}
-                  </AppText>
-                )}
-              </View>
-              <View>
-                <AppText style={styles.itemTitle}>{name}</AppText>
-              </View>
-            </View>
+            {project && (
+              <AppText style={styles.project}>
+                <TaskListIcon name="login-variant" />
+                {project}
+              </AppText>
+            )}
+            {customer && (
+              <AppText style={styles.customer}>
+                <TaskListIcon name="logout-variant" iconColor={colors.red} />
+                {customer}
+              </AppText>
+            )}
+            {anies && (
+              <AppText style={styles.assignee}>
+                <TaskListIcon
+                  name="timer-outline"
+                  iconColor={colors.secondary}
+                />
+                {anies}
+              </AppText>
+            )}
+            <AppText style={styles.itemTitle}>{title}</AppText>
           </View>
         </TouchableHighlight>
       </Swipeable>
@@ -82,38 +72,47 @@ function TaskListItem({
 }
 
 const styles = StyleSheet.create({
-  assignee: {
-    color: colors.darkGrey,
-  },
-  customer: {},
   innerContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    height: "100%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
-  date: {
-    fontWeight: "bold",
-    color: colors.black,
-    paddingLeft: 5,
-  },
-  itemTitle: {
-    fontWeight: "bold",
-    color: colors.black,
-    paddingLeft: 5,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 35,
-  },
+
   listContainer: {
     backgroundColor: colors.white,
     borderRadius: 20,
     margin: 7,
     height: 80,
     justifyContent: "center",
+    shadowColor: colors.gray,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 10,
   },
-  listDetailsContainer: { paddingHorizontal: 30 },
-  project: {},
+
+  assignee: {
+    color: colors.darkGrey,
+  },
+
+  date: {
+    fontWeight: "bold",
+    color: colors.black,
+    paddingLeft: 5,
+  },
+
+  itemTitle: {
+    fontWeight: "bold",
+    color: colors.black,
+    paddingLeft: 5,
+  },
+
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 35,
+  },
 });
 
 export default TaskListItem;

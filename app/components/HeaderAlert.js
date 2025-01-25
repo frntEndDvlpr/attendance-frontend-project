@@ -33,15 +33,12 @@ function HeaderAlert({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    marginBottom: 10,
   },
   text: {
     fontWeight: "bold",
     color: colors.black,
-    width: "80%",
   },
 });
 export default HeaderAlert;
