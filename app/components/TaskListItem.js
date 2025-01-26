@@ -86,10 +86,11 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "center",
     shadowColor: colors.gray,
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 10,
+    flex: 1,
   },
 
   assignee: {

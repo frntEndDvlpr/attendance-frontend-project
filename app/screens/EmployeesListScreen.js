@@ -10,6 +10,7 @@ import employeesApi from "../api/employees";
 import colors from "../config/colors";
 import HeaderAlert from "../components/HeaderAlert";
 import UploadScreen from "./UploadScreen";
+import EmployeeListItem from "../components/EmployeeListItem";
 
 function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
@@ -129,13 +130,13 @@ function EmployeesListScreen({ navigation }) {
         data={employees}
         keyExtractor={(employee) => employee.id.toString()}
         renderItem={({ item }) => (
-          <TaskListItem
+          <EmployeeListItem
             employeeCode={item.employeeCode}
             name={item.name}
             department={item.department}
-            designation={item.department}
-            email={item.department}
-            Phone={item.department}
+            designation={item.designation}
+            email={item.email}
+            Phone={item.Phone}
             onPress={() =>
               navigation.navigate("EmployeeForm", {
                 employee: item,
@@ -147,11 +148,11 @@ function EmployeesListScreen({ navigation }) {
             )}
           />
         )}
-        ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
         onRefresh={() => {
           loadEmployees();
         }}
+        ItemSeparatorComponent={ListItemSeparator}
       />
       <AddTaskButton
         onPress={() =>
