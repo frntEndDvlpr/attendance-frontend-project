@@ -8,17 +8,15 @@ import AppText from "./AppText";
 import TaskListIcon from "./TaskListIcon";
 
 function TaskListItem({
-  image,
-  ImageComponent,
-  name,
-  created_on,
-  employeeCode,
-  project,
-  customer,
-  anies,
+  time_in,
+  time_out,
+  employee,
+  location,
+  status,
+  date,
+  total_hours,
   onPress,
   renderRightActions,
-  title,
 }) {
   return (
     <GestureHandlerRootView>
@@ -28,42 +26,60 @@ function TaskListItem({
           onPress={onPress}
           underlayColor={colors.lightGreen}
         >
-          <View style={styles.innerContainer}>
-            {ImageComponent}
-            {image && <Image style={styles.image} source={image} />}
-            {created_on && <AppText style={styles.date}>{created_on}</AppText>}
-            {employeeCode && (
-              <AppText style={styles.assignee}>
-                <TaskListIcon
-                  name="map-marker-outline"
-                  iconColor={colors.blue}
-                />
-                {employeeCode}
+          <View style={styles.Container}>
+            {date && (
+              <AppText style={styles.dateText}>
+                <TaskListIcon name="" />
+                {date}
               </AppText>
             )}
-
-            {project && (
-              <AppText style={styles.project}>
-                <TaskListIcon name="login-variant" />
-                {project}
+            <View style={styles.midContainer}>
+              {location && (
+                <AppText style={styles.assignee}>
+                  <TaskListIcon
+                    name="map-marker-outline"
+                    iconColor={colors.secondary}
+                  />
+                  {location}
+                </AppText>
+              )}
+              {time_in && (
+                <AppText style={styles.time_in}>
+                  <TaskListIcon name="login-variant" />
+                  {time_in}
+                </AppText>
+              )}
+              {time_out && (
+                <AppText style={styles.time_out}>
+                  <TaskListIcon name="logout-variant" iconColor={colors.red} />
+                  {time_out}
+                </AppText>
+              )}
+              {employee && (
+                <AppText style={styles.assignee}>
+                  <TaskListIcon
+                    name="map-marker-outline"
+                    iconColor={colors.blue}
+                  />
+                  {employee}
+                </AppText>
+              )}
+              {total_hours && (
+                <AppText style={styles.assignee}>
+                  <TaskListIcon
+                    name="timer-outline"
+                    iconColor={colors.secondary}
+                  />
+                  {total_hours}
+                </AppText>
+              )}
+            </View>
+            {status && (
+              <AppText style={styles.statusText}>
+                <TaskListIcon name="" />
+                {status}
               </AppText>
             )}
-            {customer && (
-              <AppText style={styles.customer}>
-                <TaskListIcon name="logout-variant" iconColor={colors.red} />
-                {customer}
-              </AppText>
-            )}
-            {anies && (
-              <AppText style={styles.assignee}>
-                <TaskListIcon
-                  name="timer-outline"
-                  iconColor={colors.secondary}
-                />
-                {anies}
-              </AppText>
-            )}
-            <AppText style={styles.itemTitle}>{title}</AppText>
           </View>
         </TouchableHighlight>
       </Swipeable>
@@ -72,48 +88,27 @@ function TaskListItem({
 }
 
 const styles = StyleSheet.create({
-  innerContainer: {
-    flexDirection: "row",
-    height: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-
   listContainer: {
     backgroundColor: colors.white,
     borderRadius: 20,
     margin: 7,
-    height: 80,
-    justifyContent: "center",
     shadowColor: colors.gray,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 10,
-    flex: 1,
+    padding: 7,
   },
 
-  assignee: {
-    color: colors.darkGrey,
+  Container: { paddingHorizontal: 10 },
+
+  midContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
-  date: {
-    fontWeight: "bold",
-    color: colors.black,
-    paddingLeft: 5,
-  },
-
-  itemTitle: {
-    fontWeight: "bold",
-    color: colors.black,
-    paddingLeft: 5,
-  },
-
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 35,
-  },
+  dateText: { color: colors.black, fontWeight: "bold" },
+  statusText: { color: colors.primary, fontWeight: "bold" },
 });
 
 export default TaskListItem;

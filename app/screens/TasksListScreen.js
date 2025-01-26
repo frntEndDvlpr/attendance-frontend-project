@@ -11,24 +11,30 @@ import TextHeader from "../components/TextHeader";
 const initialTasks = [
   {
     id: 1,
-    title: "Task 1",
-    date: "1/1/2024",
-    assignee: "Assignee",
+    date: "6/19/2024",
+    time_in: "07-30",
+    time_out: "16-30",
+    location: "HO",
+    status: "Present",
+    total_hours: "8Hrs",
   },
   {
     id: 2,
-    title: "Task 2",
     date: "6/19/2024",
-    assignee: "Ahmed",
-    project: "Project 2",
+    time_in: "07-30",
+    time_out: "16-30",
+    location: "HO",
+    status: "Present",
+    total_hours: "8Hrs",
   },
   {
     id: 3,
-    title: "Task 3",
-    date: "7/19/2024",
-    assignee: "Ali",
-    project: "Project 3",
-    customer: "XYZ",
+    date: "6/19/2024",
+    time_in: "07-30",
+    time_out: "16-30",
+    location: "HO",
+    status: "Present",
+    total_hours: "8Hrs",
   },
 ];
 function TasksListScreen({ navigation }) {
@@ -51,13 +57,12 @@ function TasksListScreen({ navigation }) {
           keyExtractor={(task) => task.id.toString()}
           renderItem={({ item }) => (
             <TaskListItem
-              title={item.title}
               date={item.date}
-              assignee={item.assignee}
-              project={item.project}
-              customer={item.customer}
-              image={item.image}
-              anies={item.anies}
+              time_in={item.time_in}
+              time_out={item.time_out}
+              location={item.location}
+              status={item.status}
+              total_hours={item.total_hours}
               onPress={() => navigation.navigate("TaskForm", item)}
               renderRightActions={() => (
                 <ListItemDeleteAction onPress={() => handleDelete(item)} />
@@ -70,48 +75,49 @@ function TasksListScreen({ navigation }) {
             setTasks([
               {
                 id: 4,
-                title: "Present",
                 date: "6/19/2024",
-                assignee: "HO",
-                project: "07:30:30",
-                customer: "14:30:50",
-                anies: "09:00 Hrs",
+                time_in: "07-30",
+                time_out: "16-30",
+                location: "HO",
+                status: "Present",
+                total_hours: "8Hrs",
               },
               {
                 id: 5,
-                title: "Absent",
                 date: "6/19/2024",
-                assignee: "Branch",
-                project: "07:30:30",
-                customer: "14:30:50",
-                anies: "10:08 Hrs",
+                time_in: "07-30",
+                time_out: "16-30",
+                location: "HO Dqum Office 2",
+                status: "Present",
+                total_hours: "8Hrs",
               },
               {
                 id: 6,
                 title: "Absent",
                 date: "6/19/2024",
-                assignee: "Branch",
-                project: "07:30:30",
-                customer: "14:30:50",
-                anies: "08:50 Hrs",
+                time_in: "07-30",
+                time_out: "16-30",
+                location: "HO",
+                status: "Present",
+                total_hours: "8Hrs",
               },
               {
                 id: 7,
-                title: "Absent",
                 date: "6/19/2024",
-                assignee: "Branch",
-                project: "07:30:30",
-                customer: "14:30:50",
-                anies: "08:50 Hrs",
+                time_in: "07-30",
+                time_out: "16-30",
+                location: "HO",
+                status: "Present",
+                total_hours: "8Hrs",
               },
               {
                 id: 8,
-                title: "Absent",
                 date: "6/19/2024",
-                assignee: "Branch",
-                project: "07:30:30",
-                customer: "14:30:50",
-                anies: "08:50 Hrs",
+                time_in: "07-30",
+                time_out: "16-30",
+                location: "HO",
+                status: "Present",
+                total_hours: "8Hrs",
               },
             ]);
           }}

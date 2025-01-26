@@ -10,17 +10,25 @@ import UploadScreen from "./UploadScreen";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   employeeCode: Yup.string().required().label("Employee Code"),
-  email: Yup.string().label("Email"),
+  email: Yup.string().notRequired().nullable().label("Email"),
   phone: Yup.string().label("Phone"),
-  designation: Yup.string().label("Designation"),
-  department: Yup.string().label("Department"),
+  designation: Yup.string().nullable().label("Designation"),
+  department: Yup.string().nullable().label("Department"),
 });
 
 function EmployeeFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
-  const employee = route.params?.employee;
 
+  // Safeguard employee from undefined params
+  const employee = route.params?.employee || null;
+
+  // Debugging logs
+  /* console.log("Route:", route);
+  console.log("Route Params:", route.params);
+  console.log("Employee Data from Route:", employee); */
+
+  // Sanitize initialValues to handle undefined strings
   const initialValues = {
     name: employee?.name || "",
     employeeCode: employee?.employeeCode || "",
@@ -29,10 +37,10 @@ function EmployeeFormScreen({ navigation, route }) {
     designation: employee?.designation || "",
     department: employee?.department || "",
   };
-  //console.log("Employee data:", employee);
-  //console.log("Initial values:", initialValues);
 
-  // Add or update an employee in the database
+  //console.log("Initial Values:", initialValues);
+
+  // Handle submit
   const handleSubmit = async (employeeData) => {
     let result;
     setProgress(0);
@@ -67,9 +75,7 @@ function EmployeeFormScreen({ navigation, route }) {
     <AppScreen style={styles.container}>
       <ScrollView>
         <UploadScreen
-          onDone={() => {
-            setUploadVisible(false);
-          }}
+          onDone={() => setUploadVisible(false)}
           progress={progress}
           visible={uploadVisible}
         />
@@ -97,7 +103,7 @@ function EmployeeFormScreen({ navigation, route }) {
             icon="email"
           />
           <AppFormField
-            name="Phone"
+            name="phone"
             placeholder="Phone"
             icon="phone"
             keyboardType="phone-pad"

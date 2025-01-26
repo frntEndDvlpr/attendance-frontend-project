@@ -1,10 +1,11 @@
 import React from "react";
-import { TouchableHighlight, View } from "react-native";
-import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import { StyleSheet, TouchableHighlight, View } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import colors from "../config/colors";
 import AppText from "./AppText";
+import ListItemSeparator from "./ListItemSeparator";
 
 function EmployeeListItem({
   name,
@@ -16,33 +17,45 @@ function EmployeeListItem({
   date_of_joining,
   renderRightActions,
   onPress,
-  prog,
-  drag,
 }) {
   return (
     <GestureHandlerRootView>
-      <ReanimatedSwipeable
-        friction={2}
-        enableTrackpadTwoFingerGesture
-        rightThreshold={40}
-        renderRightActions={(prog, drag) => (
-          <renderAction prog={prog} drag={drag} />
-        )}
-      >
-        <TouchableHighlight onPress={onPress} underlayColor={colors.gray}>
-          <View>
-            {name && <AppText>{name}</AppText>}
-            {employeeCode && <AppText>{employeeCode}</AppText>}
-            {email && <AppText>{email}</AppText>}
-            {phone && <AppText>{phone}</AppText>}
-            {designation && <AppText>{designation}</AppText>}
-            {department && <AppText>{department}</AppText>}
+      <Swipeable renderRightActions={renderRightActions}>
+        <TouchableHighlight onPress={onPress} underlayColor={colors.lightGrey}>
+          <View style={styles.container}>
+            <View style={styles.codeName}>
+              <AppText style={styles.codeNameText}>[{employeeCode}]</AppText>
+              <AppText style={styles.codeNameText}>{name}</AppText>
+            </View>
+            <View style={styles.contactDetails}>
+              {email && <AppText style={styles.text}>{email}</AppText>}
+              {phone && <AppText style={styles.text}>{phone}</AppText>}
+            </View>
+            <View style={styles.codeName}>
+              {department && (
+                <AppText style={styles.text}>{department}</AppText>
+              )}
+              {designation && (
+                <AppText style={styles.text}>{designation}</AppText>
+              )}
+            </View>
             {date_of_joining && <AppText>{date_of_joining}</AppText>}
           </View>
         </TouchableHighlight>
-      </ReanimatedSwipeable>
+        <ListItemSeparator />
+      </Swipeable>
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { padding: 10 },
+  codeName: {
+    flexDirection: "row",
+  },
+  codeNameText: { color: colors.black, fontWeight: "bold", paddingRight: 10 },
+  contactDetails: { flexDirection: "row" },
+  text: { paddingRight: 10 },
+});
 
 export default EmployeeListItem;

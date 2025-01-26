@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Alert } from "react-native";
 
 import ActivityIndicator from "../components/ActivityIndicator";
-import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../components/AddTaskButton";
@@ -34,7 +33,7 @@ function EmployeesListScreen({ navigation }) {
     } else {
       setError(false);
       setEmployees(response.data);
-      console.log("Success:", response.data);
+      //console.log("Success:", response.data);
     }
   };
 
@@ -131,12 +130,13 @@ function EmployeesListScreen({ navigation }) {
         keyExtractor={(employee) => employee.id.toString()}
         renderItem={({ item }) => (
           <EmployeeListItem
-            employeeCode={item.employeeCode}
             name={item.name}
-            department={item.department}
-            designation={item.designation}
+            employeeCode={item.employeeCode}
             email={item.email}
-            Phone={item.Phone}
+            phone={item.phone}
+            designation={item.designation}
+            department={item.department}
+            date_of_joining={item.date_of_joining}
             onPress={() =>
               navigation.navigate("EmployeeForm", {
                 employee: item,

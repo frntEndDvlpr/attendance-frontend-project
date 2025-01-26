@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "bold",
     color: colors.black,
+    width: "80%",
   },
 });
 export default HeaderAlert;
