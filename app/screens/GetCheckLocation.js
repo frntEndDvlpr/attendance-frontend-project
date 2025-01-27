@@ -158,7 +158,7 @@ export default function GetCheckLocation({ navigation }) {
         <TouchableOpacity
           style={styles.CamreaBtn}
           onPress={() => {
-            navigation.navigate("OpenCamera");
+            navigation.navigate("Camera");
           }}
         >
           <AppIcon name="camera-outline" size={35} />

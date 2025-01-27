@@ -6,7 +6,6 @@ import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
-import TextHeader from "../components/TextHeader";
 
 const initialTasks = [
   {

@@ -20,6 +20,9 @@ function EmployeesListScreen({ navigation }) {
   const [error, setError] = useState(false);
   const [response, setResponse] = useState(false);
 
+  // Sort Employees list descending based on the 'id'
+  const sortedEmployees = employees.sort((a, b) => b.id - a.id);
+
   // Get employees list from the server
   const loadEmployees = async () => {
     setLoading(true); // Start loading

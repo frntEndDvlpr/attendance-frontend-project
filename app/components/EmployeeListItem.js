@@ -32,11 +32,11 @@ function EmployeeListItem({
               {phone && <AppText style={styles.text}>{phone}</AppText>}
             </View>
             <View style={styles.codeName}>
-              {department && (
-                <AppText style={styles.text}>{department}</AppText>
-              )}
               {designation && (
                 <AppText style={styles.text}>{designation}</AppText>
+              )}
+              {department && (
+                <AppText style={styles.text}>{department}</AppText>
               )}
             </View>
             {date_of_joining && <AppText>{date_of_joining}</AppText>}

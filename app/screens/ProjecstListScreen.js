@@ -1,35 +1,38 @@
 import React, { useState } from "react";
 import { FlatList } from "react-native";
 
-import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../components/AddTaskButton";
+import ProjectListItem from "../components/ProjectListItem";
 
 const initialProjects = [
   {
     id: 1,
     title: "Project 1",
     description: "description",
-    starts: "1/1/2024",
-    ends: "1/1/2024",
+    start_date: "1/1/2024",
+    end_date: "1/1/2024",
     client: "client 1",
+    location: "location 3",
   },
   {
     id: 2,
     title: "Project 2",
     description: "description",
-    starts: "1/1/2024",
-    ends: "1/1/2024",
+    start_date: "1/1/2024",
+    end_date: "1/1/2024",
     client: "client 2",
+    location: "location 3",
   },
   {
     id: 3,
     title: "Project 3",
     description: "description",
-    starts: "1/1/2024",
-    ends: "1/1/2024",
+    start_date: "1/1/2024",
+    end_date: "1/1/2024",
     client: "client 3",
+    location: "location 3",
   },
 ];
 function ProjecstListScreen({ navigation }) {
@@ -46,12 +49,13 @@ function ProjecstListScreen({ navigation }) {
         data={initialProjects}
         keyExtractor={(project) => project.id.toString()}
         renderItem={({ item }) => (
-          <TaskListItem
+          <ProjectListItem
             title={item.title}
             description={item.description}
-            starts={item.starts}
-            ends={item.ends}
+            start_date={item.start_date}
+            end_date={item.end_date}
             client={item.client}
+            location={item.location}
             onPress={() => console.log("Project Selected", item)}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => handleDelete(item)} />
@@ -66,9 +70,10 @@ function ProjecstListScreen({ navigation }) {
               id: 2,
               title: "Project 2",
               description: "description",
-              starts: "1/1/2024",
-              ends: "1/1/2024",
+              start_date: "1/1/2024",
+              end_date: "1/1/2024",
               client: "client 2",
+              location: "location 2",
             },
           ]);
         }}

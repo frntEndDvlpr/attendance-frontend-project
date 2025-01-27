@@ -60,7 +60,7 @@ function EmployeeFormScreen({ navigation, route }) {
 
     if (!result.ok) {
       setUploadVisible(false);
-      return alert("Could not save the employee.");
+      return alert("Could not save the employee!");
     }
 
     setProgress(1);
