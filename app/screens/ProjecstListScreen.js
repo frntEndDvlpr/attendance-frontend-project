@@ -141,7 +141,7 @@ function ProjecstListScreen({ navigation }) {
             onPress={() =>
               navigation.navigate("ProjectForm", {
                 project: item,
-                onGoBack: loadProjects(),
+                onGoBack: loadProjects,
               })
             }
             renderRightActions={() => (

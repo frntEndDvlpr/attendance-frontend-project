@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import * as Yup from "yup";
 
 import { AppForm, SubmitButton, TaskFormField } from "../components/forms";
@@ -10,16 +11,23 @@ import UploadScreen from "./UploadScreen";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
   description: Yup.string().required().label("Description"),
-  start_date: Yup.string().nullable().notRequired().label("Staets"),
+  start_date: Yup.string().nullable().notRequired().label("Starts"),
   end_date: Yup.string().nullable().notRequired().label("Ends"),
   client: Yup.string().nullable().notRequired().label("Client"),
-  //employees: Yup.string().nullable().notRequired().label("Employees"),
-  location: Yup.string().nullable().notRequired().label("Location"),
+  location: Yup.object()
+    .shape({
+      latitude: Yup.number().required().label("Latitude"),
+      longitude: Yup.number().required().label("Longitude"),
+    })
+    .nullable()
+    .notRequired()
+    .label("Location"),
 });
 
 function ProjectsFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const project = route.params?.project || null;
 
   const initialValues = {
@@ -28,8 +36,12 @@ function ProjectsFormScreen({ navigation, route }) {
     start_date: project?.start_date || "",
     end_date: project?.end_date || "",
     client: project?.client || "",
-    //employees: project?.employees || "",
-    location: project?.location || "",
+    location: project?.location || null,
+  };
+
+  const handleMapPress = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ latitude, longitude });
   };
 
   // Handle submit
@@ -38,14 +50,16 @@ function ProjectsFormScreen({ navigation, route }) {
     setProgress(0);
     setUploadVisible(true);
 
+    const dataToSubmit = { ...projectData, location: selectedLocation };
+
     if (project) {
       result = await projectApi.updateProject(
         project.id,
-        projectData,
+        dataToSubmit,
         (progress) => setProgress(progress)
       );
     } else {
-      result = await projectApi.addProject(projectData, (progress) =>
+      result = await projectApi.addProject(dataToSubmit, (progress) =>
         setProgress(progress)
       );
     }
@@ -64,18 +78,30 @@ function ProjectsFormScreen({ navigation, route }) {
   };
 
   return (
-    <AppScreen style={styles.container}>
-      <ScrollView>
-        <UploadScreen
-          onDone={() => setUploadVisible(false)}
-          progress={progress}
-          visible={uploadVisible}
-        />
-        <AppForm
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
+    <ScrollView>
+      <UploadScreen
+        onDone={() => setUploadVisible(false)}
+        progress={progress}
+        visible={uploadVisible}
+      />
+      <AppForm
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            onPress={handleMapPress}
+            initialRegion={{
+              latitude: selectedLocation?.latitude || 37.78825,
+              longitude: selectedLocation?.longitude || -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          ></MapView>
+        </View>
+        <View style={styles.fieldsContainer}>
           <TaskFormField
             name="title"
             placeholder="Title"
@@ -90,19 +116,25 @@ function ProjectsFormScreen({ navigation, route }) {
           <TaskFormField name="start_date" placeholder="Starts" />
           <TaskFormField name="end_date" placeholder="Ends" />
           <TaskFormField name="client" placeholder="Client" />
-          <TaskFormField name="location" placeholder="Location" />
+          {selectedLocation && <Marker coordinate={selectedLocation} />}
+
           <SubmitButton title={project ? "Update" : "Save"} />
-        </AppForm>
-      </ScrollView>
-    </AppScreen>
+        </View>
+      </AppForm>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 10,
-    fontWeight: "bold",
+  container: {},
+  mapContainer: {
+    flex: 1,
+    height: 300,
   },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  fieldsContainer: { flex: 2 },
 });
 
 export default ProjectsFormScreen;
