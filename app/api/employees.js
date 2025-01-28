@@ -35,8 +35,6 @@ const updateEmployee = (id, employee, onUploadProgress) => {
   data.append("designation", employee.designation);
   data.append("department", employee.department);
 
-  //console.log("Updating data to server:", data);
-
   return apiClient.put(`${endPoint}${id}/`, data, {
     onUploadProgress: (event) => {
       const progress = event.loaded / event.total;

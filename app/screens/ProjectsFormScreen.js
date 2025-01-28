@@ -13,7 +13,7 @@ const validationSchema = Yup.object().shape({
   start_date: Yup.string().nullable().notRequired().label("Staets"),
   end_date: Yup.string().nullable().notRequired().label("Ends"),
   client: Yup.string().nullable().notRequired().label("Client"),
-  employees: Yup.string().nullable().notRequired().label("Employees"),
+  //employees: Yup.string().nullable().notRequired().label("Employees"),
   location: Yup.string().nullable().notRequired().label("Location"),
 });
 
@@ -23,19 +23,17 @@ function ProjectsFormScreen({ navigation, route }) {
   const project = route.params?.project || null;
 
   const initialValues = {
-    title: "",
-    description: "",
-    start_date: "",
-    end_date: "",
-    client: "",
-    employees: "",
-    location: "",
+    title: project?.title || "",
+    description: project?.description || "",
+    start_date: project?.start_date || "",
+    end_date: project?.end_date || "",
+    client: project?.client || "",
+    //employees: project?.employees || "",
+    location: project?.location || "",
   };
 
   // Handle submit
   const handleSubmit = async (projectData) => {
-    console.log(projectData);
-
     let result;
     setProgress(0);
     setUploadVisible(true);
@@ -53,7 +51,6 @@ function ProjectsFormScreen({ navigation, route }) {
     }
 
     if (!result.ok) {
-      console.log(result.problem);
       setUploadVisible(false);
       return alert("Could not save the project!");
     }

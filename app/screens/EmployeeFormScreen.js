@@ -19,16 +19,8 @@ const validationSchema = Yup.object().shape({
 function EmployeeFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  // Safeguard employee from undefined params
   const employee = route.params?.employee || null;
 
-  // Debugging logs
-  /* console.log("Route:", route);
-  console.log("Route Params:", route.params);
-  console.log("Employee Data from Route:", employee); */
-
-  // Sanitize initialValues to handle undefined strings
   const initialValues = {
     name: employee?.name || "",
     employeeCode: employee?.employeeCode || "",
@@ -37,8 +29,6 @@ function EmployeeFormScreen({ navigation, route }) {
     designation: employee?.designation || "",
     department: employee?.department || "",
   };
-
-  //console.log("Initial Values:", initialValues);
 
   // Handle submit
   const handleSubmit = async (employeeData) => {

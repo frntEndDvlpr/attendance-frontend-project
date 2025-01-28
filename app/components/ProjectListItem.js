@@ -49,7 +49,7 @@ function ProjectListItem({
                 </AppText>
               )}
             </View>
-            <AppText style={styles.titleText}>{client}</AppText>
+            {client && <AppText style={styles.titleText}>{client}</AppText>}
             {location && (
               <AppText>
                 <MaterialCommunityIcons
@@ -71,7 +71,6 @@ function ProjectListItem({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     padding: 10,
   },
   title: { flexDirection: "row" },

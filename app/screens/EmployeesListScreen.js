@@ -89,7 +89,7 @@ function EmployeesListScreen({ navigation }) {
 
   return (
     <>
-      {/* Display loading spinner while data is being fetched from the server */}
+      {/* Display loading bar while data is being fetched from the server */}
       {loading && <ActivityIndicator visible={true} />}
 
       {/* Display error message if data could not be fetched from the server */}
