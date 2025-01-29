@@ -13,6 +13,7 @@ const addProject = (project, onUploadProgress) => {
   data.append("start_date", project.start_date);
   data.append("end_date", project.end_date);
   data.append("client", project.client);
+  data.append("range", project.range);
   //data.append("employees", project.employees);
   data.append("location", project.location);
 
@@ -34,6 +35,7 @@ const updateProject = (id, project, onUploadProgress) => {
   data.append("start_date", project.start_date);
   data.append("end_date", project.end_date);
   data.append("client", project.client);
+  data.append("range", project.range);
   //data.append("employees", project.employees);
   data.append("location", project.location);
 

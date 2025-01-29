@@ -31,10 +31,8 @@ const styles = StyleSheet.create({
   container: {
     borderBottomColor: colors.lightGreen,
     borderBottomWidth: 1,
-    flexDirection: "row",
-    width: "100%",
     padding: 10,
-    marginVertical: 5,
+    width: "100%",
   },
   icon: {
     marginRight: 10,

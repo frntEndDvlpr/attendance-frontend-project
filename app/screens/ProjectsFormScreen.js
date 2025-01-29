@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 import * as Yup from "yup";
 
 import { AppForm, SubmitButton, TaskFormField } from "../components/forms";
-import AppScreen from "../components/AppScreen";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 
@@ -14,21 +14,34 @@ const validationSchema = Yup.object().shape({
   start_date: Yup.string().nullable().notRequired().label("Starts"),
   end_date: Yup.string().nullable().notRequired().label("Ends"),
   client: Yup.string().nullable().notRequired().label("Client"),
-  location: Yup.object()
-    .shape({
-      latitude: Yup.number().required().label("Latitude"),
-      longitude: Yup.number().required().label("Longitude"),
-    })
-    .nullable()
-    .notRequired()
-    .label("Location"),
+  location: Yup.string().nullable().notRequired().label("Location"),
+  range: Yup.number().nullable().notRequired().label("Range"),
 });
 
 function ProjectsFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const project = route.params?.project || null;
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    })();
+  }, []);
 
   const initialValues = {
     title: project?.title || "",
@@ -36,12 +49,8 @@ function ProjectsFormScreen({ navigation, route }) {
     start_date: project?.start_date || "",
     end_date: project?.end_date || "",
     client: project?.client || "",
-    location: project?.location || null,
-  };
-
-  const handleMapPress = (event) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ latitude, longitude });
+    location: project?.location || "",
+    range: project?.range || "",
   };
 
   // Handle submit
@@ -50,8 +59,6 @@ function ProjectsFormScreen({ navigation, route }) {
     setProgress(0);
     setUploadVisible(true);
 
-    const dataToSubmit = { ...projectData, location: selectedLocation };
-
     if (project) {
       result = await projectApi.updateProject(
         project.id,
@@ -59,7 +66,7 @@ function ProjectsFormScreen({ navigation, route }) {
         (progress) => setProgress(progress)
       );
     } else {
-      result = await projectApi.addProject(dataToSubmit, (progress) =>
+      result = await projectApi.addProject(projectData, (progress) =>
         setProgress(progress)
       );
     }
@@ -78,58 +85,53 @@ function ProjectsFormScreen({ navigation, route }) {
   };
 
   return (
-    <ScrollView>
+    <View style={styles.container}>
       <UploadScreen
         onDone={() => setUploadVisible(false)}
         progress={progress}
         visible={uploadVisible}
       />
-      <AppForm
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            onPress={handleMapPress}
-            initialRegion={{
-              latitude: selectedLocation?.latitude || 37.78825,
-              longitude: selectedLocation?.longitude || -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          ></MapView>
-        </View>
-        <View style={styles.fieldsContainer}>
-          <TaskFormField
-            name="title"
-            placeholder="Title"
-            maxLength={100}
-            autoFocus
-          />
-          <TaskFormField
-            name="description"
-            placeholder="Description"
-            maxLength={100}
-          />
-          <TaskFormField name="start_date" placeholder="Starts" />
-          <TaskFormField name="end_date" placeholder="Ends" />
-          <TaskFormField name="client" placeholder="Client" />
-          {selectedLocation && <Marker coordinate={selectedLocation} />}
 
-          <SubmitButton title={project ? "Update" : "Save"} />
-        </View>
-      </AppForm>
-    </ScrollView>
+      <View style={styles.mapContainer}>
+        <MapView style={styles.map} initialRegion={currentLocation}></MapView>
+      </View>
+
+      <View style={styles.fieldsContainer}>
+        <ScrollView>
+          <AppForm
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <TaskFormField
+              name="title"
+              placeholder="Title"
+              maxLength={100}
+              autoFocus
+            />
+            <TaskFormField
+              name="description"
+              placeholder="Description"
+              maxLength={100}
+            />
+            <TaskFormField name="start_date" placeholder="Starts" />
+            <TaskFormField name="end_date" placeholder="Ends" />
+            <TaskFormField name="location" placeholder="Location" />
+            <TaskFormField name="rang" placeholder="Range" />
+            <TaskFormField name="client" placeholder="Client" />
+
+            <SubmitButton title={project ? "Update" : "Save"} />
+          </AppForm>
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { flex: 1 },
   mapContainer: {
     flex: 1,
-    height: 300,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
