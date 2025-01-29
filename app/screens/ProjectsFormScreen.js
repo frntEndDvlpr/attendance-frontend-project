@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { AppForm, SubmitButton, TaskFormField } from "../components/forms";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
+import AppText from "../components/AppText";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
@@ -84,6 +85,11 @@ function ProjectsFormScreen({ navigation, route }) {
     }, 2000);
   };
 
+  const handelSelectedLocation = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ latitude, longitude });
+  };
+
   return (
     <View style={styles.container}>
       <UploadScreen
@@ -92,8 +98,26 @@ function ProjectsFormScreen({ navigation, route }) {
         visible={uploadVisible}
       />
 
+      <AppText style={styles.selectedLocationHeader}>
+        Selected Location:
+        {selectedLocation
+          ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
+          : "None"}
+      </AppText>
       <View style={styles.mapContainer}>
-        <MapView style={styles.map} initialRegion={currentLocation}></MapView>
+        <MapView
+          style={styles.map}
+          initialRegion={currentLocation}
+          onLongPress={handelSelectedLocation}
+        >
+          {currentLocation && <Marker coordinate={currentLocation} />}
+          {selectedLocation && (
+            <Marker
+              coordinate={selectedLocation}
+              image={require("../assets/selectedLocation.png")}
+            />
+          )}
+        </MapView>
       </View>
 
       <View style={styles.fieldsContainer}>
@@ -137,6 +161,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   fieldsContainer: { flex: 2 },
+  selectedLocationHeader: { padding: 3 },
 });
 
 export default ProjectsFormScreen;
