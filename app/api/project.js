@@ -15,7 +15,10 @@ const addProject = (project, onUploadProgress) => {
   data.append("client", project.client);
   data.append("range", project.range);
   //data.append("employees", project.employees);
-  data.append("location", project.location);
+  if (project.location) {
+    const locationString = `${project.location.latitude},${project.location.longitude}`;
+    data.append("location", locationString);
+  }
 
   //console.log("Sending data to server:", data);
 
@@ -37,7 +40,10 @@ const updateProject = (id, project, onUploadProgress) => {
   data.append("client", project.client);
   data.append("range", project.range);
   //data.append("employees", project.employees);
-  data.append("location", project.location);
+  if (project.location) {
+    const locationString = `${project.location.latitude},${project.location.longitude}`;
+    data.append("location", locationString);
+  }
 
   return apiClient.put(`${endPoint}${id}/`, data, {
     onUploadProgress: (event) => {

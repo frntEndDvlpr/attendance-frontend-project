@@ -15,7 +15,14 @@ const validationSchema = Yup.object().shape({
   start_date: Yup.string().nullable().notRequired().label("Starts"),
   end_date: Yup.string().nullable().notRequired().label("Ends"),
   client: Yup.string().nullable().notRequired().label("Client"),
-  location: Yup.string().nullable().notRequired().label("Location"),
+  location: Yup.object()
+    .shape({
+      latitude: Yup.number().nullable().notRequired().label("Latitude"),
+      longitude: Yup.number().nullable().notRequired().label("Longitude"),
+    })
+    .nullable()
+    .notRequired()
+    .label("Location"),
   range: Yup.number().nullable().notRequired().label("Range"),
 });
 
@@ -50,7 +57,7 @@ function ProjectsFormScreen({ navigation, route }) {
     start_date: project?.start_date || "",
     end_date: project?.end_date || "",
     client: project?.client || "",
-    location: project?.location || "",
+    location: project?.location || { latitude: null, longitude: null },
     range: project?.range || "",
   };
 
@@ -60,6 +67,16 @@ function ProjectsFormScreen({ navigation, route }) {
     setProgress(0);
     setUploadVisible(true);
 
+    const dataToSubmit = {
+      ...projectData,
+      location: selectedLocation
+        ? {
+            latitude: selectedLocation.latitude,
+            longitude: selectedLocation.longitude,
+          }
+        : projectData.location,
+    };
+
     if (project) {
       result = await projectApi.updateProject(
         project.id,
@@ -67,12 +84,13 @@ function ProjectsFormScreen({ navigation, route }) {
         (progress) => setProgress(progress)
       );
     } else {
-      result = await projectApi.addProject(projectData, (progress) =>
+      result = await projectApi.addProject(dataToSubmit, (progress) =>
         setProgress(progress)
       );
     }
 
     if (!result.ok) {
+      console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the project!");
     }
@@ -140,7 +158,8 @@ function ProjectsFormScreen({ navigation, route }) {
             />
             <TaskFormField name="start_date" placeholder="Starts" />
             <TaskFormField name="end_date" placeholder="Ends" />
-            <TaskFormField name="location" placeholder="Location" />
+            <TaskFormField name="location.latitude" placeholder="Latitude" />
+            <TaskFormField name="location.longitude" placeholder="Longitude" />
             <TaskFormField name="rang" placeholder="Range" />
             <TaskFormField name="client" placeholder="Client" />
 
