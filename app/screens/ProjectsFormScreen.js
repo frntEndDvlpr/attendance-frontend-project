@@ -58,7 +58,7 @@ function ProjectsFormScreen({ navigation, route }) {
     end_date: project?.end_date || "",
     client: project?.client || "",
     location: project?.location || { latitude: null, longitude: null },
-    range: project?.range || "",
+    range: project?.range || 0,
   };
 
   // Handle submit
@@ -160,7 +160,7 @@ function ProjectsFormScreen({ navigation, route }) {
             <TaskFormField name="end_date" placeholder="Ends" />
             <TaskFormField name="location.latitude" placeholder="Latitude" />
             <TaskFormField name="location.longitude" placeholder="Longitude" />
-            <TaskFormField name="rang" placeholder="Range" />
+            <TaskFormField name="range" placeholder="Range" />
             <TaskFormField name="client" placeholder="Client" />
 
             <SubmitButton title={project ? "Update" : "Save"} />
