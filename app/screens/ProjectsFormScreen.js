@@ -168,7 +168,7 @@ function ProjectsFormScreen({ navigation, route }) {
             <TaskFormField name="end_date" placeholder="Ends" />
             <TaskFormField
               name="range"
-              placeholder="Range"
+              placeholder="Attendance range in meters"
               keyboardType="numeric"
               onChangeText={(value) => setRange(Number(value))}
             />
