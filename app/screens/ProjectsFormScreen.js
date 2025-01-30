@@ -33,7 +33,7 @@ function ProjectsFormScreen({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const project = route.params?.project || null;
-  const [AttendanceRange, setAttendanceRange] = useState(100);
+  const [range, setRange] = useState(100);
 
   useEffect(() => {
     (async () => {
@@ -60,7 +60,7 @@ function ProjectsFormScreen({ navigation, route }) {
     end_date: project?.end_date || "",
     client: project?.client || "",
     location: project?.location || { latitude: null, longitude: null },
-    range: project?.range || 100,
+    range: project?.range || 0,
   };
 
   // Handle submit
@@ -137,7 +137,7 @@ function ProjectsFormScreen({ navigation, route }) {
               <Marker coordinate={selectedLocation} />
               <Circle
                 center={selectedLocation}
-                radius={AttendanceRange}
+                radius={range}
                 strokeColor={colors.primary}
                 fillColor={colors.primaryTransparency}
               />
@@ -170,7 +170,7 @@ function ProjectsFormScreen({ navigation, route }) {
               name="range"
               placeholder="Attendance range in meters"
               keyboardType="numeric"
-              onChangeText={(value) => setAttendanceRange(Number(value))}
+              handleChange={(value) => setRange(Number(value))}
             />
             <TaskFormField name="client" placeholder="Client" />
 
