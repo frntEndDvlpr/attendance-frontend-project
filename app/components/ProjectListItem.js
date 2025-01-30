@@ -15,6 +15,7 @@ function ProjectListItem({
   end_date,
   client,
   location,
+  range,
   renderRightActions,
   onPress,
 }) {
@@ -25,7 +26,7 @@ function ProjectListItem({
           <View style={styles.container}>
             <View style={styles.title}>
               <AppText style={styles.titleText}>{title}</AppText>
-              {description && <AppText>{description}</AppText>}
+              <AppText>{description}</AppText>
             </View>
             <View style={styles.date}>
               {start_date && (
@@ -49,17 +50,29 @@ function ProjectListItem({
                 </AppText>
               )}
             </View>
-            {client && <AppText style={styles.titleText}>{client}</AppText>}
-            {location && (
-              <AppText>
-                <MaterialCommunityIcons
-                  name="map-marker-outline"
-                  size={20}
-                  color={colors.blue}
-                />
-                {location}
-              </AppText>
-            )}
+            <View style={styles.location}>
+              {location && (
+                <AppText style={styles.titleText}>
+                  <MaterialCommunityIcons
+                    name="map-marker-outline"
+                    size={20}
+                    color={colors.blue}
+                  />
+                  {location}
+                </AppText>
+              )}
+              {range !== undefined && (
+                <AppText>
+                  <MaterialCommunityIcons
+                    name="map-marker-circle"
+                    size={20}
+                    color={colors.secondary}
+                  />
+                  {range.toString()}
+                </AppText>
+              )}
+            </View>
+            {client && <AppText>{client}</AppText>}
           </View>
         </TouchableHighlight>
         <ListItemSeparator />
@@ -75,6 +88,7 @@ const styles = StyleSheet.create({
   },
   title: { flexDirection: "row" },
   date: { flexDirection: "row", marginVertical: 5 },
+  location: { flexDirection: "row" },
   titleText: { color: colors.black, fontWeight: "bold", paddingRight: 10 },
   dateText: { paddingRight: 10, color: colors.black },
 });

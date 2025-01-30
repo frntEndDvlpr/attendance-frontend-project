@@ -138,6 +138,7 @@ function ProjecstListScreen({ navigation }) {
             end_date={item.end_date}
             client={item.client}
             location={item.location}
+            range={item.range}
             onPress={() =>
               navigation.navigate("ProjectForm", {
                 project: item,
