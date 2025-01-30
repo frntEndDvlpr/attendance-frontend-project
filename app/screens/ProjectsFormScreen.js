@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Yup from "yup";
 
@@ -8,6 +8,7 @@ import { AppForm, SubmitButton, TaskFormField } from "../components/forms";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 import AppText from "../components/AppText";
+import colors from "../config/colors";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
@@ -32,6 +33,7 @@ function ProjectsFormScreen({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const project = route.params?.project || null;
+  const [range, setRange] = useState(100);
 
   useEffect(() => {
     (async () => {
@@ -117,7 +119,7 @@ function ProjectsFormScreen({ navigation, route }) {
       />
 
       <AppText style={styles.selectedLocationHeader}>
-        Selected Location:
+        Project Location:
         {selectedLocation
           ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
           : "None"}
@@ -129,11 +131,17 @@ function ProjectsFormScreen({ navigation, route }) {
           onLongPress={handelSelectedLocation}
         >
           {currentLocation && <Marker coordinate={currentLocation} />}
+
           {selectedLocation && (
-            <Marker
-              coordinate={selectedLocation}
-              image={require("../assets/selectedLocation.png")}
-            />
+            <>
+              <Marker coordinate={selectedLocation} />
+              <Circle
+                center={selectedLocation}
+                radius={range}
+                strokeColor={colors.primary}
+                fillColor={colors.primaryTransparency}
+              />
+            </>
           )}
         </MapView>
       </View>
@@ -158,9 +166,12 @@ function ProjectsFormScreen({ navigation, route }) {
             />
             <TaskFormField name="start_date" placeholder="Starts" />
             <TaskFormField name="end_date" placeholder="Ends" />
-            <TaskFormField name="location.latitude" placeholder="Latitude" />
-            <TaskFormField name="location.longitude" placeholder="Longitude" />
-            <TaskFormField name="range" placeholder="Range" />
+            <TaskFormField
+              name="range"
+              placeholder="Range"
+              keyboardType="numeric"
+              onChangeText={(value) => setRange(Number(value))}
+            />
             <TaskFormField name="client" placeholder="Client" />
 
             <SubmitButton title={project ? "Update" : "Save"} />
@@ -180,7 +191,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   fieldsContainer: { flex: 2 },
-  selectedLocationHeader: { padding: 3 },
+  selectedLocationHeader: { padding: 3, fontWeight: "bold" },
 });
 
 export default ProjectsFormScreen;
