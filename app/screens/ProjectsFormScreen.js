@@ -137,7 +137,7 @@ function ProjectsFormScreen({ navigation, route }) {
               <Marker coordinate={selectedLocation} />
               <Circle
                 center={selectedLocation}
-                radius={range}
+                radius={100}
                 strokeColor={colors.primary}
                 fillColor={colors.primaryTransparency}
               />
@@ -170,7 +170,7 @@ function ProjectsFormScreen({ navigation, route }) {
               name="range"
               placeholder="Attendance range in meters"
               keyboardType="numeric"
-              handleChange={(value) => setRange(Number(value))}
+              //handleChange={(value) => setRange(Number(value))}
             />
             <TaskFormField name="client" placeholder="Client" />
 
