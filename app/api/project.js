@@ -13,7 +13,7 @@ const addProject = (project, onUploadProgress) => {
   data.append("start_date", project.start_date);
   data.append("end_date", project.end_date);
   data.append("client", project.client);
-  data.append("range", project.range);
+  data.append("attendanceRange", project.attendanceRange);
   //data.append("employees", project.employees);
   if (project.location) {
     const locationString = `${project.location.latitude},${project.location.longitude}`;
@@ -38,7 +38,7 @@ const updateProject = (id, project, onUploadProgress) => {
   data.append("start_date", project.start_date);
   data.append("end_date", project.end_date);
   data.append("client", project.client);
-  data.append("range", project.range);
+  data.append("attendanceRange", project.attendanceRange);
   //data.append("employees", project.employees);
   if (project.location) {
     const locationString = `${project.location.latitude},${project.location.longitude}`;

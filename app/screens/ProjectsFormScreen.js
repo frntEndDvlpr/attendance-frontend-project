@@ -9,6 +9,7 @@ import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
+import AppIcon from "../components/AppIcon";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
@@ -24,7 +25,7 @@ const validationSchema = Yup.object().shape({
     .nullable()
     .notRequired()
     .label("Location"),
-  range: Yup.number().nullable().notRequired().label("Range"),
+  attendanceRange: Yup.number().nullable().notRequired().label("Range"),
 });
 
 function ProjectsFormScreen({ navigation, route }) {
@@ -33,7 +34,6 @@ function ProjectsFormScreen({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const project = route.params?.project || null;
-  const [range, setRange] = useState(100);
 
   useEffect(() => {
     (async () => {
@@ -60,7 +60,7 @@ function ProjectsFormScreen({ navigation, route }) {
     end_date: project?.end_date || "",
     client: project?.client || "",
     location: project?.location || { latitude: null, longitude: null },
-    range: project?.range || 0,
+    attendanceRange: project?.attendanceRange || 0,
   };
 
   // Handle submit
@@ -126,6 +126,7 @@ function ProjectsFormScreen({ navigation, route }) {
       </AppText>
       <View style={styles.mapContainer}>
         <MapView
+          mapType="hybrid"
           style={styles.map}
           initialRegion={currentLocation}
           onLongPress={handelSelectedLocation}
@@ -134,7 +135,14 @@ function ProjectsFormScreen({ navigation, route }) {
 
           {selectedLocation && (
             <>
-              <Marker coordinate={selectedLocation} />
+              <Marker coordinate={selectedLocation}>
+                <AppIcon
+                  name="bullseye"
+                  size={70}
+                  iconColor={colors.secondary}
+                  backgroundColor={false}
+                />
+              </Marker>
               <Circle
                 center={selectedLocation}
                 radius={100}
@@ -167,7 +175,7 @@ function ProjectsFormScreen({ navigation, route }) {
             <TaskFormField name="start_date" placeholder="Starts" />
             <TaskFormField name="end_date" placeholder="Ends" />
             <TaskFormField
-              name="range"
+              name="attendanceRange"
               placeholder="Attendance range in meters"
               keyboardType="numeric"
               //handleChange={(value) => setRange(Number(value))}

@@ -138,13 +138,14 @@ function ProjecstListScreen({ navigation }) {
             end_date={item.end_date}
             client={item.client}
             location={item.location}
-            range={item.range}
-            onPress={() =>
+            attendanceRange={item.attendanceRange}
+            onPress={() => {
+              console.log(item);
               navigation.navigate("ProjectForm", {
                 project: item,
                 onGoBack: loadProjects,
-              })
-            }
+              });
+            }}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}
