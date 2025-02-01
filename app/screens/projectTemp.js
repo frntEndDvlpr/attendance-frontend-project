@@ -1,39 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, View } from "react-native";
-import * as Yup from "yup";
+import React, { useState, useEffect } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import * as Yup from "yup";
 
-import { AppForm, TaskFormField, SubmitButton } from "../components/forms";
+import { AppForm, SubmitButton, TaskFormField } from "../components/forms";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
-import MapView, { Circle, Marker } from "react-native-maps";
-import AppIcon from "../components/AppIcon";
-import colors from "../config/colors";
 import AppText from "../components/AppText";
+import colors from "../config/colors";
+import AppIcon from "../components/AppIcon";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
-  description: Yup.string().required().label("description"),
-  start_date: Yup.string().notRequired().nullable().label("Start Date"),
-  end_date: Yup.string().label("End Date"),
-  client: Yup.string().nullable().label("Client"),
-  location: Yup.string().nullable().label("Client"),
-  attendanceRange: Yup.string().nullable().label("Attendance Range"),
+  description: Yup.string().required().label("Description"),
+  start_date: Yup.string().nullable().notRequired().label("Starts"),
+  end_date: Yup.string().nullable().notRequired().label("Ends"),
+  client: Yup.string().nullable().notRequired().label("Client"),
+  location: Yup.object()
+    .shape({
+      latitude: Yup.number().nullable().notRequired().label("Latitude"),
+      longitude: Yup.number().nullable().notRequired().label("Longitude"),
+    })
+    .nullable()
+    .notRequired()
+    .label("Location"),
+  attendanceRange: Yup.number().nullable().notRequired().label("Range"),
 });
 
 function ProjectsFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const project = route.params?.project || null;
 
-  // Map variables
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [radius, setRadius] = useState(100);
-
-  //Permissioning and getting the current location
   useEffect(() => {
-    //Get locatio permission
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -41,7 +43,6 @@ function ProjectsFormScreen({ navigation, route }) {
         return;
       }
 
-      //Get current location
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation({
         latitude: location.coords.latitude,
@@ -52,42 +53,46 @@ function ProjectsFormScreen({ navigation, route }) {
     })();
   }, []);
 
-  // Handeling selected location
-  const handelSelectedLocation = (event) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ latitude, longitude });
-  };
-
   const initialValues = {
     title: project?.title || "",
     description: project?.description || "",
     start_date: project?.start_date || "",
     end_date: project?.end_date || "",
     client: project?.client || "",
-    location: project?.location || "",
+    location: project?.location || { latitude: null, longitude: null },
     attendanceRange: project?.attendanceRange || 0,
   };
 
-  // Handling submission form
+  // Handle submit
   const handleSubmit = async (projectData) => {
     let result;
     setProgress(0);
     setUploadVisible(true);
 
+    const dataToSubmit = {
+      ...projectData,
+      location: selectedLocation
+        ? {
+            latitude: selectedLocation.latitude,
+            longitude: selectedLocation.longitude,
+          }
+        : projectData.location,
+    };
+
     if (project) {
       result = await projectApi.updateProject(
         project.id,
-        projectData,
+        dataToSubmit,
         (progress) => setProgress(progress)
       );
     } else {
-      result = await projectApi.addProject(projectData, (progress) =>
+      result = await projectApi.addProject(dataToSubmit, (progress) =>
         setProgress(progress)
       );
     }
 
     if (!result.ok) {
-      console.log(result.problem);
+      console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the project!");
     }
@@ -100,6 +105,11 @@ function ProjectsFormScreen({ navigation, route }) {
     }, 2000);
   };
 
+  const handelSelectedLocation = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ latitude, longitude });
+  };
+
   return (
     <View style={styles.container}>
       <UploadScreen
@@ -107,45 +117,29 @@ function ProjectsFormScreen({ navigation, route }) {
         progress={progress}
         visible={uploadVisible}
       />
-      {
-        <AppText style={styles.projectLocationText}>
-          Project Location:
-          {selectedLocation
-            ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
-            : "None"}
-        </AppText>
-      }
+
+      <AppText style={styles.selectedLocationHeader}>
+        Project Location:
+        {selectedLocation
+          ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
+          : "None"}
+      </AppText>
       <View style={styles.mapContainer}>
         <MapView
-          style={styles.map}
           mapType="hybrid"
+          style={styles.map}
           initialRegion={currentLocation}
           onLongPress={handelSelectedLocation}
         >
-          <TextInput
-            style={styles.radiusInput}
-            keyboardType="numeric"
-            value={String(radius)}
-            onChangeText={(text) => setRadius(Number(text))}
-            placeholder="Enter radius"
-          />{" "}
-          {currentLocation && (
-            <Marker coordinate={currentLocation}>
-              <AppIcon
-                name="map-marker"
-                iconColor={colors.red}
-                size={70}
-                backgroundColor={false}
-              />
-            </Marker>
-          )}{" "}
+          {currentLocation && <Marker coordinate={currentLocation} />}
+
           {selectedLocation && (
             <>
               <Marker coordinate={selectedLocation}>
                 <AppIcon
                   name="bullseye"
                   size={70}
-                  iconColor={colors.primary}
+                  iconColor={colors.secondary}
                   backgroundColor={false}
                 />
               </Marker>
@@ -160,7 +154,7 @@ function ProjectsFormScreen({ navigation, route }) {
         </MapView>
       </View>
 
-      <View style={styles.formConatainer}>
+      <View style={styles.fieldsContainer}>
         <ScrollView>
           <AppForm
             initialValues={initialValues}
@@ -173,15 +167,20 @@ function ProjectsFormScreen({ navigation, route }) {
               maxLength={100}
               autoFocus
             />
-            <TaskFormField name="description" placeholder="Description" />
-            <TaskFormField name="start_date" placeholder="start Date" />
-            <TaskFormField name="end_date" placeholder="End Date" icon="" />
-            <TaskFormField name="client" placeholder="Client" />
-            <TaskFormField name="location" placeholder="Location" />
+            <TaskFormField
+              name="description"
+              placeholder="Description"
+              maxLength={100}
+            />
+            <TaskFormField name="start_date" placeholder="Starts" />
+            <TaskFormField name="end_date" placeholder="Ends" />
             <TaskFormField
               name="attendanceRange"
-              placeholder="Attendance Range in Meters"
+              placeholder="Attendance range in meters"
+              keyboardType="numeric"
+              //handleChange={(value) => setRange(Number(value))}
             />
+            <TaskFormField name="client" placeholder="Client" />
 
             <SubmitButton title={project ? "Update" : "Save"} />
           </AppForm>
@@ -193,17 +192,14 @@ function ProjectsFormScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  mapContainer: { flex: 1 },
-  map: { flex: 1 },
-  formConatainer: { flex: 2 },
-  projectLocationText: { padding: 3, fontWeight: "bold" },
-  radiusInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    margin: 10,
-    padding: 10,
+  mapContainer: {
+    flex: 1,
   },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  fieldsContainer: { flex: 2 },
+  selectedLocationHeader: { padding: 3, fontWeight: "bold" },
 });
 
 export default ProjectsFormScreen;
