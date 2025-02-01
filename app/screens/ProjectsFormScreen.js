@@ -151,7 +151,7 @@ function ProjectsFormScreen({ navigation, route }) {
               </Marker>
               <Circle
                 center={selectedLocation}
-                radius={100}
+                radius={radius}
                 strokeColor={colors.primary}
                 fillColor={colors.primaryTransparency}
               />
