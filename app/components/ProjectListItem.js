@@ -15,7 +15,7 @@ function ProjectListItem({
   end_date,
   client,
   location,
-  range,
+  attendanceRange,
   renderRightActions,
   onPress,
 }) {
@@ -58,17 +58,17 @@ function ProjectListItem({
                     size={20}
                     color={colors.blue}
                   />
-                  {location}
+                  {location.latitude}, {location.longitude}
                 </AppText>
               )}
-              {range !== undefined && (
+              {attendanceRange !== undefined && (
                 <AppText>
                   <MaterialCommunityIcons
                     name="map-marker-circle"
                     size={20}
                     color={colors.secondary}
                   />
-                  {range.toString()}
+                  {attendanceRange}
                 </AppText>
               )}
             </View>
