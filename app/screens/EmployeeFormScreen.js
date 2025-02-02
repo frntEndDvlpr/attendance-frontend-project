@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
 import employeesApi from "../api/employees";
+import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
+import AppPicker from "../components/AppPicker";
+import AppIcon from "../components/AppIcon";
+import project from "../api/project";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -19,7 +23,22 @@ const validationSchema = Yup.object().shape({
 function EmployeeFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [project, setPrject] = useState();
   const employee = route.params?.employee || null;
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    const response = await projectApi.getProjects();
+    if (response.ok) {
+      setProjects(response.data); // Assuming response.data is an array of projects
+    } else {
+      alert("Could not fetch projects.");
+    }
+  };
 
   const initialValues = {
     name: employee?.name || "",
@@ -100,6 +119,13 @@ function EmployeeFormScreen({ navigation, route }) {
           />
           <AppFormField name="designation" placeholder="Designation" />
           <AppFormField name="department" placeholder="Department" />
+          <AppPicker
+            icon="apps"
+            items={projects}
+            placeholder="Projects"
+            selectedItem={project}
+            onSelectItem={(item) => setPrject(item)}
+          />
 
           <SubmitButton title={employee ? "Update" : "Save"} />
         </AppForm>
