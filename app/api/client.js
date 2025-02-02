@@ -1,7 +1,7 @@
 import { create } from "apisauce";
 
 const apiClient = create({
-  baseURL: "http://192.168.0.159:8000/api/",
+  baseURL: "http://192.168.100.65:8000/api/",
   timeout: 30000,
 });
 
