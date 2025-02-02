@@ -140,7 +140,6 @@ function ProjecstListScreen({ navigation }) {
             location={item.location}
             attendanceRange={item.attendanceRange}
             onPress={() => {
-              console.log(item);
               navigation.navigate("ProjectForm", {
                 project: item,
                 onGoBack: loadProjects,

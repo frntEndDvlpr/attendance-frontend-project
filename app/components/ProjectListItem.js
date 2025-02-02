@@ -51,17 +51,17 @@ function ProjectListItem({
               )}
             </View>
             <View style={styles.location}>
-              {location && (
+              {location.latitude && location.longitude && (
                 <AppText style={styles.titleText}>
                   <MaterialCommunityIcons
                     name="map-marker-outline"
                     size={20}
                     color={colors.blue}
                   />
-                  {location.latitude}, {location.longitude}
+                  {location.latitude} {location.longitude}
                 </AppText>
               )}
-              {attendanceRange !== undefined && (
+              {attendanceRange && (
                 <AppText>
                   <MaterialCommunityIcons
                     name="map-marker-circle"

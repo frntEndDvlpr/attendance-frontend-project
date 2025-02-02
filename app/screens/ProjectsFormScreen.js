@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, TextInput } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import MapView, { Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Yup from "yup";
@@ -11,6 +10,7 @@ import UploadScreen from "./UploadScreen";
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
+import AppDateTimePicker from "../components/AppDateTimePicker";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
@@ -193,10 +193,9 @@ function ProjectsFormScreen({ navigation, route }) {
               autoFocus
             />
             <TaskFormField name="description" placeholder="Description" />
-            <TaskFormField name="start_date" placeholder="Start Date" />
-            <TaskFormField name="end_date" placeholder="End Date" />
+            <AppDateTimePicker name="start_date" placeholder="Start Date" />
+            <AppDateTimePicker name="end_date" placeholder="End Date" />
             <TaskFormField name="client" placeholder="Client" />
-
             <SubmitButton title={project ? "Update" : "Save"} />
           </AppForm>
         </ScrollView>
