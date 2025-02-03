@@ -8,8 +8,6 @@ import employeesApi from "../api/employees";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 import AppPicker from "../components/AppPicker";
-import AppIcon from "../components/AppIcon";
-import project from "../api/project";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -25,6 +23,8 @@ function EmployeeFormScreen({ navigation, route }) {
   const [progress, setProgress] = useState(0);
   const [projects, setProjects] = useState([]);
   const [project, setPrject] = useState();
+  const [selectedProjects, setSelectedProjects] = useState([]);
+
   const employee = route.params?.employee || null;
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function EmployeeFormScreen({ navigation, route }) {
   const fetchProjects = async () => {
     const response = await projectApi.getProjects();
     if (response.ok) {
-      setProjects(response.data); // Assuming response.data is an array of projects
+      setProjects(response.data);
     } else {
       alert("Could not fetch projects.");
     }
@@ -47,6 +47,7 @@ function EmployeeFormScreen({ navigation, route }) {
     phone: employee?.phone || "",
     designation: employee?.designation || "",
     department: employee?.department || "",
+    projects: employee?.projects || [],
   };
 
   // Handle submit
@@ -55,14 +56,19 @@ function EmployeeFormScreen({ navigation, route }) {
     setProgress(0);
     setUploadVisible(true);
 
+    const dataToSubmit = {
+      ...employeeData,
+      projects: selectedProjects.map((p) => p.id), // Send only project IDs
+    };
+
     if (employee) {
       result = await employeesApi.updateEmployee(
         employee.id,
-        employeeData,
+        dataToSubmit,
         (progress) => setProgress(progress)
       );
     } else {
-      result = await employeesApi.addEmployee(employeeData, (progress) =>
+      result = await employeesApi.addEmployee(dataToSubmit, (progress) =>
         setProgress(progress)
       );
     }
@@ -122,9 +128,9 @@ function EmployeeFormScreen({ navigation, route }) {
           <AppPicker
             icon="apps"
             items={projects}
-            placeholder="Projects"
-            selectedItem={project}
-            onSelectItem={(item) => setPrject(item)}
+            placeholder="Select Projects"
+            selectedItems={selectedProjects}
+            onSelectItems={setSelectedProjects}
           />
 
           <SubmitButton title={employee ? "Update" : "Save"} />

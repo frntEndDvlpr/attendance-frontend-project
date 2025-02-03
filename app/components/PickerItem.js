@@ -1,19 +1,44 @@
-import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
+import colors from "../config/colors";
 
-function PickerItem({ title, description, onPress, location }) {
+function PickerItem({ title, description, onPress, isSelected }) {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <AppText style={styles.text}>{title}</AppText>
-      <AppText style={styles.text}>{description}</AppText>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+      <MaterialCommunityIcons
+        name={isSelected ? "radiobox-marked" : "radiobox-blank"}
+        size={24}
+        color={isSelected ? colors.primary : colors.medium}
+      />
+      <View style={styles.textContainer}>
+        <AppText style={styles.text}>{title}</AppText>
+        {description && (
+          <AppText style={styles.description}>{description}</AppText>
+        )}
+      </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
     padding: 20,
+    //justifyContent: "space-between",
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  text: {
+    fontSize: 16,
+  },
+  description: {
+    fontSize: 14,
+    color: colors.medium,
   },
 });
 

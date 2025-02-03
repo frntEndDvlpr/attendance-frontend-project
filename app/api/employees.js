@@ -14,6 +14,7 @@ const addEmployee = (employee, onUploadProgress) => {
   data.append("phone", employee.phone);
   data.append("designation", employee.designation);
   data.append("department", employee.department);
+  data.append("projects", employee.projects);
 
   //console.log("Sending data to server:", data);
 
@@ -34,6 +35,7 @@ const updateEmployee = (id, employee, onUploadProgress) => {
   data.append("phone", employee.phone);
   data.append("designation", employee.designation);
   data.append("department", employee.department);
+  data.append("projects", employee.projects);
 
   return apiClient.put(`${endPoint}${id}/`, data, {
     onUploadProgress: (event) => {

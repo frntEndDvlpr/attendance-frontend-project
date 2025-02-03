@@ -51,7 +51,7 @@ function ProjectListItem({
               )}
             </View>
             <View style={styles.location}>
-              {location.latitude && location.longitude && (
+              {location?.latitude && location?.longitude && (
                 <AppText style={styles.titleText}>
                   <MaterialCommunityIcons
                     name="map-marker-outline"

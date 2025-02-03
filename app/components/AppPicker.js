@@ -16,8 +16,20 @@ import defaultStyles from "../config/styles";
 import AppText from "./AppText";
 import PickerItem from "./PickerItem";
 
-function AppPicker({ icon, items, onSelectItem, placeholder, selectedItem }) {
+function AppPicker({ icon, items, onSelectItems, placeholder, selectedItems }) {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelect = (item) => {
+    let newSelectedItems;
+    if (selectedItems.some((p) => p.id === item.id)) {
+      // Remove item if already selected
+      newSelectedItems = selectedItems.filter((p) => p.id !== item.id);
+    } else {
+      // Add item if not already selected
+      newSelectedItems = [...selectedItems, item];
+    }
+    onSelectItems(newSelectedItems);
+  };
 
   return (
     <>
@@ -32,7 +44,9 @@ function AppPicker({ icon, items, onSelectItem, placeholder, selectedItem }) {
             />
           )}
           <AppText style={styles.text}>
-            {selectedItem ? selectedItem.title : placeholder}
+            {selectedItems.length > 0
+              ? selectedItems.map((p) => p.title).join(", ")
+              : placeholder}
           </AppText>
           {icon && (
             <MaterialCommunityIcons
@@ -53,10 +67,8 @@ function AppPicker({ icon, items, onSelectItem, placeholder, selectedItem }) {
               <PickerItem
                 title={item.title}
                 description={item.description}
-                onPress={() => {
-                  setModalVisible(false);
-                  onSelectItem(item);
-                }}
+                onPress={() => handleSelect(item)}
+                isSelected={selectedItems.some((p) => p.id === item.id)}
               />
             )}
           />
