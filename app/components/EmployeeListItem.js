@@ -15,6 +15,7 @@ function EmployeeListItem({
   designation,
   department,
   date_of_joining,
+  projects,
   renderRightActions,
   onPress,
 }) {
@@ -40,6 +41,7 @@ function EmployeeListItem({
               )}
             </View>
             {date_of_joining && <AppText>{date_of_joining}</AppText>}
+            {projects && <AppText>{projects}</AppText>}
           </View>
         </TouchableHighlight>
         <ListItemSeparator />
@@ -56,6 +58,7 @@ const styles = StyleSheet.create({
   codeNameText: { color: colors.black, fontWeight: "bold", paddingRight: 10 },
   contactDetails: { flexDirection: "row" },
   text: { paddingRight: 10 },
+  projectBadge: { backgroundColor: colors.primary },
 });
 
 export default EmployeeListItem;

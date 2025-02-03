@@ -134,13 +134,7 @@ function ProjectsFormScreen({ navigation, route }) {
           ? `${selectedLocation.latitude}, ${selectedLocation.longitude}`
           : "None"}
       </AppText>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Attendance Range"
-        keyboardType="numeric"
-        value={attendanceRange.toString()}
-        onChangeText={(text) => setAttendanceRange(Number(text))}
-      />
+
       <View style={styles.mapContainer}>
         <MapView
           mapType="hybrid"
@@ -180,6 +174,20 @@ function ProjectsFormScreen({ navigation, route }) {
       </View>
 
       <View style={styles.formContainer}>
+        <View style={styles.textInput}>
+          <AppIcon
+            name="bullseye"
+            backgroundColor={false}
+            iconColor={colors.gray}
+          />
+          <TextInput
+            placeholder="Attendance Range"
+            keyboardType="numeric"
+            value={attendanceRange.toString()}
+            onChangeText={(text) => setAttendanceRange(Number(text))}
+            style={{ width: "100%" }}
+          />
+        </View>
         <ScrollView>
           <AppForm
             initialValues={initialValues}
@@ -208,14 +216,14 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   mapContainer: { flex: 1 },
   map: { flex: 1 },
-  formContainer: { flex: 2 },
+  formContainer: { flex: 1.3 },
   projectLocationText: { padding: 3, fontWeight: "bold" },
   textInput: {
     height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: colors.lightGrey,
     marginBottom: 10,
     paddingHorizontal: 10,
+    flexDirection: "row",
   },
 });
 

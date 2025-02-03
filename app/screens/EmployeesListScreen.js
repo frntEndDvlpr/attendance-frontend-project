@@ -139,7 +139,7 @@ function EmployeesListScreen({ navigation }) {
             phone={item.phone}
             designation={item.designation}
             department={item.department}
-            date_of_joining={item.date_of_joining}
+            projects={item.projects}
             onPress={() =>
               navigation.navigate("EmployeeForm", {
                 employee: item,

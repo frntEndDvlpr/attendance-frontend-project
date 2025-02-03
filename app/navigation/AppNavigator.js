@@ -37,7 +37,7 @@ const AppNavigator = () => (
         tabBarIcon: ({ color, size }) => (
           <View style={styles.container}>
             <MaterialCommunityIcons
-              name="plus-circle"
+              name="account-clock-outline"
               color={colors.white}
               size={35}
             />

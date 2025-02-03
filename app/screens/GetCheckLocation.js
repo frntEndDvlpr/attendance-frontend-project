@@ -95,7 +95,7 @@ export default function GetCheckLocation({ navigation }) {
             <MapView
               style={styles.map}
               initialRegion={currentLocation}
-              mapType="hybrid" // Set map type to satellite
+              //mapType="hybrid"
             >
               {/* Marker for current location */}
               <Marker
@@ -156,12 +156,13 @@ export default function GetCheckLocation({ navigation }) {
           <Text>Fetching current location...</Text>
         )}
         <TouchableOpacity
-          style={styles.CamreaBtn}
           onPress={() => {
             navigation.navigate("Camera");
           }}
         >
-          <AppIcon name="camera-outline" size={35} />
+          <View style={styles.CamreaBtn}>
+            <AppText style={styles.CamreaBtnText}>Time in</AppText>
+          </View>
         </TouchableOpacity>
 
         {/* <KeyboardAvoidingView
@@ -204,7 +205,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -241,5 +243,17 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 20,
   },
-  CamreaBtn: {},
+  CamreaBtn: {
+    borderRadius: 5,
+    width: 90,
+    height: 40,
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+  },
+  CamreaBtnText: {
+    color: colors.white,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  },
 });

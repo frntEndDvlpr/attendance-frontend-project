@@ -14,7 +14,7 @@ const TaskNavigator = () => (
       name="TasksList"
       component={TasksListScreen}
       options={{
-        headerTitle: (props) => <AppText>Attendance</AppText>,
+        headerShown: false,
       }}
     />
 

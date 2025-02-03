@@ -26,11 +26,21 @@ function ProjectListItem({
           <View style={styles.container}>
             <View style={styles.title}>
               <AppText style={styles.titleText}>{title}</AppText>
-              <AppText>{description}</AppText>
-            </View>
-            <View style={styles.date}>
-              {start_date && (
+              {client && (
                 <AppText style={styles.dateText}>
+                  <MaterialCommunityIcons
+                    name="account-tie"
+                    size={20}
+                    color={colors.black}
+                  />
+                  {client}
+                </AppText>
+              )}
+            </View>
+            <AppText>{description}</AppText>
+            <View style={styles.dateClientStyle}>
+              {start_date && (
+                <AppText>
                   <MaterialCommunityIcons
                     name="calendar-start"
                     size={20}
@@ -40,7 +50,7 @@ function ProjectListItem({
                 </AppText>
               )}
               {end_date && (
-                <AppText>
+                <AppText style={styles.dateText}>
                   <MaterialCommunityIcons
                     name="calendar-end"
                     size={20}
@@ -50,29 +60,26 @@ function ProjectListItem({
                 </AppText>
               )}
             </View>
-            <View style={styles.location}>
-              {location?.latitude && location?.longitude && (
-                <AppText style={styles.titleText}>
-                  <MaterialCommunityIcons
-                    name="map-marker-outline"
-                    size={20}
-                    color={colors.blue}
-                  />
-                  {location.latitude} {location.longitude}
-                </AppText>
-              )}
-              {attendanceRange && (
-                <AppText>
-                  <MaterialCommunityIcons
-                    name="map-marker-circle"
-                    size={20}
-                    color={colors.secondary}
-                  />
-                  {attendanceRange}
-                </AppText>
-              )}
-            </View>
-            {client && <AppText>{client}</AppText>}
+            {location?.latitude && location?.longitude && (
+              <AppText style={styles.titleText}>
+                <MaterialCommunityIcons
+                  name="map-marker-outline"
+                  size={20}
+                  color={colors.blue}
+                />
+                {location.latitude} {location.longitude}
+              </AppText>
+            )}
+            {attendanceRange && (
+              <AppText style={styles.range}>
+                <MaterialCommunityIcons
+                  name="map-marker-circle"
+                  size={20}
+                  color={colors.secondary}
+                />
+                {attendanceRange}
+              </AppText>
+            )}
           </View>
         </TouchableHighlight>
         <ListItemSeparator />
@@ -87,10 +94,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: { flexDirection: "row" },
-  date: { flexDirection: "row", marginVertical: 5 },
-  location: { flexDirection: "row" },
+  dateClientStyle: { flexDirection: "row", paddingVertical: 5 },
   titleText: { color: colors.black, fontWeight: "bold", paddingRight: 10 },
-  dateText: { paddingRight: 10, color: colors.black },
+  dateText: { marginLeft: 10, color: colors.black },
+  range: { paddingTop: 5 },
 });
 
 export default ProjectListItem;
