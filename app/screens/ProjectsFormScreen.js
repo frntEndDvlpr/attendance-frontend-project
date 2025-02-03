@@ -178,7 +178,7 @@ function ProjectsFormScreen({ navigation, route }) {
           <AppIcon
             name="bullseye"
             backgroundColor={false}
-            iconColor={colors.gray}
+            iconColor={colors.primary}
           />
           <TextInput
             placeholder="Attendance Range"
@@ -221,9 +221,11 @@ const styles = StyleSheet.create({
   textInput: {
     height: 40,
     backgroundColor: colors.lightGrey,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    margin: 10,
     flexDirection: "row",
+    width: "90%",
+    alignSelf: "center",
+    borderRadius: 10,
   },
 });
 
