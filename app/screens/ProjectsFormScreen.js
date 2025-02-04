@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   rangeIcon: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.secondary,
     width: 25,
     height: 25,
     alignItems: "center",
