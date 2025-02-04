@@ -9,15 +9,15 @@ import AppButton from "../components/AppButton";
 import AuthApi from "../api/auth";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
+  username: Yup.string().required().label("Username"),
   password: Yup.string().required().min(4).label("Password"),
 });
 
 function LoginScreen({ navigation }) {
   const [loginFailed, setLoginFailed] = useState(false);
 
-  handelSubmit = async ({ email, password }) => {
-    const result = await AuthApi.login(email, password);
+  handelSubmit = async ({ username, password }) => {
+    const result = await AuthApi.login(username, password);
     if (!result.ok) return setLoginFailed(true);
     setLoginFailed(false);
     console.log(result.data);
@@ -34,23 +34,22 @@ function LoginScreen({ navigation }) {
       </View>
 
       <AppForm
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ username: "", password: "" }}
         onSubmit={handelSubmit}
         validationSchema={validationSchema}
       >
         <AppErrorMasage
-          error="Invalid email or password."
+          error="Invalid username or password."
           visible={loginFailed}
         />
         <AppFormField
           autoFocus
           autoCapitalize="none"
           autoCorrect={false}
-          icon="email"
-          keyboardType="email-address"
-          name="email"
-          placeholder="Email"
-          textContentType="emailAddress"
+          icon="account"
+          name="username"
+          placeholder="Username"
+          //textContentType="emailAddress"
         />
         <AppFormField
           autoCapitalize="none"

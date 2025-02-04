@@ -17,7 +17,7 @@ import TasksListScreen from "./app/screens/TasksListScreen";
 export default function App() {
   return (
     <NavigationContainer theme={NavigationTheme}>
-      <AppNavigator />
+      <AuthNavigator />
     </NavigationContainer>
   );
 }
