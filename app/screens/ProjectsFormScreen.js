@@ -175,11 +175,22 @@ function ProjectsFormScreen({ navigation, route }) {
 
       <View style={styles.formContainer}>
         <View style={styles.textInput}>
-          <AppIcon
-            name="bullseye"
-            backgroundColor={false}
-            iconColor={colors.primary}
-          />
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              width: 25,
+              height: 25,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 5,
+            }}
+          >
+            <AppIcon
+              name="bullseye"
+              backgroundColor={false}
+              iconColor={colors.white}
+            />
+          </View>
           <TextInput
             placeholder="Attendance Range"
             keyboardType="numeric"
@@ -226,6 +237,8 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: "center",
     borderRadius: 10,
+    alignItems: "center",
+    paddingHorizontal: 10,
   },
 });
 
