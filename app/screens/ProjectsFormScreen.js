@@ -177,7 +177,7 @@ function ProjectsFormScreen({ navigation, route }) {
         <View style={styles.textInput}>
           <View style={styles.rangeIcon}>
             <AppIcon
-              name="bullseye"
+              name="adjust"
               backgroundColor={false}
               iconColor={colors.white}
             />
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10,
     alignItems: "center",
-    paddingHorizontal: 10,
   },
   rangeIcon: {
     backgroundColor: colors.primary,
@@ -238,6 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
+    marginHorizontal: 10,
   },
 });
 
