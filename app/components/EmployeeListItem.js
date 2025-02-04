@@ -41,7 +41,17 @@ function EmployeeListItem({
               )}
             </View>
             {date_of_joining && <AppText>{date_of_joining}</AppText>}
-            {projects && <AppText>{projects}</AppText>}
+            <View style={styles.projectContainer}>
+              {projects &&
+                projects.length > 0 &&
+                projects.map((project) => (
+                  <View key={project.id} style={styles.projectBadge}>
+                    <AppText style={styles.projectText}>
+                      {project.title}
+                    </AppText>
+                  </View>
+                ))}
+            </View>
           </View>
         </TouchableHighlight>
         <ListItemSeparator />
@@ -58,7 +68,20 @@ const styles = StyleSheet.create({
   codeNameText: { color: colors.black, fontWeight: "bold", paddingRight: 10 },
   contactDetails: { flexDirection: "row" },
   text: { paddingRight: 10 },
-  projectBadge: { backgroundColor: colors.primary },
+  projectContainer: {
+    flexDirection: "row", // Arrange badges in a row
+    flexWrap: "wrap", // Allow wrapping to next line if needed
+    gap: 5, // Add spacing between badges
+  },
+  projectBadge: {
+    backgroundColor: colors.lightGreen,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  projectText: {
+    color: colors.black,
+  },
 });
 
 export default EmployeeListItem;
