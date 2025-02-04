@@ -74,6 +74,7 @@ function EmployeeFormScreen({ navigation, route }) {
     }
 
     if (!result.ok) {
+      console.log(result.problem);
       setUploadVisible(false);
       return alert("Could not save the employee!");
     }
