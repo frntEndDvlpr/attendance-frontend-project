@@ -4,8 +4,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 
 import colors from "../config/colors";
-import { AppFormField, AppForm } from "../components/forms";
-import AppButton from "../components/AppButton";
+import {
+  AppFormField,
+  AppForm,
+  AppErrorMasage,
+  SubmitButton,
+} from "../components/forms";
 import AuthApi from "../api/auth";
 
 const validationSchema = Yup.object().shape({
@@ -13,14 +17,14 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(4).label("Password"),
 });
 
-function LoginScreen() {
+function LoginScreen({ navigation }) {
   const [loginFailed, setLoginFailed] = useState(false);
 
   const handelSubmit = async ({ username, password }) => {
     const result = await AuthApi.login(username, password);
     if (!result.ok) {
       setLoginFailed(true);
-      console.log(result.problem);
+      return console.log(result.problem);
     }
     setLoginFailed(false);
     console.log(result.data);
@@ -36,6 +40,10 @@ function LoginScreen() {
         />
       </View>
 
+      <AppErrorMasage
+        error="Invalid username and/or passwor!"
+        visible={loginFailed}
+      />
       <AppForm
         initialValues={{ username: "", password: "" }}
         onSubmit={handelSubmit}
@@ -59,7 +67,7 @@ function LoginScreen() {
           secureTextEntry
           textContentType="password"
         />
-        <AppButton title="login" onPress={handelSubmit} />
+        <SubmitButton title="login" />
       </AppForm>
       <Button title="Forgot Your Password?" />
     </View>
