@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,11 +6,14 @@ import {
   View,
   FlatList,
   StatusBar,
+  Button,
 } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import colors from "../config/colors";
 import TaskListIcon from "../components/TaskListIcon";
+import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
 const menuItems = [
   {
@@ -30,6 +33,13 @@ const menuItems = [
 ];
 
 function AccountScreen(props) {
+  const { user, setUser } = useContext(AuthContext);
+
+  const handelLogout = () => {
+    setUser(null);
+    authStorage.removeTokem();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TaskListItem
@@ -53,6 +63,9 @@ function AccountScreen(props) {
             />
           )}
         />
+      </View>
+      <View style={{ marginBottom: 50 }}>
+        <Button title="Logout" onPress={handelLogout} />
       </View>
     </SafeAreaView>
   );

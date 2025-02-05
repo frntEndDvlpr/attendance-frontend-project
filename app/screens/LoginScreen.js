@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
+import { jwtDecode } from "jwt-decode";
 
 import colors from "../config/colors";
 import {
@@ -11,14 +12,17 @@ import {
   SubmitButton,
 } from "../components/forms";
 import AuthApi from "../api/auth";
+import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label("Username"),
   password: Yup.string().required().min(4).label("Password"),
 });
 
-function LoginScreen({ navigation }) {
+function LoginScreen() {
   const [loginFailed, setLoginFailed] = useState(false);
+  const authContext = useContext(AuthContext);
 
   const handelSubmit = async ({ username, password }) => {
     const result = await AuthApi.login(username, password);
@@ -27,7 +31,9 @@ function LoginScreen({ navigation }) {
       return console.log(result.problem);
     }
     setLoginFailed(false);
-    console.log(result.data);
+    const user = jwtDecode(result.data.access);
+    authContext.setUser(user);
+    authStorage.storeToken(result.data.access);
   };
 
   return (
@@ -41,7 +47,7 @@ function LoginScreen({ navigation }) {
       </View>
 
       <AppErrorMasage
-        error="Invalid username and/or passwor!"
+        error="Invalid username and/or password!"
         visible={loginFailed}
       />
       <AppForm
