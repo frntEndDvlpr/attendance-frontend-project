@@ -5,7 +5,7 @@ export default {
   danger: "#ff7f00",
   gray: "#808080",
   lightGrey: "#ededed",
-  lightGreen: "#eaf0d8",
+  lightGreen: "#f2f5eb",
   primary: "#a5d028",
   secondary: "#4ecdc4",
   secondaryTransparency: "#4ecdc499",

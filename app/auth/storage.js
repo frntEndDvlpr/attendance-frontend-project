@@ -1,7 +1,7 @@
 import * as SecureStore from "expo-secure-store";
 import { jwtDecode } from "jwt-decode";
 
-let key = "authToken";
+const key = "authToken";
 
 const storeToken = async (authToken) => {
   try {
@@ -32,4 +32,4 @@ const removeTokem = async () => {
   }
 };
 
-export default { getUser, storeToken, removeTokem };
+export default { getToken, getUser, storeToken, removeTokem };

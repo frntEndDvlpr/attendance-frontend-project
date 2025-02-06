@@ -10,7 +10,7 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().label("Password"),
 });
 
-function RgisterScreen(props) {
+function RegisterScreen(props) {
   return (
     <View style={styles.container}>
       <AppForm
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RgisterScreen;
+export default RegisterScreen;

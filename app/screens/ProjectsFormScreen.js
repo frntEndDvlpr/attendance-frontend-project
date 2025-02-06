@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   projectLocationText: { padding: 3, fontWeight: "bold" },
   textInput: {
     height: 40,
-    backgroundColor: colors.lightGrey,
+    backgroundColor: colors.lightGreen,
     margin: 10,
     flexDirection: "row",
     width: "90%",

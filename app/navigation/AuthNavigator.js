@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import LoginScreen from "../../app/screens/LoginScreen";
-import RgisterScreen from "../../app/screens/RgisterScreen";
+import RegisterScreen from "../screens/Register";
 import WelcomeScreen from "../../app/screens/WelcomeScreen";
 import AppNavigator from "./AppNavigator";
 
@@ -16,7 +16,7 @@ const AuthNavigator = () => (
       options={{ headerShown: false }}
     />
     <Stak.Screen name="Login" component={LoginScreen} />
-    <Stak.Screen name="Register" component={RgisterScreen} />
+    <Stak.Screen name="Register" component={RegisterScreen} />
     <Stak.Screen
       name="appnavigation"
       component={AppNavigator}
