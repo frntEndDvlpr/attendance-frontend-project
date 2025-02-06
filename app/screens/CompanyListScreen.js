@@ -1,29 +1,30 @@
 import React, { useState } from "react";
 import { FlatList } from "react-native";
 
-import TaskListItem from "../components/TaskListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
-import AddTaskButton from "../components/AddTaskButton";
+//import AddTaskButton from "../components/AddTaskButton";
+import CompanyFormScreen from "./CompanyFormScreen";
+import EmployeeListItem from "../components/EmployeeListItem";
 
 const initialClients = [
   {
     id: 1,
-    title: "Company 1",
-    contactPerson: "Person 1",
-    contactPhone: "6568646",
+    name: "Company 1",
+    email: "Person 1",
+    phone: "6568646",
   },
   {
     id: 2,
-    title: "Company 2",
-    contactPerson: "Person 2",
-    contactPhone: "6568646",
+    name: "Company 2",
+    email: "Person 2",
+    phone: "6568646",
   },
   {
     id: 3,
-    title: "Company 3",
-    contactPerson: "Person 3",
-    contactPhone: "6568646",
+    name: "Company 3",
+    email: "Person 3",
+    phone: "6568646",
   },
 ];
 function ClientsListScreen({ navigation }) {
@@ -36,14 +37,15 @@ function ClientsListScreen({ navigation }) {
 
   return (
     <>
+      <CompanyFormScreen />
       <FlatList
         data={clients}
         keyExtractor={(client) => client.id.toString()}
         renderItem={({ item }) => (
-          <TaskListItem
-            title={item.title}
-            contactPerson={item.contactPerson}
-            contactPhone={item.contactPhone}
+          <EmployeeListItem
+            name={item.name}
+            email={item.email}
+            phone={item.phone}
             onPress={() => console.log("Project Selected", item)}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => handleDelete(item)} />
@@ -56,14 +58,14 @@ function ClientsListScreen({ navigation }) {
           setclients([
             {
               id: 2,
-              title: "Company 2",
-              contactPerson: "Person 2",
-              contactPhone: "6568646",
+              name: "Company 2",
+              email: "Person 2",
+              phone: "6568646",
             },
           ]);
         }}
       />
-      <AddTaskButton onPress={() => navigation.navigate("ClientForm")} />
+      {/* <AddTaskButton onPress={() => navigation.navigate("CompanyForm")} /> */}
     </>
   );
 }

@@ -25,7 +25,9 @@ function EmployeeListItem({
         <TouchableHighlight onPress={onPress} underlayColor={colors.lightGrey}>
           <View style={styles.container}>
             <View style={styles.codeName}>
-              <AppText style={styles.codeNameText}>[{employeeCode}]</AppText>
+              {employeeCode && (
+                <AppText style={styles.codeNameText}>[{employeeCode}]</AppText>
+              )}
               <AppText style={styles.codeNameText}>{name}</AppText>
             </View>
             <View style={styles.contactDetails}>

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import AppText from "../components/AppText";
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
@@ -14,17 +8,19 @@ import TaskListIcon from "../components/TaskListIcon";
 
 function SettingsScreen({ navigation }) {
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Clients")}>
+    <View style={styles.mainContainer}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Company")}>
         <View style={styles.container}>
           <AppIcon
             name="city-variant-outline"
             backgroundColor={colors.secondary}
           />
           <View style={styles.innerContainer}>
-            <AppText style={styles.titl}>Customers</AppText>
+            <AppText style={styles.titl}>Company</AppText>
             <ListItemSeparator />
-            <AppText style={styles.subTitle}>Just a long text to test</AppText>
+            <AppText style={styles.subTitle}>
+              register your company details
+            </AppText>
           </View>
           <TaskListIcon
             name="chevron-right"
@@ -68,7 +64,7 @@ function SettingsScreen({ navigation }) {
           />
         </View>
       </TouchableWithoutFeedback>
-    </SafeAreaView>
+    </View>
   );
 }
 
