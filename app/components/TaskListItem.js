@@ -17,6 +17,8 @@ function TaskListItem({
   total_hours,
   onPress,
   renderRightActions,
+  title,
+  customer,
 }) {
   return (
     <GestureHandlerRootView>
@@ -80,6 +82,7 @@ function TaskListItem({
                 {status}
               </AppText>
             )}
+            {title && <AppText style={styles.statusText}>{title}</AppText>}
           </View>
         </TouchableHighlight>
       </Swipeable>

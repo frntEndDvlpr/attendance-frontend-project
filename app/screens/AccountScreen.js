@@ -14,6 +14,12 @@ import colors from "../config/colors";
 import TaskListIcon from "../components/TaskListIcon";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
+import AppScreen from "../components/AppScreen";
+import ProfileCard from "../components/ProfileCard";
+import AppListItem from "../components/AppListItem";
+import AppIcon from "../components/AppIcon";
+import AccountListItem from "../components/AccountListItem";
+import ListItemSeparator from "../components/ListItemSeparator";
 
 const menuItems = [
   {
@@ -41,40 +47,56 @@ function AccountScreen(props) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TaskListItem
-        title="Abbas Muhammad"
-        customer="abbassalama2@gmail.com"
-        image={require("../assets/SOMS-icon.png")}
+    <View style={styles.container}>
+      <ProfileCard
+        name="Abbas Muhammad"
+        position="Software Engineer"
+        email="abbassalama2@gmail.com"
+        image={require("../assets/Mr.Bean2.jpg")}
       />
-      <View>
-        <FlatList
-          data={menuItems}
-          keyExtractor={(item) => item.title}
-          renderItem={({ item }) => (
-            <TaskListItem
-              title={item.title}
-              ImageComponent={
-                <TaskListIcon
-                  name={item.icon.name}
-                  backgroundColor={item.icon.backgroundColor}
-                />
-              }
-            />
-          )}
+      <View style={styles.list}>
+        <AccountListItem
+          title="My Attendance Logs"
+          iconName="format-list-bulleted"
+          backgroundColor={colors.primary}
+          onPress={() => console.log()}
+        />
+        <ListItemSeparator />
+        <AccountListItem
+          title="My Requests"
+          iconName="file-document-edit-outline"
+          backgroundColor={colors.secondary}
+          onPress={() => console.log()}
+        />
+        <ListItemSeparator />
+        <AccountListItem
+          title="My Leaves"
+          iconName="airplane-clock"
+          backgroundColor={colors.blue}
+          onPress={() => console.log()}
         />
       </View>
-      <View style={{ marginBottom: 50 }}>
-        <Button title="Logout" onPress={handelLogout} />
-      </View>
-    </SafeAreaView>
+      <AccountListItem
+        title="Log Out"
+        iconName="logout"
+        backgroundColor={colors.danger}
+        onPress={handelLogout}
+      />
+
+      {/* <Button title="Logout" onPress={handelLogout} /> */}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.lightGrey,
+  },
+  list: {
+    marginTop: 50,
+    borderRadius: 100,
+    paddingBottom: 70,
   },
 });
 
