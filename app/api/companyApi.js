@@ -1,6 +1,6 @@
 import apiClient from "./client";
 
-const endPoint = "company/";
+const endPoint = "api/company/";
 
 // Getting employees from the server API
 const getCompanys = () => apiClient.get(endPoint);

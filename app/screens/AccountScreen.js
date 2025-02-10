@@ -1,42 +1,12 @@
 import React, { useContext } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Platform,
-  View,
-  FlatList,
-  StatusBar,
-  Button,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import TaskListItem from "../components/TaskListItem";
 import colors from "../config/colors";
-import TaskListIcon from "../components/TaskListIcon";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
-import AppScreen from "../components/AppScreen";
 import ProfileCard from "../components/ProfileCard";
-import AppListItem from "../components/AppListItem";
-import AppIcon from "../components/AppIcon";
 import AccountListItem from "../components/AccountListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
-
-const menuItems = [
-  {
-    title: "My Tasks",
-    icon: {
-      name: "format-list-bulleted",
-      backgroundColor: colors.primary,
-    },
-  },
-  {
-    title: "My Emails",
-    icon: {
-      name: "email",
-      backgroundColor: colors.secondary,
-    },
-  },
-];
 
 function AccountScreen(props) {
   const { user, setUser } = useContext(AuthContext);
@@ -49,6 +19,7 @@ function AccountScreen(props) {
   return (
     <View style={styles.container}>
       <ProfileCard
+        entifire={user.user_id}
         name="Abbas Muhammad"
         position="Software Engineer"
         email="abbassalama2@gmail.com"
@@ -58,13 +29,15 @@ function AccountScreen(props) {
         <AccountListItem
           title="My Attendance Logs"
           iconName="format-list-bulleted"
-          backgroundColor={colors.primary}
+          rightIcon="chevron-right"
+          backgroundColor={colors.blue}
           onPress={() => console.log()}
         />
         <ListItemSeparator />
         <AccountListItem
           title="My Requests"
           iconName="file-document-edit-outline"
+          rightIcon="chevron-right"
           backgroundColor={colors.secondary}
           onPress={() => console.log()}
         />
@@ -72,7 +45,8 @@ function AccountScreen(props) {
         <AccountListItem
           title="My Leaves"
           iconName="airplane-clock"
-          backgroundColor={colors.blue}
+          rightIcon="chevron-right"
+          backgroundColor={colors.primary}
           onPress={() => console.log()}
         />
       </View>

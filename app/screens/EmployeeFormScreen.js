@@ -8,6 +8,7 @@ import employeesApi from "../api/employees";
 import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 import AppPicker from "../components/AppPicker";
+import auth from "../api/auth";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -22,10 +23,25 @@ function EmployeeFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [projects, setProjects] = useState([]);
+  const [user, setUser] = useState([]);
   const [project, setPrject] = useState();
   const [selectedProjects, setSelectedProjects] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
 
   const employee = route.params?.employee || null;
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const response = await auth.getUsers();
+    if (response.ok) {
+      setUser(response.data);
+    } else {
+      alert("Could not fetch Users.");
+    }
+  };
 
   useEffect(() => {
     fetchProjects();
@@ -59,6 +75,7 @@ function EmployeeFormScreen({ navigation, route }) {
     const dataToSubmit = {
       ...employeeData,
       projects: selectedProjects.map((p) => p.id), // Send only project IDs
+      user: selectedUser.map((u) => u.id), // Send only user IDs
     };
 
     if (employee) {
@@ -132,6 +149,13 @@ function EmployeeFormScreen({ navigation, route }) {
             placeholder="Select Projects"
             selectedItems={selectedProjects}
             onSelectItems={setSelectedProjects}
+          />
+          <AppPicker
+            icon="apps"
+            items={user}
+            placeholder="Select User"
+            selectedItems={selectedUser}
+            onSelectItems={setSelectedUser}
           />
 
           <SubmitButton title={employee ? "Update" : "Save"} />

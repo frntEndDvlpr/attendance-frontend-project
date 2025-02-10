@@ -5,7 +5,13 @@ import colors from "../config/colors";
 import AppText from "./AppText";
 import TaskListIcon from "./TaskListIcon";
 
-function AccountListItem({ title, iconName, backgroundColor, onPress }) {
+function AccountListItem({
+  title,
+  iconName,
+  backgroundColor,
+  onPress,
+  rightIcon,
+}) {
   return (
     <TouchableHighlight
       onPress={onPress}
@@ -18,11 +24,7 @@ function AccountListItem({ title, iconName, backgroundColor, onPress }) {
           <AppText style={styles.title}>{title}</AppText>
         </View>
         <View>
-          <TaskListIcon
-            name="chevron-right"
-            iconColor={colors.midGray}
-            size={50}
-          />
+          <TaskListIcon name={rightIcon} iconColor={colors.midGray} size={50} />
         </View>
       </View>
     </TouchableHighlight>

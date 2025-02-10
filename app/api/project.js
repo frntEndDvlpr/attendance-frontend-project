@@ -1,6 +1,6 @@
 import apiClient from "./client";
 
-const endPoint = "projects/";
+const endPoint = "api/projects/";
 
 // Getting projects from the server API
 const getProjects = () => apiClient.get(endPoint);

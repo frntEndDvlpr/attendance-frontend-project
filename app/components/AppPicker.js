@@ -66,6 +66,7 @@ function AppPicker({ icon, items, onSelectItems, placeholder, selectedItems }) {
             renderItem={({ item }) => (
               <PickerItem
                 title={item.title}
+                name={item.id}
                 description={item.description}
                 onPress={() => handleSelect(item)}
                 isSelected={selectedItems.some((p) => p.id === item.id)}

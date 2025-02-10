@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-function PickerItem({ title, description, onPress, isSelected }) {
+function PickerItem({ title, name, description, onPress, isSelected }) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <MaterialCommunityIcons
@@ -13,7 +13,8 @@ function PickerItem({ title, description, onPress, isSelected }) {
         color={isSelected ? colors.primary : colors.medium}
       />
       <View style={styles.textContainer}>
-        <AppText style={styles.text}>{title}</AppText>
+        {title && <AppText style={styles.text}>{title}</AppText>}
+        {name && <AppText style={styles.text}>{name}</AppText>}
         {description && (
           <AppText style={styles.description}>{description}</AppText>
         )}

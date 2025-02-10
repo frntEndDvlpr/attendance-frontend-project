@@ -3,10 +3,11 @@ import { View, StyleSheet, Image } from "react-native";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-function ProfileCard({ name, position, email, image }) {
+function ProfileCard({ name, position, email, image, entifire }) {
   return (
     <View style={styles.container}>
       <Image source={image} style={styles.image} />
+      <AppText style={styles.name}>{entifire}</AppText>
       <AppText style={styles.name}>{name}</AppText>
       <AppText style={styles.emailPosition}>{position}</AppText>
       <AppText style={styles.emailPosition}>{email}</AppText>

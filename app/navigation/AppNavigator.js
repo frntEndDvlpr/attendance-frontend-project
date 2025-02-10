@@ -12,7 +12,7 @@ import { View, StyleSheet } from "react-native";
 const BottomTap = createBottomTabNavigator();
 
 const AppNavigator = () => (
-  <BottomTap.Navigator>
+  <BottomTap.Navigator initialRouteName="TasksListings">
     <BottomTap.Screen
       name="Account"
       component={AccountScreen}
