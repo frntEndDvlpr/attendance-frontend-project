@@ -5,4 +5,7 @@ const getUsers = () => apiClient.get("auth/users/");
 const login = (username, password) =>
   apiClient.post("token/", { username, password });
 
-export default { login, getUsers };
+// Deleting a user from the server API
+const deleteUser = (id) => apiClient.delete(endPoint + id + "/");
+
+export default { login, getUsers, deleteUser };

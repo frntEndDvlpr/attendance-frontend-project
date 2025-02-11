@@ -64,6 +64,7 @@ function EmployeeFormScreen({ navigation, route }) {
     designation: employee?.designation || "",
     department: employee?.department || "",
     projects: employee?.projects || [],
+    user_id: employee?.user_id || "",
   };
 
   // Handle submit
@@ -75,7 +76,7 @@ function EmployeeFormScreen({ navigation, route }) {
     const dataToSubmit = {
       ...employeeData,
       projects: selectedProjects.map((p) => p.id), // Send only project IDs
-      user: selectedUser.map((u) => u.id), // Send only user IDs
+      user_id: selectedUser?.[0]?.id || null,
     };
 
     if (employee) {
@@ -92,6 +93,7 @@ function EmployeeFormScreen({ navigation, route }) {
 
     if (!result.ok) {
       console.log(result.problem);
+      console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the employee!");
     }

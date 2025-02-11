@@ -16,6 +16,10 @@ function AccountScreen(props) {
     authStorage.removeTokem();
   };
 
+  employees = () => {
+    user.employee;
+  };
+
   return (
     <View style={styles.container}>
       <ProfileCard
