@@ -9,9 +9,12 @@ import EmployeeListItem from "../components/EmployeeListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AppScreen from "../components/AppScreen";
+import colors from "../config/colors";
+import employeesApi from "../api/employees";
 
 function UserListScreen(props) {
   const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -20,9 +23,9 @@ function UserListScreen(props) {
   const [response, setResponse] = useState(false);
 
   useEffect(() => {
-    loadUsers;
+    loadUsers();
     //console.log(users);
-  });
+  }, []);
 
   //const sortedUsers = users.sort((a, b) => b.id - a.id);
 
@@ -35,6 +38,7 @@ function UserListScreen(props) {
     if (!response.ok) {
       setError(true);
       console.log(response.problem);
+      //console.log(response.data);
       setResponse(response.problem);
     } else {
       setError(false);
@@ -42,6 +46,22 @@ function UserListScreen(props) {
       //console.log("Success:", response.data);
     }
   };
+
+  const fetchEmployees = async () => {
+    const response = await employeesApi.getEmployees();
+
+    if (response.ok) {
+      setEmployees(response.data);
+      console.log(response.data);
+    } else {
+      alert("Could not load employees");
+      console.log(response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
 
   // Delete a user
   const handleDelete = async (user) => {
@@ -129,8 +149,8 @@ function UserListScreen(props) {
         keyExtractor={(user) => user.id.toString()}
         renderItem={({ item }) => (
           <EmployeeListItem
-            name={item.id}
-            employeeCode={item.employeeCode}
+            name={item.username}
+            employeeCode={item.id}
             email={item.email}
             phone={item.phone}
             designation={item.designation}

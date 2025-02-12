@@ -28,7 +28,7 @@ function EmployeeListItem({
               {employeeCode && (
                 <AppText style={styles.codeNameText}>[{employeeCode}]</AppText>
               )}
-              <AppText style={styles.codeNameText}>{name}</AppText>
+              {name && <AppText style={styles.codeNameText}>{name}</AppText>}
             </View>
             <View style={styles.contactDetails}>
               {email && <AppText style={styles.text}>{email}</AppText>}
