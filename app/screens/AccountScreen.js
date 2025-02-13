@@ -16,9 +16,9 @@ function AccountScreen(props) {
     authStorage.removeTokem();
   };
 
-  employees = () => {
+  /*   employees = () => {
     user.employee;
-  };
+  }; */
 
   return (
     <View style={styles.container}>

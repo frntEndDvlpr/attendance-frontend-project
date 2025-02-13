@@ -52,10 +52,10 @@ function UserListScreen(props) {
 
     if (response.ok) {
       setEmployees(response.data);
-      console.log(response.data);
+      //console.log(response.data);
     } else {
       alert("Could not load employees");
-      console.log(response.data);
+      //console.log(response.data);
     }
   };
 
@@ -75,7 +75,7 @@ function UserListScreen(props) {
     if (!response.ok) {
       setUploadVisible(false);
       return Alert.alert("Fail", "Faiel to delet the employee", [
-        { text: "Retry", onPress: () => handleDelete(employee) },
+        { text: "Retry", onPress: () => handleDelete(user) },
         { text: "Cancel", style: "cancel" },
       ]);
     }
@@ -152,7 +152,7 @@ function UserListScreen(props) {
             name={item.username}
             employeeCode={item.id}
             email={item.email}
-            phone={item.phone}
+            phone={item.employee}
             designation={item.designation}
             department={item.department}
             projects={item.projects}
