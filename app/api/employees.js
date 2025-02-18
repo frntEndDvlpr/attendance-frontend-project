@@ -1,9 +1,10 @@
 import apiClient from "./client";
 
-const endPoint = "api/employees";
+const endPoint = "api/employees/";
 
 // Getting employees from the server API
 const getEmployees = () => apiClient.get(endPoint);
+const getEmployeesProfile = () => apiClient.get(endPoint + "me/");
 const getEmployeeById = (userId) => apiClient.get(`${endPoint}/${userId}`);
 
 // Adding an employee to the server API
@@ -52,6 +53,7 @@ const deleteEmployee = (id) => apiClient.delete(endPoint + id + "/");
 export default {
   getEmployees,
   getEmployeeById,
+  getEmployeesProfile,
   addEmployee,
   updateEmployee,
   deleteEmployee,

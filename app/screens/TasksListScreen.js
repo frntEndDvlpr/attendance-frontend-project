@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
@@ -6,6 +6,7 @@ import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
+import employeesApi from "../api/employees";
 
 const initialTasks = [
   {
@@ -36,9 +37,35 @@ const initialTasks = [
     total_hours: "8Hrs",
   },
 ];
+
 function TasksListScreen({ navigation }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [refreshing, setRefreshing] = useState(false);
+  const [user, setUser] = useState();
+  const [projectLocations, setProjectLocations] = useState([]);
+
+  const loadMyProfile = async () => {
+    const response = await employeesApi.getEmployeesProfile();
+    if (response.ok) {
+      setUser(response.data);
+      //console.log("User's Profile:", response.data);
+    } else {
+      alert("Error getting profile data.");
+      console.log(response.problem);
+    }
+  };
+
+  useEffect(() => {
+    loadMyProfile();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      const locations = user.projects.map((project) => project.location);
+      setProjectLocations(locations);
+      console.log("Project Locations:", locations);
+    }
+  }, [user]);
 
   const handleDelete = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
