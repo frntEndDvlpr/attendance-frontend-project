@@ -7,6 +7,7 @@ import AppText from "../components/AppText";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
 import employeesApi from "../api/employees";
+import useLocation from "../hooks/useLocation";
 
 const initialTasks = [
   {
@@ -43,6 +44,7 @@ function TasksListScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState();
   const [projectLocations, setProjectLocations] = useState([]);
+  const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
 
   const loadMyProfile = async () => {
     const response = await employeesApi.getEmployeesProfile();
@@ -61,15 +63,25 @@ function TasksListScreen({ navigation }) {
 
   useEffect(() => {
     if (user) {
-      const locations = user.projects.map((project) => project.location);
-      setProjectLocations(locations);
-      console.log("Project Locations:", locations);
+      const projectsLocation = user.projects.map((project) => project.location);
+      setProjectLocations(projectsLocation);
+      console.log("Project Locations:", projectsLocation);
     }
   }, [user]);
 
   const handleDelete = (task) => {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
+
+  const currentLocation = useLocation();
+
+  useEffect(() => {
+    if (currentLocation) {
+      console.log("Current Location:", currentLocation);
+      const isAtLocation = projectLocations.includes(currentLocation);
+      setIsAtProjectLocation(isAtLocation);
+    }
+  }, [currentLocation, projectLocations]);
 
   return (
     <View style={styles.container}>
@@ -78,6 +90,7 @@ function TasksListScreen({ navigation }) {
       </View>
       <View style={styles.list}>
         <AppText style={styles.title}>My Attendace Log</AppText>
+
         <FlatList
           data={tasks}
           keyExtractor={(task) => task.id.toString()}
