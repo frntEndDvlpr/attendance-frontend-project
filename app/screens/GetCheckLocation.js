@@ -139,7 +139,7 @@ export default function GetCheckLocation({ navigation }) {
               )}
             </MapView>
 
-            <View style={styles.coordinates}>
+            {/* <View style={styles.coordinates}>
               <AppIcon
                 name="crosshairs-gps"
                 size={40}
@@ -150,12 +150,12 @@ export default function GetCheckLocation({ navigation }) {
                 {currentLocation.latitude.toFixed(5)},{" "}
                 {currentLocation.longitude.toFixed(5)}
               </AppText>
-            </View>
+            </View> */}
           </>
         ) : (
           <Text>Fetching current location...</Text>
         )}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate("Camera");
           }}
@@ -163,7 +163,7 @@ export default function GetCheckLocation({ navigation }) {
           <View style={styles.CamreaBtn}>
             <AppText style={styles.CamreaBtnText}>Time in</AppText>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* <KeyboardAvoidingView
           style={styles.inputContainer}

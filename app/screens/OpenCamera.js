@@ -14,7 +14,7 @@ import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 import TakePhotoButton from "../components/TakePhotoButton";
 
-export default function OpenCamera() {
+export default function OpenCamera({ navigation }) {
   const [facing, setFacing] = useState("front");
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
@@ -87,7 +87,10 @@ export default function OpenCamera() {
     <View style={{ flex: 1 }}>
       <CameraView style={styles.camera} ref={setCamera} facing={facing}>
         <View style={styles.cameraIcons}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.goBack()}
+          >
             <AppIcon
               name={"close-thick"}
               size={60}

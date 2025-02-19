@@ -40,7 +40,7 @@ function TaskListItem({
                 <AppText style={styles.assignee}>
                   <TaskListIcon
                     name="map-marker-outline"
-                    iconColor={colors.secondary}
+                    iconColor={colors.gray}
                   />
                   {location}
                 </AppText>

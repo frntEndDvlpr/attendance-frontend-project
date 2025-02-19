@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -8,6 +8,7 @@ import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
 import employeesApi from "../api/employees";
 import useLocation from "../hooks/useLocation";
+import AppIcon from "../components/AppIcon";
 
 const initialTasks = [
   {
@@ -44,7 +45,11 @@ function TasksListScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState();
   const [projectLocations, setProjectLocations] = useState([]);
+  const [attendanceRange, setAttendanceRange] = useState([]);
   const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
+  const [currentProjectTitle, setCurrentProjectTitle] = useState("");
+
+  const currentLocation = useLocation();
 
   const loadMyProfile = async () => {
     const response = await employeesApi.getEmployeesProfile();
@@ -63,9 +68,13 @@ function TasksListScreen({ navigation }) {
 
   useEffect(() => {
     if (user) {
+      //console.log("User's Projects:", user.projects);
       const projectsLocation = user.projects.map((project) => project.location);
       setProjectLocations(projectsLocation);
       console.log("Project Locations:", projectsLocation);
+      const attendanceRange = user.projects.map((project) => project.range);
+      setAttendanceRange(attendanceRange);
+      console.log("Attendance Range:", attendanceRange);
     }
   }, [user]);
 
@@ -73,20 +82,105 @@ function TasksListScreen({ navigation }) {
     setTasks(tasks.filter((t) => t.id !== task.id));
   };
 
-  const currentLocation = useLocation();
+  // Haversine formula to calculate the distance between two geographical points
+  const haversineDistance = (coords1, coords2) => {
+    const toRad = (x) => (x * Math.PI) / 180;
+
+    const lat1 = coords1.latitude;
+    const lon1 = coords1.longitude;
+    const lat2 = coords2.latitude;
+    const lon2 = coords2.longitude;
+
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c * 1000; // Distance in meters
+
+    return distance;
+  };
+
+  // Function to check if the current location is within range of any project location
+  const checkIfWithinRange = (
+    currentLocation,
+    projectLocations,
+    attendanceRanges
+  ) => {
+    for (let i = 0; i < projectLocations.length; i++) {
+      const projectLocation = projectLocations[i];
+      const range = attendanceRanges[i]; // Range is already in meters
+
+      const distance = haversineDistance(currentLocation, projectLocation);
+      if (distance <= range) {
+        return user.projects[i].title; // Return the project title if within range
+      }
+    }
+    return null;
+  };
 
   useEffect(() => {
     if (currentLocation) {
       console.log("Current Location:", currentLocation);
-      const isAtLocation = projectLocations.includes(currentLocation);
-      setIsAtProjectLocation(isAtLocation);
+      const projectTitle = checkIfWithinRange(
+        currentLocation,
+        projectLocations,
+        attendanceRange
+      );
+      setIsAtProjectLocation(!!projectTitle);
+      setCurrentProjectTitle(projectTitle || "");
+      console.log("Is at Project Location:", !!projectTitle);
     }
-  }, [currentLocation, projectLocations]);
+  }, [currentLocation, projectLocations, attendanceRange]);
+
+  const OpenCamera = () => {
+    navigation.navigate("Camera");
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.map}>
         <CameraNavigator />
+      </View>
+      <View style={styles.locationCameraBtn}>
+        <View
+          style={[
+            styles.coordinates,
+            {
+              backgroundColor: isAtProjectLocation
+                ? "rgba(104, 214, 104, 0.5)"
+                : "rgba(255, 0, 0, 0.5)", // Change this to the desired color when outside geofence
+            },
+          ]}
+        >
+          <AppIcon
+            name="crosshairs-gps"
+            size={40}
+            backgroundColor="false"
+            iconColor={colors.black}
+          />
+          <AppText style={styles.coordText}>
+            {isAtProjectLocation
+              ? `Within ${currentProjectTitle} geofence`
+              : "Outside of the geofence"}
+          </AppText>
+        </View>
+        {isAtProjectLocation && (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Camera");
+            }}
+          >
+            <View style={styles.CamreaBtn}>
+              <AppText style={styles.CamreaBtnText}>Time in</AppText>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.list}>
         <AppText style={styles.title}>My Attendace Log</AppText>
@@ -183,6 +277,36 @@ const styles = StyleSheet.create({
   list: {
     flex: 2,
     backgroundColor: colors.lightGrey,
+  },
+  CamreaBtn: {
+    borderRadius: 5,
+    width: 90,
+    height: 40,
+    justifyContent: "center",
+    backgroundColor: colors.secondary,
+  },
+  CamreaBtnText: {
+    color: colors.white,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  },
+  coordinates: {
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  coordText: {
+    fontWeight: "bold",
+    color: colors.black,
+    marginRight: 10,
+  },
+  locationCameraBtn: {
+    position: "absolute",
+    flexDirection: "row",
+    width: "100%",
+    top: 45,
+    justifyContent: "space-around",
   },
 });
 
