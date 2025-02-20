@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraView } from "expo-camera";
@@ -19,6 +20,8 @@ export default function OpenCamera({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [photoUri, setPhotoUri] = useState(null);
+  const [photoDateTime, setPhotoDateTime] = useState(null);
 
   // Getting permission to access the camera and media library
   useEffect(() => {
@@ -44,34 +47,21 @@ export default function OpenCamera({ navigation }) {
     if (camera) {
       const photoData = await camera.takePictureAsync({ exif: true });
       setPhoto(photoData.uri);
-
-      savePhotoToCameraRoll(photoData.uri);
-      console.log(photoData.uri);
+      setPhotoUri(photoData.uri);
 
       if (photoData.exif) {
         const { DateTimeOriginal } = photoData.exif;
         if (DateTimeOriginal) {
-          console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
+          setPhotoDateTime(DateTimeOriginal);
+          //console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
         } else {
           console.log("Date and time metadata not available in EXIF");
         }
       } else {
         console.log("No EXIF metadata available");
       }
-    }
-  };
 
-  // Saving the photo to the camera roll
-  const savePhotoToCameraRoll = async (uri) => {
-    try {
-      await MediaLibrary.saveToLibraryAsync(uri);
-      Alert.alert(
-        "Photo saved!",
-        "Your photo has been saved to the camera roll."
-      );
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Error saving photo", "There was an error saving the photo.");
+      //console.log(photoData.uri);
     }
   };
 
@@ -109,10 +99,29 @@ export default function OpenCamera({ navigation }) {
       </CameraView>
 
       {photo && (
-        <Image
-          source={{ uri: photo }}
-          style={{ width: 100, height: 100, margin: 20 }}
-        />
+        <View style={styles.previewContainer}>
+          <Image
+            source={{ uri: photo }}
+            style={{ width: "100%", height: "89%", margin: 20 }}
+          />
+          <View style={styles.btnsContainer}>
+            <Button
+              title="Confirm"
+              color={colors.primary}
+              onPress={() => {
+                console.log("Photo URI:", photoUri);
+                console.log("Photo DateTime:", photoDateTime);
+                // You can add logic here to include the photo in a Formik form and send it to the server
+                navigation.goBack(); // Close the camera after confirming
+              }}
+            />
+            <Button
+              title="Retake"
+              color={colors.danger}
+              onPress={() => setPhoto(null)}
+            />
+          </View>
+        </View>
       )}
     </View>
   );
@@ -135,5 +144,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     flexDirection: "row",
     alignItems: "center",
+  },
+  previewContainer: {
+    alignItems: "center",
+  },
+  btnsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
   },
 });
