@@ -48,9 +48,9 @@ function TasksListScreen({ navigation }) {
   const [attendanceRange, setAttendanceRange] = useState([]);
   const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
   const [currentProjectTitle, setCurrentProjectTitle] = useState("");
-
   const currentLocation = useLocation();
 
+  // Load the user's profile data
   const loadMyProfile = async () => {
     const response = await employeesApi.getEmployeesProfile();
     if (response.ok) {
@@ -66,15 +66,16 @@ function TasksListScreen({ navigation }) {
     loadMyProfile();
   }, []);
 
+  // Extract the project locations and attendance ranges from the user's profile
   useEffect(() => {
     if (user) {
       //console.log("User's Projects:", user.projects);
       const projectsLocation = user.projects.map((project) => project.location);
       setProjectLocations(projectsLocation);
-      console.log("Project Locations:", projectsLocation);
+      //console.log("Project Locations:", projectsLocation);
       const attendanceRange = user.projects.map((project) => project.range);
       setAttendanceRange(attendanceRange);
-      console.log("Attendance Range:", attendanceRange);
+      //console.log("Attendance Range:", attendanceRange);
     }
   }, [user]);
 
@@ -124,9 +125,10 @@ function TasksListScreen({ navigation }) {
     return null;
   };
 
+  // Check if the current location is within range of any project location
   useEffect(() => {
     if (currentLocation) {
-      console.log("Current Location:", currentLocation);
+      //console.log("Current Location:", currentLocation);
       const projectTitle = checkIfWithinRange(
         currentLocation,
         projectLocations,
@@ -134,13 +136,9 @@ function TasksListScreen({ navigation }) {
       );
       setIsAtProjectLocation(!!projectTitle);
       setCurrentProjectTitle(projectTitle || "");
-      console.log("Is at Project Location:", !!projectTitle);
+      //console.log("Is at Project Location:", !!projectTitle);
     }
   }, [currentLocation, projectLocations, attendanceRange]);
-
-  const OpenCamera = () => {
-    navigation.navigate("Camera");
-  };
 
   return (
     <View style={styles.container}>

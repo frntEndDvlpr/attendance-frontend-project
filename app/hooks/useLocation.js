@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 const useLocation = () => {
   const [location, setLocation] = useState();
 
-  const GetLocation = async () => {
+  const getLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") return;
@@ -19,7 +19,13 @@ const useLocation = () => {
   };
 
   useEffect(() => {
-    GetLocation();
+    getLocation();
+
+    const intervalId = setInterval(() => {
+      getLocation();
+    }, 20000); // Update location every 20 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
   return location;
