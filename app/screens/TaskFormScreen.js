@@ -1,81 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 
-import { AppForm, TaskFormField, SubmitButton } from "../components/forms";
+import { AppForm } from "../components/forms";
+import attendanceApi from "../api/attendance";
 
 const validationSchema = Yup.object().shape({
-  assignee: Yup.string().required().label("Assignee"),
-  client: Yup.string().label("Client"),
-  department: Yup.string().label("Department"),
-  description: Yup.string().label("Description"),
-  ends: Yup.string().required().label("Ends"),
-  project_code: Yup.string().required().label("Project Code"),
-  starts: Yup.string().required().label("Stats"),
-  title: Yup.string().required().label("Title"),
+  employee_id: Yup.number().required().label("Employee ID"),
+  att_date_time: Yup.date().required().label("Attendance Date & Time"),
+  location: Yup.string().required().label("Location"),
+  photo: Yup.mixed().notRequired().nullable().label("Photo"),
 });
 
 function TaskFormScreen(props) {
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handleSubmit = async (attendanceData) => {
+    let result;
+    setProgress(0);
+    setUploadVisible(true);
+
+    if (attendanceData) {
+      result = await attendanceApi.updateAttendanceLogs(
+        attendanceData,
+        (progress) => setProgress(progress)
+      );
+    } else {
+      result = await attendanceApi.addAttendanceLogs(
+        attendanceData,
+        (progress) => setProgress(progress)
+      );
+    }
+
+    if (!result.ok) {
+      console.log(result.problem);
+      setUploadVisible(false);
+      return alert("Could not proceed the attendance!");
+    }
+
+    setProgress(1);
+    if (route.params?.onGoBack) route.params.onGoBack();
+    setTimeout(() => {
+      setUploadVisible(false);
+      navigation.goBack();
+    }, 2000);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <AppForm
           initialValues={{
-            assignee: "",
-            client: "",
-            department: "",
-            description: "",
-            ends: "",
-            project_code: "",
-            starts: "",
-            title: "",
+            employee_id: "",
+            att_date_time: "",
+            location: "",
+            photo: "",
           }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}
-        >
-          <TaskFormField
-            name="title"
-            placeholder="Task"
-            maxLength={100}
-            autoFocus
-            icon="clipboard-clock-outline"
-          />
-          <TaskFormField
-            name="description"
-            placeholder="Description"
-            multiline
-            numberOfLines={3}
-            maxLength={255}
-            icon="file-document-edit-outline"
-          />
-          <TaskFormField
-            name="project-code"
-            placeholder="Project Code"
-            icon="folder-pound-outline"
-          />
-          <TaskFormField
-            name="starts"
-            placeholder="Starts"
-            icon="calendar-start"
-          />
-          <TaskFormField name="ends" placeholder="Ends" icon="calendar-end" />
-          <TaskFormField
-            name="assignee"
-            placeholder="Assignee"
-            icon="account"
-          />
-          <TaskFormField
-            name="department"
-            placeholder="Department"
-            icon="office-building-cog-outline"
-          />
-          <TaskFormField
-            name="client"
-            placeholder="Client"
-            icon="city-variant-outline"
-          />
-          <SubmitButton title="Post" />
-        </AppForm>
+        ></AppForm>
       </ScrollView>
     </View>
   );
