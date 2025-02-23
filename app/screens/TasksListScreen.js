@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -55,6 +56,7 @@ function TasksListScreen({ navigation }) {
     const response = await employeesApi.getEmployeesProfile();
     if (response.ok) {
       setUser(response.data);
+      console.log(response.data);
       //console.log("User's Profile:", response.data);
     } else {
       alert("Error getting profile data.");
@@ -62,9 +64,11 @@ function TasksListScreen({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    loadMyProfile();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadMyProfile();
+    }, [])
+  );
 
   // Extract the project locations and attendance ranges from the user's profile
   useEffect(() => {

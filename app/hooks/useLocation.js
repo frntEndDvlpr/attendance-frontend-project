@@ -21,11 +21,11 @@ const useLocation = () => {
   useEffect(() => {
     getLocation();
 
-    const intervalId = setInterval(() => {
+    /* const intervalId = setInterval(() => {
       getLocation();
     }, 20000); // Update location every 20 seconds
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount */
   }, []);
 
   return location;
