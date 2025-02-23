@@ -10,18 +10,22 @@ import {
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraView } from "expo-camera";
+import * as Yup from "yup";
 
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 import TakePhotoButton from "../components/TakePhotoButton";
+import attendanceApi from "../api/attendance";
 
-export default function OpenCamera({ navigation }) {
+export default function OpenCamera({ navigation, route }) {
   const [facing, setFacing] = useState("front");
   const [hasPermission, setHasPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [photoDateTime, setPhotoDateTime] = useState(null);
+
+  const { location, employee_id } = route.params; // Receive the location and employee_id parameter
 
   // Getting permission to access the camera and media library
   useEffect(() => {
@@ -73,6 +77,28 @@ export default function OpenCamera({ navigation }) {
     return <Text>No access to camera</Text>;
   }
 
+  const submitAttendanceLog = async () => {
+    const attendanceData = {
+      selfie: {
+        uri: photo,
+        type: "image/jpeg", // or the appropriate mime type
+        name: "selfie.jpg",
+      },
+      att_date_time: new Date(photoDateTime).toISOString(), // Format the date correctly
+      location: location, // Use the received location
+      employee_id: employee_id, // Use the received employee_id
+    };
+    console.log("Attendance Data:", attendanceData);
+    const response = await attendanceApi.addAttendanceLogs(attendanceData);
+    if (!response.ok) {
+      console.log("Error:", response.problem);
+      console.log("Response Data:", response.data);
+      return alert("Error saving attendance log.");
+    }
+    alert("Attendance log saved successfully.");
+    //navigation.navigate(routes.ATTENDANCE_LOGS);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <CameraView style={styles.camera} ref={setCamera} facing={facing}>
@@ -109,8 +135,9 @@ export default function OpenCamera({ navigation }) {
               title="Confirm"
               color={colors.primary}
               onPress={() => {
-                console.log("Photo URI:", photoUri);
-                console.log("Photo DateTime:", photoDateTime);
+                //console.log("Photo URI:", photo);
+                //console.log("Photo DateTime:", photoDateTime);
+                submitAttendanceLog();
                 // You can add logic here to include the photo in a Formik form and send it to the server
                 navigation.goBack(); // Close the camera after confirming
               }}

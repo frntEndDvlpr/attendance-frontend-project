@@ -49,6 +49,7 @@ function TasksListScreen({ navigation }) {
   const [attendanceRange, setAttendanceRange] = useState([]);
   const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
   const [currentProjectTitle, setCurrentProjectTitle] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
   const currentLocation = useLocation();
 
   // Load the user's profile data
@@ -56,7 +57,7 @@ function TasksListScreen({ navigation }) {
     const response = await employeesApi.getEmployeesProfile();
     if (response.ok) {
       setUser(response.data);
-      console.log(response.data);
+      //console.log("user's profile", response.data);
       //console.log("User's Profile:", response.data);
     } else {
       alert("Error getting profile data.");
@@ -79,6 +80,9 @@ function TasksListScreen({ navigation }) {
       //console.log("Project Locations:", projectsLocation);
       const attendanceRange = user.projects.map((project) => project.range);
       setAttendanceRange(attendanceRange);
+      const employeeId = user.id;
+      setEmployeeId(employeeId);
+      //console.log("Employee ID:", employeeId);
       //console.log("Attendance Range:", attendanceRange);
     }
   }, [user]);
@@ -175,7 +179,10 @@ function TasksListScreen({ navigation }) {
         {isAtProjectLocation && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Camera");
+              navigation.navigate("Camera", {
+                location: currentLocation,
+                employee_id: employeeId,
+              });
             }}
           >
             <View style={styles.CamreaBtn}>
