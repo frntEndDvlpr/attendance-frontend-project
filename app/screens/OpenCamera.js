@@ -17,6 +17,13 @@ import colors from "../config/colors";
 import TakePhotoButton from "../components/TakePhotoButton";
 import attendanceApi from "../api/attendance";
 
+// Helper function to convert EXIF DateTimeOriginal to ISO format
+const convertToISOFormat = (dateTimeOriginal) => {
+  const [date, time] = dateTimeOriginal.split(" ");
+  const formattedDate = date.replace(/:/g, "-");
+  return `${formattedDate}T${time}Z`;
+};
+
 export default function OpenCamera({ navigation, route }) {
   const [facing, setFacing] = useState("front");
   const [hasPermission, setHasPermission] = useState(null);
@@ -56,8 +63,15 @@ export default function OpenCamera({ navigation, route }) {
       if (photoData.exif) {
         const { DateTimeOriginal } = photoData.exif;
         if (DateTimeOriginal) {
-          setPhotoDateTime(DateTimeOriginal);
-          //console.log(`Photo captured at: ${DateTimeOriginal}`); // Log the date and time
+          const isoDateTime = convertToISOFormat(DateTimeOriginal);
+          const date = new Date(isoDateTime);
+          if (!isNaN(date.getTime())) {
+            setPhotoDateTime(isoDateTime);
+            console.log(`Photo captured at: ${isoDateTime}`); // Log the date and time
+          } else {
+            console.error("Invalid DateTimeOriginal value:", DateTimeOriginal);
+            Alert.alert("Error", "Invalid date and time metadata in photo.");
+          }
         } else {
           console.log("Date and time metadata not available in EXIF");
         }
@@ -77,26 +91,49 @@ export default function OpenCamera({ navigation, route }) {
     return <Text>No access to camera</Text>;
   }
 
-  const submitAttendanceLog = async () => {
+  const validationSchema = Yup.object().shape({
+    selfie: Yup.string().required("Selfie is required"),
+    att_date_time: Yup.string().required("Date and time are required"),
+    location: Yup.string().required("Location is required"),
+    employee_id: Yup.string().required("Employee ID is required"),
+  });
+
+  const handleSubmit = async () => {
+    const values = {
+      selfie: photo,
+      att_date_time: new Date(photoDateTime).toISOString(),
+      location: location,
+      employee_id: employee_id,
+    };
+    console.log("Form Submitted", values); // Debugging log
     const attendanceData = {
       selfie: {
-        uri: photo,
+        uri: values.selfie,
         type: "image/jpeg", // or the appropriate mime type
         name: "selfie.jpg",
       },
-      att_date_time: new Date(photoDateTime).toISOString(), // Format the date correctly
-      location: location, // Use the received location
-      employee_id: employee_id, // Use the received employee_id
+      att_date_time: values.att_date_time,
+      location: JSON.stringify(values.location), // Ensure location is a valid JSON object
+      employee_id: values.employee_id,
     };
     console.log("Attendance Data:", attendanceData);
-    const response = await attendanceApi.addAttendanceLogs(attendanceData);
-    if (!response.ok) {
-      console.log("Error:", response.problem);
-      console.log("Response Data:", response.data);
-      return alert("Error saving attendance log.");
+    try {
+      const response = await attendanceApi.addAttendanceLogs(attendanceData);
+      console.log("API Response:", response); // Debugging log
+      if (!response.ok) {
+        console.log("Error:", response.problem);
+        console.log("Response Data:", response.data);
+        alert("Error saving attendance log.");
+      } else {
+        alert("Attendance log saved successfully.");
+        // Delete the photo after successfully sending the log to the server
+        await MediaLibrary.deleteAssetsAsync([photoUri]);
+        navigation.goBack(); // Close the camera after confirming
+      }
+    } catch (error) {
+      console.error("API call failed:", error);
+      alert("Error saving attendance log.");
     }
-    alert("Attendance log saved successfully.");
-    //navigation.navigate(routes.ATTENDANCE_LOGS);
   };
 
   return (
@@ -135,11 +172,8 @@ export default function OpenCamera({ navigation, route }) {
               title="Confirm"
               color={colors.primary}
               onPress={() => {
-                //console.log("Photo URI:", photo);
-                //console.log("Photo DateTime:", photoDateTime);
-                submitAttendanceLog();
-                // You can add logic here to include the photo in a Formik form and send it to the server
-                navigation.goBack(); // Close the camera after confirming
+                console.log("Confirm button pressed");
+                handleSubmit();
               }}
             />
             <Button
