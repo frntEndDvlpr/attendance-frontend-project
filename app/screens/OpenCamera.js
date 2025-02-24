@@ -67,7 +67,7 @@ export default function OpenCamera({ navigation, route }) {
           const date = new Date(isoDateTime);
           if (!isNaN(date.getTime())) {
             setPhotoDateTime(isoDateTime);
-            console.log(`Photo captured at: ${isoDateTime}`); // Log the date and time
+            //console.log(`Photo captured at: ${isoDateTime}`); // Log the date and time
           } else {
             console.error("Invalid DateTimeOriginal value:", DateTimeOriginal);
             Alert.alert("Error", "Invalid date and time metadata in photo.");
@@ -105,7 +105,7 @@ export default function OpenCamera({ navigation, route }) {
       location: location,
       employee_id: employee_id,
     };
-    console.log("Form Submitted", values); // Debugging log
+    //console.log("Form Submitted", values); // Debugging log
     const attendanceData = {
       selfie: {
         uri: values.selfie,
@@ -116,13 +116,13 @@ export default function OpenCamera({ navigation, route }) {
       location: JSON.stringify(values.location), // Ensure location is a valid JSON object
       employee_id: values.employee_id,
     };
-    console.log("Attendance Data:", attendanceData);
+    //console.log("Attendance Data:", attendanceData);
     try {
       const response = await attendanceApi.addAttendanceLogs(attendanceData);
-      console.log("API Response:", response); // Debugging log
+      //console.log("API Response:", response); // Debugging log
       if (!response.ok) {
         console.log("Error:", response.problem);
-        console.log("Response Data:", response.data);
+        //console.log("Response Data:", response.data);
         alert("Error saving attendance log.");
       } else {
         alert("Attendance log saved successfully.");
@@ -172,7 +172,6 @@ export default function OpenCamera({ navigation, route }) {
               title="Confirm"
               color={colors.primary}
               onPress={() => {
-                console.log("Confirm button pressed");
                 handleSubmit();
               }}
             />

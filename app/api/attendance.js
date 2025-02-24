@@ -19,15 +19,15 @@ const getAttendanceLogs = () => apiClient.get(endPoint);
 const addAttendanceLogs = (attendance, onUploadProgress) => {
   const data = new FormData();
   data.append("employee_id", attendance.employee_id);
-  data.append("att_date_time", formatDate(attendance.att_date_time)); // Format the date correctly
-  data.append("location", JSON.stringify(attendance.location)); // Ensure location is a valid JSON object
+  data.append("att_date_time", formatDate(attendance.att_date_time));
+  data.append("location", JSON.stringify(attendance.location));
   data.append("selfie", {
     uri: attendance.selfie.uri,
     type: attendance.selfie.type,
     name: attendance.selfie.name,
   });
 
-  console.log("Sending attendance data to server:", data); // Debugging log
+  //console.log("Sending attendance data to server:", data); // Debugging log
 
   return apiClient.post(endPoint, data, {
     headers: {
