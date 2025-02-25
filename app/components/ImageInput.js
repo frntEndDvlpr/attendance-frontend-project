@@ -1,35 +1,43 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
 
-function ImageInput({ imageUri }) {
+function ImageInput({ imageUri, handlePress }) {
   return (
-    <View style={styles.container}>
-      {!imageUri && (
-        <MaterialCommunityIcons
-          color={colors.darkGrey}
-          name="camera"
-          size={35}
-        />
-      )}
-      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-    </View>
+    <TouchableWithoutFeedback onPress={handlePress}>
+      <View style={styles.container}>
+        {!imageUri && (
+          <MaterialCommunityIcons
+            color={colors.midGray}
+            name="camera"
+            size={100}
+          />
+        )}
+        {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    borderRadius: 35,
+    borderRadius: 100,
     backgroundColor: colors.lightGreen,
-    height: 70,
+    height: 200,
     justifyContent: "center",
-    width: 70,
+    overflow: "hidden",
+    width: 200,
   },
   image: {
-    Highlight: "100%",
+    height: "100%", // Corrected property name
     width: "100%",
   },
 });
