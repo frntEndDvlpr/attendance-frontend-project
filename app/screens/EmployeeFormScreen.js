@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import * as Yup from "yup";
+import * as ImagePicker from "expo-image-picker";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
@@ -9,6 +10,7 @@ import projectApi from "../api/project";
 import UploadScreen from "./UploadScreen";
 import AppPicker from "../components/AppPicker";
 import auth from "../api/auth";
+import ImageInput from "../components/ImageInput";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -27,8 +29,38 @@ function EmployeeFormScreen({ navigation, route }) {
   const [project, setPrject] = useState();
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
+  const [photo, setphoto] = useState(null);
 
   const employee = route.params?.employee || null;
+
+  const openMediaLibrary = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        quality: 0.5,
+      });
+      if (!result.canceled) {
+        setphoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error loading the image: ", error);
+    }
+  };
+
+  const TakePhoto = async () => {
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        quality: 0.5,
+        allowsEditing: true,
+      });
+      if (!result.canceled) {
+        setphoto(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error loading the image: ", error);
+    }
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -77,7 +109,9 @@ function EmployeeFormScreen({ navigation, route }) {
       ...employeeData,
       projects: selectedProjects.map((p) => p.id), // Send only project IDs
       user_id: selectedUser?.[0]?.id || null,
+      photo: photo,
     };
+    console.log("data", dataToSubmit);
 
     if (employee) {
       result = await employeesApi.updateEmployee(
@@ -93,7 +127,7 @@ function EmployeeFormScreen({ navigation, route }) {
 
     if (!result.ok) {
       console.log(result.problem);
-      console.log(dataToSubmit);
+      //console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the employee!");
     }
@@ -114,6 +148,32 @@ function EmployeeFormScreen({ navigation, route }) {
           progress={progress}
           visible={uploadVisible}
         />
+        <View style={styles.imageContainer}>
+          <ImageInput
+            imageUri={photo}
+            handlePress={() => {
+              Alert.alert(
+                "Select an image",
+                "Would you like to take a photo or choose one from your library?",
+                [
+                  {
+                    text: "Take Photo",
+                    onPress: () => {
+                      TakePhoto();
+                    },
+                  },
+                  {
+                    text: "Choose from Library",
+                    onPress: () => {
+                      openMediaLibrary();
+                    },
+                  },
+                  { text: "Cancel" },
+                ]
+              );
+            }}
+          />
+        </View>
         <AppForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
@@ -171,6 +231,10 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,
     fontWeight: "bold",
+  },
+  imageContainer: {
+    marginVertical: 50,
+    alignSelf: "center",
   },
 });
 

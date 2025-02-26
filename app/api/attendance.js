@@ -26,6 +26,7 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
     type: attendance.selfie.type,
     name: attendance.selfie.name,
   });
+  //console.log("Sending data to server:", data);
 
   return apiClient.post(endPoint, data, {
     headers: {
