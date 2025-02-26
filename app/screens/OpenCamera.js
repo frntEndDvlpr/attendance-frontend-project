@@ -129,6 +129,7 @@ export default function OpenCamera({ navigation, route }) {
         // Delete the photo after successfully sending the log to the server
         await MediaLibrary.deleteAssetsAsync([photoUri]);
         navigation.goBack(); // Close the camera after confirming
+        //console.log("submited date", values);
       }
     } catch (error) {
       console.error("API call failed:", error);

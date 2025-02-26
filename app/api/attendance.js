@@ -27,8 +27,6 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
     name: attendance.selfie.name,
   });
 
-  //console.log("Sending attendance data to server:", data); // Debugging log
-
   return apiClient.post(endPoint, data, {
     headers: {
       "Content-Type": "multipart/form-data",
