@@ -213,7 +213,7 @@ function EmployeeFormScreen({ navigation, route }) {
             onSelectItems={setSelectedProjects}
           />
           <AppPicker
-            icon="apps"
+            icon="account"
             items={user}
             placeholder="Select User"
             selectedItems={selectedUser}
