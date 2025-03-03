@@ -56,7 +56,10 @@ export default function OpenCamera({ navigation, route }) {
   // Capturing a photo
   const takePicture = async () => {
     if (camera) {
-      const photoData = await camera.takePictureAsync({ exif: true });
+      const photoData = await camera.takePictureAsync({
+        exif: true,
+        quality: 0.5,
+      });
       setPhoto(photoData.uri);
       setPhotoUri(photoData.uri);
 

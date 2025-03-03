@@ -30,7 +30,6 @@ function EmployeeFormScreen({ navigation, route }) {
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
   const [photo, setphoto] = useState(null);
-
   const employee = route.params?.employee || null;
 
   const openMediaLibrary = async () => {
@@ -53,6 +52,7 @@ function EmployeeFormScreen({ navigation, route }) {
       let result = await ImagePicker.launchCameraAsync({
         quality: 0.5,
         allowsEditing: true,
+        exif: true,
       });
       if (!result.canceled) {
         setphoto(result.assets[0].uri);
