@@ -153,7 +153,7 @@ export default function GetCheckLocation({ navigation }) {
             </View> */}
           </>
         ) : (
-          <Text>Fetching current location...</Text>
+          <AppText>Fetching current location...</AppText>
         )}
         {/* <TouchableOpacity
           onPress={() => {
@@ -202,9 +202,9 @@ export default function GetCheckLocation({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-start",
+    alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingHorizontal: 20,
     paddingTop: 50,
   },
