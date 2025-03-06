@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import EXIF from "exif-js";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -10,6 +12,7 @@ import CameraNavigator from "../navigation/CameraNavigator";
 import employeesApi from "../api/employees";
 import useLocation from "../hooks/useLocation";
 import AppIcon from "../components/AppIcon";
+import attendanceApi from "../api/attendance";
 
 const initialTasks = [
   {
@@ -50,6 +53,10 @@ function TasksListScreen({ navigation }) {
   const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
   const [currentProjectTitle, setCurrentProjectTitle] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const [photo, setphoto] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [photoDateTime, setPhotoDateTime] = useState(null);
   const currentLocation = useLocation();
 
   // Load the user's profile data
@@ -148,6 +155,67 @@ function TasksListScreen({ navigation }) {
     }
   }, [currentLocation, projectLocations, attendanceRange]);
 
+  const TakePhoto = async () => {
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        quality: 0.1,
+        exif: true,
+        cameraType: "front",
+      });
+
+      console.log("Camera result:", result);
+
+      if (!result.canceled) {
+        const photoUri = result.assets[0].uri;
+        setphoto(photoUri);
+        console.log("Photo URI:", photoUri);
+
+        // Extract EXIF data directly from the result object
+        const exifData = result.assets[0].exif;
+        const dateTime = exifData.DateTimeOriginal || exifData.DateTime;
+        setPhotoDateTime(dateTime);
+        console.log("Captured Date and Time:", dateTime);
+
+        // Call handleSubmit after setting the photo and dateTime
+        handleSubmit(photoUri);
+      }
+    } catch (error) {
+      console.error("Error loading the image: ", error);
+    }
+  };
+
+  const handleSubmit = async (photoUri) => {
+    setProgress(0);
+    setUploadVisible(true);
+    setRefreshing(true);
+    const attendanceData = {
+      employee_id: employeeId,
+      att_date_time: new Date(photoDateTime).toISOString(),
+      location: JSON.stringify(currentLocation),
+      selfie: {
+        uri: photoUri,
+        type: "image/jpeg",
+        name: "selfie.jpg",
+      },
+    };
+    console.log("Attendance Data:", attendanceData);
+
+    try {
+      const response = await attendanceApi.addAttendanceLogs(attendanceData);
+      (progress) => setProgress(progress);
+      if (!response.ok) {
+        console.log("Error saving attendance data:", response.problem);
+        console.log("Error saving attendance data:", response.data);
+        return;
+      }
+      console.log("Attendance data saved successfully:", response.data);
+      setRefreshing(false);
+    } catch (error) {
+      console.error("Error saving attendance data:", error);
+      setRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.map}>
@@ -179,10 +247,11 @@ function TasksListScreen({ navigation }) {
         {isAtProjectLocation && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Camera", {
+              /* navigation.navigate("Camera", {
                 location: currentLocation,
                 employee_id: employeeId,
-              });
+              }); */
+              TakePhoto();
             }}
           >
             <View style={styles.CamreaBtn}>

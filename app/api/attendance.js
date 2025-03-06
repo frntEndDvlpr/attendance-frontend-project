@@ -21,12 +21,15 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
   data.append("employee_id", attendance.employee_id);
   data.append("att_date_time", formatDate(attendance.att_date_time));
   data.append("location", JSON.stringify(attendance.location));
-  data.append("selfie", {
-    uri: attendance.selfie.uri,
-    type: attendance.selfie.type,
-    name: attendance.selfie.name,
-  });
-  //console.log("Sending data to server:", data);
+  if (attendance.selfie.uri) {
+    data.append("selfie", {
+      uri: attendance.selfie.uri,
+      type: attendance.selfie.type,
+      name: attendance.selfie.name,
+    });
+  } else {
+    console.error("Selfie URI is null");
+  }
 
   return apiClient.post(endPoint, data, {
     headers: {
@@ -45,11 +48,15 @@ const updateAttendanceLogs = (id, attendanceData, onUploadProgress) => {
   data.append("employee_id", attendanceData.employee_id);
   data.append("att_date_time", formatDate(attendanceData.att_date_time)); // Format the date correctly
   data.append("location", JSON.stringify(attendanceData.location)); // Ensure location is a valid JSON object
-  data.append("selfie", {
-    uri: attendanceData.selfie.uri,
-    type: attendanceData.selfie.type,
-    name: attendanceData.selfie.name,
-  });
+  if (attendanceData.selfie.uri) {
+    data.append("selfie", {
+      uri: attendanceData.selfie.uri,
+      type: attendanceData.selfie.type,
+      name: attendanceData.selfie.name,
+    });
+  } else {
+    console.error("Selfie URI is null");
+  }
 
   return apiClient.put(`${endPoint}${id}/`, data, {
     headers: {

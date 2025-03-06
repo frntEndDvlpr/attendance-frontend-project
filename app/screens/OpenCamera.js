@@ -11,11 +11,13 @@ import {
 import * as MediaLibrary from "expo-media-library";
 import { Camera, CameraView } from "expo-camera";
 import * as Yup from "yup";
+import * as ImagePicker from "expo-image-picker";
 
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";
 import TakePhotoButton from "../components/TakePhotoButton";
 import attendanceApi from "../api/attendance";
+import UploadScreen from "./UploadScreen";
 
 // Helper function to convert EXIF DateTimeOriginal to ISO format
 const convertToISOFormat = (dateTimeOriginal) => {
@@ -31,6 +33,8 @@ export default function OpenCamera({ navigation, route }) {
   const [photo, setPhoto] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [photoDateTime, setPhotoDateTime] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploadVisible, setUploadVisible] = useState(false);
 
   const { location, employee_id } = route.params; // Receive the location and employee_id parameter
 
@@ -58,7 +62,7 @@ export default function OpenCamera({ navigation, route }) {
     if (camera) {
       const photoData = await camera.takePictureAsync({
         exif: true,
-        quality: 0.5,
+        quality: 1,
       });
       setPhoto(photoData.uri);
       setPhotoUri(photoData.uri);
@@ -94,14 +98,9 @@ export default function OpenCamera({ navigation, route }) {
     return <Text>No access to camera</Text>;
   }
 
-  const validationSchema = Yup.object().shape({
-    selfie: Yup.string().required("Selfie is required"),
-    att_date_time: Yup.string().required("Date and time are required"),
-    location: Yup.string().required("Location is required"),
-    employee_id: Yup.string().required("Employee ID is required"),
-  });
-
   const handleSubmit = async () => {
+    setProgress(0);
+    setUploadVisible(true);
     const values = {
       selfie: photo,
       att_date_time: new Date(photoDateTime).toISOString(),
@@ -122,16 +121,22 @@ export default function OpenCamera({ navigation, route }) {
     //console.log("Attendance Data:", attendanceData);
     try {
       const response = await attendanceApi.addAttendanceLogs(attendanceData);
+      (progress) => setProgress(progress);
       //console.log("API Response:", response); // Debugging log
       if (!response.ok) {
         console.log("Error:", response.problem);
         //console.log("Response Data:", response.data);
+        setUploadVisible(false);
         alert("Error saving attendance log.");
       } else {
-        alert("Attendance log saved successfully.");
+        setProgress(1);
+        setTimeout(() => {
+          setUploadVisible(false);
+          navigation.goBack(); // Close the camera after confirming
+        }, 2000);
+        //alert("Attendance log saved successfully.");
         // Delete the photo after successfully sending the log to the server
         await MediaLibrary.deleteAssetsAsync([photoUri]);
-        navigation.goBack(); // Close the camera after confirming
         //console.log("submited date", values);
       }
     } catch (error) {
@@ -142,6 +147,11 @@ export default function OpenCamera({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
+      <UploadScreen
+        onDone={() => setUploadVisible(false)}
+        progress={progress}
+        visible={uploadVisible}
+      />
       <CameraView style={styles.camera} ref={setCamera} facing={facing}>
         <View style={styles.cameraIcons}>
           <TouchableOpacity
