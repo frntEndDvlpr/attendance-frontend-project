@@ -13,6 +13,7 @@ import employeesApi from "../api/employees";
 import useLocation from "../hooks/useLocation";
 import AppIcon from "../components/AppIcon";
 import attendanceApi from "../api/attendance";
+import UploadScreen from "./UploadScreen";
 
 const initialTasks = [
   {
@@ -206,10 +207,14 @@ function TasksListScreen({ navigation }) {
       if (!response.ok) {
         console.log("Error saving attendance data:", response.problem);
         console.log("Error saving attendance data:", response.data);
-        return;
+        setUploadVisible(false);
+      } else {
+        setProgress(1);
+        setTimeout(() => {
+          setUploadVisible(false);
+          setRefreshing(false);
+        }, 2000);
       }
-      console.log("Attendance data saved successfully:", response.data);
-      setRefreshing(false);
     } catch (error) {
       console.error("Error saving attendance data:", error);
       setRefreshing(false);
@@ -262,6 +267,12 @@ function TasksListScreen({ navigation }) {
       </View>
       <View style={styles.list}>
         <AppText style={styles.title}>My Attendace Log</AppText>
+
+        <UploadScreen
+          onDone={() => setUploadVisible(false)}
+          progress={progress}
+          visible={uploadVisible}
+        />
 
         <FlatList
           data={tasks}
