@@ -285,7 +285,7 @@ function TasksListScreen({ navigation }) {
               location={item.location}
               status={item.status}
               total_hours={item.total_hours}
-              onPress={() => navigation.navigate("TaskForm", item)}
+              onPress={() => console.log("Task selected", item)}
               renderRightActions={() => (
                 <ListItemDeleteAction onPress={() => handleDelete(item)} />
               )}
