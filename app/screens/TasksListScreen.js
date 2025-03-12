@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import EXIF from "exif-js";
+import moment from "moment-timezone";
 
 import TaskListItem from "../components/TaskListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -58,7 +58,9 @@ function TasksListScreen({ navigation }) {
   const [progress, setProgress] = useState(0);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [photoDateTime, setPhotoDateTime] = useState(null);
+  const [photoTimeZone, setPhotoTimeZone] = useState(null);
   const currentLocation = useLocation();
+  const [hasTimedIn, setHasTimedIn] = useState(false);
 
   // Load the user's profile data
   const loadMyProfile = async () => {
@@ -174,24 +176,37 @@ function TasksListScreen({ navigation }) {
         // Extract EXIF data directly from the result object
         const exifData = result.assets[0].exif;
         const dateTime = exifData.DateTimeOriginal || exifData.DateTime;
+        const timezone = exifData.TimeZone || "";
+        setPhotoTimeZone(timezone);
+        console.log("Timezone:", timezone);
+
         setPhotoDateTime(dateTime);
         console.log("Captured Date and Time:", dateTime);
 
         // Call handleSubmit after setting the photo and dateTime
-        handleSubmit(photoUri);
+        handleSubmit(photoUri, dateTime, timezone);
       }
     } catch (error) {
       console.error("Error loading the image: ", error);
     }
   };
 
-  const handleSubmit = async (photoUri) => {
+  const handleSubmit = async (photoUri, dateTime, timezone) => {
     setProgress(0);
     setUploadVisible(true);
     setRefreshing(true);
+
+    const formattedDateTime = dateTime.replace(/:/g, "-");
+    const momentDateTime = moment.tz(
+      formattedDateTime,
+      "YYYY-MM-DD HH-mm-ss",
+      timezone
+    );
+    const isoDateTime = momentDateTime.toISOString();
+
     const attendanceData = {
       employee_id: employeeId,
-      att_date_time: new Date(photoDateTime).toISOString(),
+      att_date_time: isoDateTime,
       location: JSON.stringify(currentLocation),
       selfie: {
         uri: photoUri,
@@ -213,6 +228,7 @@ function TasksListScreen({ navigation }) {
         setTimeout(() => {
           setUploadVisible(false);
           setRefreshing(false);
+          setHasTimedIn(true);
         }, 2000);
       }
     } catch (error) {
@@ -260,7 +276,9 @@ function TasksListScreen({ navigation }) {
             }}
           >
             <View style={styles.CamreaBtn}>
-              <AppText style={styles.CamreaBtnText}>Time in</AppText>
+              <AppText style={styles.CamreaBtnText}>
+                {hasTimedIn ? "Time out" : "Time in"}
+              </AppText>
             </View>
           </TouchableOpacity>
         )}

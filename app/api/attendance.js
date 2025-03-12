@@ -2,14 +2,9 @@ import apiClient from "./client";
 
 const endPoint = "/api/attendance-logs/";
 
-// Helper function to validate and format date
+// No need to format the date anymore, as it's already formatted in TasksListScreen
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    console.error("Invalid date string:", dateString);
-    throw new RangeError("Date value out of bounds");
-  }
-  return date.toISOString();
+  return dateString;
 };
 
 // Getting employees from the server API
@@ -19,7 +14,8 @@ const getAttendanceLogs = () => apiClient.get(endPoint);
 const addAttendanceLogs = (attendance, onUploadProgress) => {
   const data = new FormData();
   data.append("employee_id", attendance.employee_id);
-  data.append("att_date_time", formatDate(attendance.att_date_time));
+  // Use the date string directly, no need to reformat it
+  data.append("att_date_time", attendance.att_date_time);
   data.append("location", JSON.stringify(attendance.location));
   if (attendance.selfie.uri) {
     data.append("selfie", {
@@ -30,6 +26,7 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
   } else {
     console.error("Selfie URI is null");
   }
+  console.log("Data sent to server:", data);
 
   return apiClient.post(endPoint, data, {
     headers: {
@@ -46,8 +43,9 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
 const updateAttendanceLogs = (id, attendanceData, onUploadProgress) => {
   const data = new FormData();
   data.append("employee_id", attendanceData.employee_id);
-  data.append("att_date_time", formatDate(attendanceData.att_date_time)); // Format the date correctly
-  data.append("location", JSON.stringify(attendanceData.location)); // Ensure location is a valid JSON object
+  // Use the date string directly, no need to reformat it
+  data.append("att_date_time", attendanceData.att_date_time);
+  data.append("location", JSON.stringify(attendanceData.location));
   if (attendanceData.selfie.uri) {
     data.append("selfie", {
       uri: attendanceData.selfie.uri,
