@@ -16,7 +16,7 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
   data.append("employee_id", attendance.employee_id);
   // Use the date string directly, no need to reformat it
   data.append("att_date_time", attendance.att_date_time);
-  data.append("location", JSON.stringify(attendance.location));
+  data.append("location", attendance.location);
   if (attendance.selfie.uri) {
     data.append("selfie", {
       uri: attendance.selfie.uri,

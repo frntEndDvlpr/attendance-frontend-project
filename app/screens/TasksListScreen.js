@@ -14,6 +14,7 @@ import useLocation from "../hooks/useLocation";
 import AppIcon from "../components/AppIcon";
 import attendanceApi from "../api/attendance";
 import UploadScreen from "./UploadScreen";
+import employees from "../api/employees";
 
 const initialTasks = [
   {
@@ -59,8 +60,35 @@ function TasksListScreen({ navigation }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [photoDateTime, setPhotoDateTime] = useState(null);
   const [photoTimeZone, setPhotoTimeZone] = useState(null);
+  const [attendaceLogs, setAttendaceLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [response, setResponse] = useState(null);
   const currentLocation = useLocation();
   const [hasTimedIn, setHasTimedIn] = useState(false);
+
+  // Get attendance log list from the server
+  const loadAttendaceLogs = async () => {
+    setLoading(true); // Start loading
+    const response = await attendanceApi.getAttendanceLogs();
+    setLoading(false); // Stop loading
+
+    if (!response.ok) {
+      setError(true);
+      console.log(response.problem);
+      setResponse(response.problem);
+    } else {
+      setError(false);
+      setAttendaceLogs(response.data);
+      console.log("Success:", response.data);
+    }
+  };
+
+  const sortedAttendaceLogs = attendaceLogs.sort((a, b) => b.id - a.id);
+
+  useEffect(() => {
+    loadAttendaceLogs();
+  }, []);
 
   // Load the user's profile data
   const loadMyProfile = async () => {
@@ -207,7 +235,7 @@ function TasksListScreen({ navigation }) {
     const attendanceData = {
       employee_id: employeeId,
       att_date_time: isoDateTime,
-      location: JSON.stringify(currentLocation),
+      location: currentProjectTitle,
       selfie: {
         uri: photoUri,
         type: "image/jpeg",
@@ -227,7 +255,7 @@ function TasksListScreen({ navigation }) {
         setProgress(1);
         setTimeout(() => {
           setUploadVisible(false);
-          setRefreshing(false);
+          loadAttendaceLogs();
           setHasTimedIn(true);
         }, 2000);
       }
@@ -293,8 +321,8 @@ function TasksListScreen({ navigation }) {
         />
 
         <FlatList
-          data={tasks}
-          keyExtractor={(task) => task.id.toString()}
+          data={attendaceLogs}
+          keyExtractor={(attendace) => attendace.id.toString()}
           renderItem={({ item }) => (
             <TaskListItem
               date={item.date}
@@ -312,54 +340,7 @@ function TasksListScreen({ navigation }) {
           /* ItemSeparatorComponent={ListItemSeparator} */
           refreshing={refreshing}
           onRefresh={() => {
-            setTasks([
-              {
-                id: 4,
-                date: "6/19/2024",
-                time_in: "07-30",
-                time_out: "16-30",
-                location: "HO",
-                status: "Present",
-                total_hours: "8Hrs",
-              },
-              {
-                id: 5,
-                date: "6/19/2024",
-                time_in: "07-30",
-                time_out: "16-30",
-                location: "HO Dqum Office 2",
-                status: "Present",
-                total_hours: "8Hrs",
-              },
-              {
-                id: 6,
-                title: "Absent",
-                date: "6/19/2024",
-                time_in: "07-30",
-                time_out: "16-30",
-                location: "HO",
-                status: "Present",
-                total_hours: "8Hrs",
-              },
-              {
-                id: 7,
-                date: "6/19/2024",
-                time_in: "07-30",
-                time_out: "16-30",
-                location: "HO",
-                status: "Present",
-                total_hours: "8Hrs",
-              },
-              {
-                id: 8,
-                date: "6/19/2024",
-                time_in: "07-30",
-                time_out: "16-30",
-                location: "HO",
-                status: "Present",
-                total_hours: "8Hrs",
-              },
-            ]);
+            loadAttendaceLogs();
           }}
         />
       </View>

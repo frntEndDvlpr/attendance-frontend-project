@@ -18,7 +18,6 @@ function TaskListItem({
   onPress,
   renderRightActions,
   title,
-  customer,
 }) {
   return (
     <GestureHandlerRootView>
