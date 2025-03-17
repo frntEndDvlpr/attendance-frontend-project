@@ -14,7 +14,6 @@ import useLocation from "../hooks/useLocation";
 import AppIcon from "../components/AppIcon";
 import attendanceApi from "../api/attendance";
 import UploadScreen from "./UploadScreen";
-import employees from "../api/employees";
 
 const initialTasks = [
   {
