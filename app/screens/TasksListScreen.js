@@ -193,7 +193,7 @@ function TasksListScreen({ navigation }) {
         cameraType: "front",
       });
 
-      console.log("Camera result:", result);
+      //console.log("Camera result:", result);
 
       if (!result.canceled) {
         const photoUri = result.assets[0].uri;
@@ -205,10 +205,10 @@ function TasksListScreen({ navigation }) {
         const dateTime = exifData.DateTimeOriginal || exifData.DateTime;
         const timezone = exifData.TimeZone || "";
         setPhotoTimeZone(timezone);
-        console.log("Timezone:", timezone);
+        //console.log("Timezone:", timezone);
 
         setPhotoDateTime(dateTime);
-        console.log("Captured Date and Time:", dateTime);
+        //console.log("Captured Date and Time:", dateTime);
 
         // Call handleSubmit after setting the photo and dateTime
         handleSubmit(photoUri, dateTime, timezone);
@@ -241,14 +241,14 @@ function TasksListScreen({ navigation }) {
         name: "selfie.jpg",
       },
     };
-    console.log("Attendance Data:", attendanceData);
+    //console.log("Attendance Data:", attendanceData);
 
     try {
       const response = await attendanceApi.addAttendanceLogs(attendanceData);
       (progress) => setProgress(progress);
       if (!response.ok) {
         console.log("Error saving attendance data:", response.problem);
-        console.log("Error saving attendance data:", response.data);
+        //console.log("Error saving attendance data:", response.data);
         setUploadVisible(false);
       } else {
         setProgress(1);

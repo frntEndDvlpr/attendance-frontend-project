@@ -2,11 +2,6 @@ import apiClient from "./client";
 
 const endPoint = "/api/attendance-logs/";
 
-// No need to format the date anymore, as it's already formatted in TasksListScreen
-const formatDate = (dateString) => {
-  return dateString;
-};
-
 // Getting employees from the server API
 const getAttendanceLogs = () => apiClient.get(endPoint);
 
