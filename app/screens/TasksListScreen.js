@@ -14,6 +14,7 @@ import useLocation from "../hooks/useLocation";
 import AppIcon from "../components/AppIcon";
 import attendanceApi from "../api/attendance";
 import UploadScreen from "./UploadScreen";
+import Calendar from "../components/Calendar";
 
 const initialTasks = [
   {
@@ -79,11 +80,12 @@ function TasksListScreen({ navigation }) {
     } else {
       setError(false);
       setAttendaceLogs(response.data);
-      console.log("Success:", response.data);
+      //console.log("Success:", response.data);
     }
   };
 
   const sortedAttendaceLogs = attendaceLogs.sort((a, b) => b.id - a.id);
+  const lastFiveLogs = sortedAttendaceLogs.slice(0, 5);
 
   useEffect(() => {
     loadAttendaceLogs();
@@ -320,7 +322,7 @@ function TasksListScreen({ navigation }) {
         />
 
         <FlatList
-          data={attendaceLogs}
+          data={lastFiveLogs}
           keyExtractor={(attendace) => attendace.id.toString()}
           renderItem={({ item }) => (
             <TaskListItem
@@ -341,6 +343,7 @@ function TasksListScreen({ navigation }) {
           onRefresh={() => {
             loadAttendaceLogs();
           }}
+          ListFooterComponent={<Calendar />}
         />
       </View>
     </View>

@@ -14,4 +14,5 @@ export default {
   red: "#cc3939",
   primaryTransparency: "#00000055",
   midGray: "#8f8f8f",
+  yellow: "#f8d210",
 };
