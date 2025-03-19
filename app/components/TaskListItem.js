@@ -37,10 +37,7 @@ function TaskListItem({
             <View style={styles.midContainer}>
               {location && (
                 <AppText style={styles.assignee}>
-                  <TaskListIcon
-                    name="map-marker-outline"
-                    iconColor={colors.gray}
-                  />
+                  <TaskListIcon name="map-marker" iconColor={colors.gray} />
                   {location}
                 </AppText>
               )}
