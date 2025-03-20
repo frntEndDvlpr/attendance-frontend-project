@@ -284,7 +284,7 @@ function TasksListScreen({ navigation }) {
         >
           <AppIcon
             name="crosshairs-gps"
-            size={40}
+            size={35}
             backgroundColor="false"
             iconColor={colors.black}
           />
@@ -370,8 +370,8 @@ const styles = StyleSheet.create({
   },
   CamreaBtn: {
     borderRadius: 5,
-    width: 90,
-    height: 40,
+    //width: 90,
+    //height: 40,
     justifyContent: "center",
     backgroundColor: colors.secondary,
   },
@@ -379,7 +379,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 15,
+    padding: 10,
   },
   coordinates: {
     borderRadius: 5,
@@ -390,6 +391,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.black,
     marginRight: 10,
+    fontSize: 11,
   },
   locationCameraBtn: {
     position: "absolute",

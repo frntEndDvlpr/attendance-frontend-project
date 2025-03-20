@@ -15,4 +15,5 @@ export default {
   primaryTransparency: "#00000055",
   midGray: "#8f8f8f",
   yellow: "#f8d210",
+  omanair: "00728e",
 };
