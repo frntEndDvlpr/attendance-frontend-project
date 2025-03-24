@@ -313,8 +313,6 @@ function TasksListScreen({ navigation }) {
         )}
       </View>
       <View style={styles.list}>
-        <AppText style={styles.title}>My Attendace Log</AppText>
-
         <UploadScreen
           onDone={() => setUploadVisible(false)}
           progress={progress}
@@ -322,6 +320,9 @@ function TasksListScreen({ navigation }) {
         />
 
         <FlatList
+          ListHeaderComponent={
+            <AppText style={styles.title}>My Attendace Log</AppText>
+          }
           data={lastFiveLogs}
           keyExtractor={(attendace) => attendace.id.toString()}
           renderItem={({ item }) => (
