@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.black,
     marginRight: 10,
-    fontSize: 11,
+    fontSize: 13,
   },
   locationCameraBtn: {
     position: "absolute",
