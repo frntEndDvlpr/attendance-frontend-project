@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import EmployeeNavigator from "../../app/navigation/EmployeeNavigator";
 import ProjectNavigator from "../../app/navigation/ProjectNavigator";
 import CompanyNavigator from "./CompanyNavigator";
-//import AppNavigator from "./AppNavigator";
+import AppNavigator from "./AppNavigator";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const Stak = createNativeStackNavigator();

@@ -189,30 +189,30 @@ function TasksListScreen({ navigation }) {
 
   const TakePhoto = async () => {
     try {
+      // Ask for camera permissions
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        alert("Camera permission is required to take a photo.");
+        return;
+      }
+
       let result = await ImagePicker.launchCameraAsync({
         quality: 0.1,
         exif: true,
         cameraType: "front",
       });
 
-      //console.log("Camera result:", result);
-
       if (!result.canceled) {
         const photoUri = result.assets[0].uri;
         setphoto(photoUri);
         console.log("Photo URI:", photoUri);
 
-        // Extract EXIF data directly from the result object
         const exifData = result.assets[0].exif;
         const dateTime = exifData.DateTimeOriginal || exifData.DateTime;
         const timezone = exifData.TimeZone || "";
         setPhotoTimeZone(timezone);
-        //console.log("Timezone:", timezone);
-
         setPhotoDateTime(dateTime);
-        //console.log("Captured Date and Time:", dateTime);
 
-        // Call handleSubmit after setting the photo and dateTime
         handleSubmit(photoUri, dateTime, timezone);
       }
     } catch (error) {
