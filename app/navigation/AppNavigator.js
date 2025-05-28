@@ -17,7 +17,7 @@ const AppNavigator = () => (
       name="Account"
       component={AccountScreen}
       options={{
-        title: () => <AppText>Account</AppText>,
+        title: "Account",
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
@@ -32,7 +32,7 @@ const AppNavigator = () => (
       name="TasksListings"
       component={TaskNavigator}
       options={{
-        title: () => <AppText>Attendance</AppText>,
+        title: "Attendance",
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <View style={styles.container}>
@@ -49,7 +49,7 @@ const AppNavigator = () => (
       name="settings"
       component={SettingsNavigator}
       options={{
-        title: () => <AppText>Settings</AppText>,
+        title: "Settings",
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
