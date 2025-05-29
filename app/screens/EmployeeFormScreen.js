@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
@@ -45,12 +46,24 @@ function EmployeeFormScreen({ navigation, route }) {
   };
 
   const takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      quality: 0.5,
-      allowsEditing: true,
-      cameraType: "front",
-    });
-    if (!result.canceled) setPhoto(result.assets[0].uri);
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.7,
+      });
+
+      if (!result.canceled) {
+        const manipulated = await ImageManipulator.manipulateAsync(
+          result.assets[0].uri,
+          [{ resize: { width: 600 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        setPhoto({ uri: manipulated.uri });
+      }
+    } catch (error) {
+      console.log("Error taking photo:", error);
+    }
   };
 
   useEffect(() => {
@@ -83,7 +96,7 @@ function EmployeeFormScreen({ navigation, route }) {
       ...employeeData,
       projects: selectedProjects.map((p) => p.id),
       user_id: selectedUser?.[0]?.id || null,
-      photo,
+      photo: photo !== employee?.photo ? photo : null,
     };
 
     const result = employee
