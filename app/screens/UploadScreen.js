@@ -1,4 +1,7 @@
-import React, { useEffect } from "react";
+/* This code defines an UploadScreen component that displays a progress circle or a success animation
+/  based on the upload progress. It uses a modal to show the upload status and handles the completion of the upload with a timeout.*/
+
+import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import * as Progress from "react-native-progress";
 import LottieView from "lottie-react-native";
@@ -8,17 +11,27 @@ function UploadScreen({
   progress = 0,
   visible = false,
   onDone,
-  timeout = 9000,
+  timeout = 2000,
 }) {
+  const hasFinished = useRef(false);
+
   useEffect(() => {
-    if (progress >= 1) {
+    if (progress >= 1 && !hasFinished.current) {
+      hasFinished.current = true;
       const timer = setTimeout(onDone, timeout);
       return () => clearTimeout(timer);
     }
   }, [progress, onDone, timeout]);
 
+  const handleAnimationFinish = () => {
+    if (!hasFinished.current) {
+      hasFinished.current = true;
+      onDone();
+    }
+  };
+
   return (
-    <Modal visible={visible}>
+    <Modal visible={visible} transparent>
       <View style={styles.container}>
         {progress < 1 ? (
           <Progress.Circle
@@ -31,7 +44,7 @@ function UploadScreen({
           <LottieView
             autoPlay
             loop={false}
-            onAnimationFinish={onDone}
+            onAnimationFinish={handleAnimationFinish}
             source={require("../assets/animations/Done.json")}
             style={styles.doneAninmation}
           />
@@ -46,8 +59,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
-  doneAninmation: { width: 200, height: 200 },
+  doneAninmation: {
+    width: 200,
+    height: 200,
+  },
 });
 
 export default UploadScreen;

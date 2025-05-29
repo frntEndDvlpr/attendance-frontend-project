@@ -1,3 +1,6 @@
+/* This code defines the EmployeeFormScreen component, which allows users to create or update employee records.
+  It includes form validation, image upload functionality, and integrates with the employees API to save data. */
+
 import React, { useState, useEffect } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import * as Yup from "yup";
@@ -29,6 +32,7 @@ function EmployeeFormScreen({ navigation, route }) {
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
   const [photo, setPhoto] = useState(null);
+
   const employee = route.params?.employee || null;
 
   const openMediaLibrary = async () => {
@@ -44,6 +48,7 @@ function EmployeeFormScreen({ navigation, route }) {
     const result = await ImagePicker.launchCameraAsync({
       quality: 0.5,
       allowsEditing: true,
+      cameraType: "front",
     });
     if (!result.canceled) setPhoto(result.assets[0].uri);
   };
@@ -89,11 +94,19 @@ function EmployeeFormScreen({ navigation, route }) {
         )
       : await employeesApi.addEmployee(dataToSubmit, setProgress);
 
-    setUploadVisible(false);
+    setProgress(1);
     if (!result.ok) {
+      setUploadVisible(false);
+      console.log("Data submitted:", dataToSubmit);
+      console.log("API response:", result.problem);
       return alert("Could not save the employee!");
     }
 
+    // Success — handled in UploadScreen's `onDone`
+  };
+
+  const handleUploadDone = () => {
+    setUploadVisible(false);
     if (route.params?.onGoBack) route.params.onGoBack();
     navigation.goBack();
   };
@@ -102,18 +115,19 @@ function EmployeeFormScreen({ navigation, route }) {
     <AppScreen style={styles.container}>
       <ScrollView>
         <UploadScreen
-          onDone={() => setUploadVisible(false)}
+          onDone={handleUploadDone}
           progress={progress}
           visible={uploadVisible}
         />
+
         <View style={styles.imageContainer}>
           <ImageInput
             imageUri={photo}
             handlePress={() => {
-              Alert.alert("Select an image", "Camera or Gallery?", [
+              Alert.alert("Select an image", "Camera or Library?", [
                 { text: "Take Photo", onPress: takePhoto },
                 { text: "Choose from Library", onPress: openMediaLibrary },
-                { text: "Cancel" },
+                { text: "Cancel", style: "cancel" },
               ]);
             }}
           />
