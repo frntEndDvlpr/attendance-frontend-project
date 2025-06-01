@@ -6,6 +6,7 @@ import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
+import * as FileSystem from "expo-file-system";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
@@ -40,29 +41,33 @@ function EmployeeFormScreen({ navigation, route }) {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      quality: 0.5,
+      quality: 0.7,
     });
-    if (!result.canceled) setPhoto(result.assets[0].uri);
+
+    if (!result.canceled) {
+      const manipulated = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setPhoto(manipulated.uri);
+    }
   };
 
   const takePhoto = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 0.7,
-      });
+    const result = await ImagePicker.launchCameraAsync({
+      cameraType: "front",
+      quality: 0.7,
+      allowsEditing: true,
+    });
 
-      if (!result.canceled) {
-        const manipulated = await ImageManipulator.manipulateAsync(
-          result.assets[0].uri,
-          [{ resize: { width: 600 } }],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-        );
-        setPhoto({ uri: manipulated.uri });
-      }
-    } catch (error) {
-      console.log("Error taking photo:", error);
+    if (!result.canceled) {
+      const manipulated = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setPhoto(manipulated.uri);
     }
   };
 
