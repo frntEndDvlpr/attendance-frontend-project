@@ -4,9 +4,6 @@
 import React, { useState, useEffect } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import * as Yup from "yup";
-import * as ImagePicker from "expo-image-picker";
-import * as ImageManipulator from "expo-image-manipulator";
-import * as FileSystem from "expo-file-system";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import AppScreen from "../components/AppScreen";
@@ -16,6 +13,7 @@ import UploadScreen from "./UploadScreen";
 import AppPicker from "../components/AppPicker";
 import auth from "../api/auth";
 import ImageInput from "../components/ImageInput";
+import { useImageHandler } from "../hooks/useImageHandler"; // Custom hook for image handling
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -33,43 +31,13 @@ function EmployeeFormScreen({ navigation, route }) {
   const [user, setUser] = useState([]);
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
-  const [photo, setPhoto] = useState(null);
+  const {
+    image: selectedPhoto,
+    pickImageFromCamera,
+    pickImageFromLibrary,
+  } = useImageHandler();
 
   const employee = route.params?.employee || null;
-
-  const openMediaLibrary = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      const manipulated = await ImageManipulator.manipulateAsync(
-        result.assets[0].uri,
-        [{ resize: { width: 800 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-      );
-      setPhoto(manipulated.uri);
-    }
-  };
-
-  const takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      cameraType: "front",
-      quality: 0.7,
-      allowsEditing: true,
-    });
-
-    if (!result.canceled) {
-      const manipulated = await ImageManipulator.manipulateAsync(
-        result.assets[0].uri,
-        [{ resize: { width: 800 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-      );
-      setPhoto(manipulated.uri);
-    }
-  };
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -101,7 +69,7 @@ function EmployeeFormScreen({ navigation, route }) {
       ...employeeData,
       projects: selectedProjects.map((p) => p.id),
       user_id: selectedUser?.[0]?.id || null,
-      photo: photo !== employee?.photo ? photo : null,
+      photo: selectedPhoto !== employee?.photo ? selectedPhoto : null,
     };
 
     const result = employee
@@ -119,8 +87,6 @@ function EmployeeFormScreen({ navigation, route }) {
       console.log("API response:", result.problem);
       return alert("Could not save the employee!");
     }
-
-    // Success — handled in UploadScreen's `onDone`
   };
 
   const handleUploadDone = () => {
@@ -140,11 +106,11 @@ function EmployeeFormScreen({ navigation, route }) {
 
         <View style={styles.imageContainer}>
           <ImageInput
-            imageUri={photo}
+            imageUri={selectedPhoto?.uri}
             handlePress={() => {
               Alert.alert("Select an image", "Camera or Library?", [
-                { text: "Take Photo", onPress: takePhoto },
-                { text: "Choose from Library", onPress: openMediaLibrary },
+                { text: "Take Photo", onPress: pickImageFromCamera },
+                { text: "Choose from Library", onPress: pickImageFromLibrary },
                 { text: "Cancel", style: "cancel" },
               ]);
             }}
