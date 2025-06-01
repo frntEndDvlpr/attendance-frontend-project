@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
   photo: Yup.mixed().notRequired().nullable().label("Photo"),
 });
 
-function TaskFormScreen(props) {
+function AttendanceFormScreen(props) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TaskFormScreen;
+export default AttendanceFormScreen;

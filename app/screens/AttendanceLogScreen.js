@@ -46,7 +46,7 @@ const initialTasks = [
   },
 ];
 
-function TasksListScreen({ navigation }) {
+function AttendanceLogScreen({ navigation }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState();
@@ -403,4 +403,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TasksListScreen;
+export default AttendanceLogScreen;

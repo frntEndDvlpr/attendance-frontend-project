@@ -4,10 +4,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import AccountScreen from "../screens/AccountScreen";
 import colors from "../config/colors";
-import TaskNavigator from "./TaskNavigator";
-import AppText from "../components/AppText";
 import SettingsNavigator from "./SettingsNavigator";
 import { View, StyleSheet } from "react-native";
+import AttendanceNavigator from "./AttendanceNavigator";
 
 const BottomTap = createBottomTabNavigator();
 
@@ -30,7 +29,7 @@ const AppNavigator = () => (
     />
     <BottomTap.Screen
       name="TasksListings"
-      component={TaskNavigator}
+      component={AttendanceNavigator}
       options={{
         title: "Attendance",
         headerShown: false,
