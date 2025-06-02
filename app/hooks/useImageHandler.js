@@ -6,6 +6,8 @@ import { Alert, Platform } from "react-native";
 export function useImageHandler() {
   const [image, setImage] = useState(null);
 
+  // Request permissions for camera and media library access
+  // This is done once when the hook is first used
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -23,6 +25,11 @@ export function useImageHandler() {
     })();
   }, []);
 
+  // Function to handle image picking and manipulation
+  /**
+   * Handles image selection from camera or library, resizes it, and prepares it for upload.
+   * @param {Function} launchFunction - The function to launch the image picker (camera or library).
+   */
   const handleImage = async (launchFunction) => {
     try {
       const result = await launchFunction({
