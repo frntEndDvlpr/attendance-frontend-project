@@ -5,7 +5,6 @@ import * as ImagePicker from "expo-image-picker";
 import moment from "moment-timezone";
 
 import TaskListItem from "../components/TaskListItem";
-import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import CameraNavigator from "../navigation/CameraNavigator";
@@ -16,38 +15,8 @@ import attendanceApi from "../api/attendance";
 import UploadScreen from "./UploadScreen";
 import Calendar from "../components/Calendar";
 
-const initialTasks = [
-  {
-    id: 1,
-    date: "6/19/2024",
-    time_in: "07-30",
-    time_out: "16-30",
-    location: "HO",
-    status: "Present",
-    total_hours: "8Hrs",
-  },
-  {
-    id: 2,
-    date: "6/19/2024",
-    time_in: "07-30",
-    time_out: "16-30",
-    location: "HO",
-    status: "Present",
-    total_hours: "8Hrs",
-  },
-  {
-    id: 3,
-    date: "6/19/2024",
-    time_in: "07-30",
-    time_out: "16-30",
-    location: "HO",
-    status: "Present",
-    total_hours: "8Hrs",
-  },
-];
-
 function AttendanceLogScreen({ navigation }) {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState();
   const [projectLocations, setProjectLocations] = useState([]);
@@ -125,10 +94,6 @@ function AttendanceLogScreen({ navigation }) {
       //console.log("Attendance Range:", attendanceRange);
     }
   }, [user]);
-
-  const handleDelete = (task) => {
-    setTasks(tasks.filter((t) => t.id !== task.id));
-  };
 
   // Haversine formula to calculate the distance between two geographical points
   const haversineDistance = (coords1, coords2) => {
@@ -334,9 +299,6 @@ function AttendanceLogScreen({ navigation }) {
               status={item.status}
               total_hours={item.total_hours}
               onPress={() => console.log("Log selected", item)}
-              renderRightActions={() => (
-                <ListItemDeleteAction onPress={() => handleDelete(item)} />
-              )}
             />
           )}
           /* ItemSeparatorComponent={ListItemSeparator} */
