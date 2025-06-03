@@ -27,7 +27,7 @@ function EmployeesListScreen({ navigation }) {
       setError(true);
     } else {
       setError(false);
-      setEmployees(response.data.sort((a, b) => b.id - a.id));
+      setEmployees(response.data.sort((a, b) => a.id - b.id)); // Oldest first (top), newest last
     }
   };
 

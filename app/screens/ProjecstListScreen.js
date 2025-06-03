@@ -21,7 +21,7 @@ function ProjecstListScreen({ navigation }) {
   const [response, setResponse] = useState(false);
 
   // Sort Projects list descending based on the 'id'
-  const sortedProjects = projects.sort((a, b) => b.id - a.id);
+  const sortedProjects = projects.sort((a, b) => a.id - b.id);
 
   // Get employees list from the server
   const loadProjects = async () => {
