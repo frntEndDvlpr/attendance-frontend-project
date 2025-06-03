@@ -16,7 +16,6 @@ import UploadScreen from "./UploadScreen";
 import Calendar from "../components/Calendar";
 
 function AttendanceLogScreen({ navigation }) {
-  const [tasks, setTasks] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setUser] = useState();
   const [projectLocations, setProjectLocations] = useState([]);
@@ -33,8 +32,8 @@ function AttendanceLogScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [response, setResponse] = useState(null);
-  const currentLocation = useLocation();
   const [hasTimedIn, setHasTimedIn] = useState(false);
+  const currentLocation = useLocation();
 
   // Get attendance log list from the server
   const loadAttendaceLogs = async () => {
@@ -56,10 +55,6 @@ function AttendanceLogScreen({ navigation }) {
   const sortedAttendaceLogs = attendaceLogs.sort((a, b) => b.id - a.id);
   const lastFiveLogs = sortedAttendaceLogs.slice(0, 5);
 
-  useEffect(() => {
-    loadAttendaceLogs();
-  }, []);
-
   // Load the user's profile data
   const loadMyProfile = async () => {
     const response = await employeesApi.getEmployeesProfile();
@@ -76,6 +71,7 @@ function AttendanceLogScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       loadMyProfile();
+      loadAttendaceLogs();
     }, [])
   );
 
@@ -208,14 +204,15 @@ function AttendanceLogScreen({ navigation }) {
         name: "selfie.jpg",
       },
     };
-    //console.log("Attendance Data:", attendanceData);
 
     try {
-      const response = await attendanceApi.addAttendanceLogs(attendanceData);
-      (progress) => setProgress(progress);
+      const response = await attendanceApi.addAttendanceLogs(
+        attendanceData,
+        (progress) => setProgress(progress)
+      );
+
       if (!response.ok) {
         console.log("Error saving attendance data:", response.problem);
-        //console.log("Error saving attendance data:", response.data);
         setUploadVisible(false);
       } else {
         setProgress(1);
@@ -223,12 +220,15 @@ function AttendanceLogScreen({ navigation }) {
           setUploadVisible(false);
           loadAttendaceLogs();
           setHasTimedIn(true);
+          setRefreshing(false);
         }, 2000);
+        return;
       }
     } catch (error) {
       console.error("Error saving attendance data:", error);
-      setRefreshing(false);
     }
+
+    setRefreshing(false);
   };
 
   return (

@@ -19,6 +19,12 @@ function TaskListItem({
   renderRightActions,
   title,
 }) {
+  const formatTotalHours = (totalHoursFloat) => {
+    const totalMinutes = Math.round(totalHoursFloat * 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}h:${minutes.toString().padStart(2, "0")}m`;
+  };
   return (
     <GestureHandlerRootView>
       <Swipeable renderRightActions={renderRightActions}>
@@ -62,13 +68,13 @@ function TaskListItem({
                   {employee}
                 </AppText>
               )}
-              {total_hours && (
+              {typeof total_hours === "number" && (
                 <AppText style={styles.assignee}>
                   <TaskListIcon
                     name="timer-outline"
                     iconColor={colors.secondary}
                   />
-                  {total_hours}
+                  {formatTotalHours(total_hours)}
                 </AppText>
               )}
             </View>

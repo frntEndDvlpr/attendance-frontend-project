@@ -2,35 +2,23 @@ import apiClient from "./client";
 
 const endPoint = "/api/attendance-logs/";
 
-// Getting employees from the server API
+// Load the attendance log from the server API
 const getAttendanceLogs = () => apiClient.get(endPoint);
 
 // Adding an attendance to the server API
 const addAttendanceLogs = (attendance, onUploadProgress) => {
   const data = new FormData();
   data.append("employee_id", attendance.employee_id);
-  // Use the date string directly, no need to reformat it
   data.append("att_date_time", attendance.att_date_time);
   data.append("location", attendance.location);
-  if (attendance.selfie.uri) {
-    data.append("selfie", {
-      uri: attendance.selfie.uri,
-      type: attendance.selfie.type,
-      name: attendance.selfie.name,
-    });
-  } else {
-    console.error("Selfie URI is null");
-  }
-  console.log("Data sent to server:", data);
+  data.append("selfie", {
+    uri: attendance.selfie.uri,
+    type: "image/jpeg",
+    name: "selfie.jpg",
+  });
 
   return apiClient.post(endPoint, data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onUploadProgress: (event) => {
-      const progress = event.loaded / event.total;
-      onUploadProgress(progress);
-    },
+    onUploadProgress,
   });
 };
 
