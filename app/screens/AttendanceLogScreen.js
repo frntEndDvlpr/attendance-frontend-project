@@ -218,8 +218,8 @@ function AttendanceLogScreen({ navigation }) {
         setProgress(1);
         setTimeout(() => {
           setUploadVisible(false);
-          loadAttendaceLogs();
           setHasTimedIn(true);
+          loadAttendaceLogs();
           setRefreshing(false);
         }, 2000);
         return;
