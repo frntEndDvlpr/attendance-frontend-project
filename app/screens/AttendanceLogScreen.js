@@ -158,7 +158,7 @@ function AttendanceLogScreen({ navigation }) {
       }
 
       let result = await ImagePicker.launchCameraAsync({
-        quality: 0.1,
+        quality: 0.7,
         exif: true,
         cameraType: "front",
       });
@@ -212,6 +212,7 @@ function AttendanceLogScreen({ navigation }) {
       );
 
       if (!response.ok) {
+        console.log("Data sent:", response.data);
         console.log("Error saving attendance data:", response.problem);
         setUploadVisible(false);
       } else {

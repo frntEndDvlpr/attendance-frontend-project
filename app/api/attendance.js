@@ -17,6 +17,11 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
     name: "selfie.jpg",
   });
 
+  // Debug: log FormData keys and values
+  for (let pair of data.entries()) {
+    console.log(pair[0] + ": " + JSON.stringify(pair[1]));
+  }
+
   return apiClient.post(endPoint, data, {
     onUploadProgress,
   });
@@ -51,11 +56,11 @@ const updateAttendanceLogs = (id, attendanceData, onUploadProgress) => {
 };
 
 // Deleting an employee from the server API
-const deleteAttendanceLog = (id) => apiClient.delete(`${endPoint}${id}/`);
+//const deleteAttendanceLog = (id) => apiClient.delete(`${endPoint}${id}/`);
 
 export default {
   getAttendanceLogs,
   addAttendanceLogs,
   updateAttendanceLogs,
-  deleteAttendanceLog,
+  //deleteAttendanceLog,
 };
