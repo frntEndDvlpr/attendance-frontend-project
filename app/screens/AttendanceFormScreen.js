@@ -6,7 +6,7 @@ import { AppForm } from "../components/forms";
 import attendanceApi from "../api/attendance";
 
 const validationSchema = Yup.object().shape({
-  employee_id: Yup.number().required().label("Employee ID"),
+  employee: Yup.number().required().label("Employee"), // employee_id
   att_date_time: Yup.date().required().label("Attendance Date & Time"),
   location: Yup.string().required().label("Location"),
   photo: Yup.mixed().notRequired().nullable().label("Photo"),
@@ -52,7 +52,7 @@ function AttendanceFormScreen(props) {
       <ScrollView>
         <AppForm
           initialValues={{
-            employee_id: "",
+            employee: "",
             att_date_time: "",
             location: "",
             photo: "",

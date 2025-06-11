@@ -8,7 +8,7 @@ const getAttendanceLogs = () => apiClient.get(endPoint);
 // Adding an attendance to the server API
 const addAttendanceLogs = (attendance, onUploadProgress) => {
   const data = new FormData();
-  data.append("employee_id", attendance.employee_id);
+  data.append("employee", attendance.employee); // employee_id
   data.append("att_date_time", attendance.att_date_time);
   data.append("location", attendance.location);
   data.append("selfie", {
@@ -30,7 +30,7 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
 // Updating an attendance in the server API
 const updateAttendanceLogs = (id, attendanceData, onUploadProgress) => {
   const data = new FormData();
-  data.append("employee_id", attendanceData.employee_id);
+  data.append("employee", attendanceData.employee); // employee_id
   // Use the date string directly, no need to reformat it
   data.append("att_date_time", attendanceData.att_date_time);
   data.append("location", JSON.stringify(attendanceData.location));
