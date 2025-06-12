@@ -59,7 +59,11 @@
     "react-native-web": "^0.20.0",
     "sharp-cli": "^5.1.0",
     "undefined": "react-native-community/datetimepicker",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "@react-native-community/netinfo": "11.4.1",
+    "expo-application": "~6.1.4",
+    "expo-crypto": "~14.1.5",
+    "expo-device": "~7.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

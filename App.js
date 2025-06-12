@@ -1,3 +1,6 @@
+import Bugsnag from '@bugsnag/expo';
+Bugsnag.start();
+
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 
