@@ -63,7 +63,8 @@
     "@react-native-community/netinfo": "11.4.1",
     "expo-application": "~6.1.4",
     "expo-crypto": "~14.1.5",
-    "expo-device": "~7.1.4"
+    "expo-device": "~7.1.4",
+    "expo-updates": "~0.28.14"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

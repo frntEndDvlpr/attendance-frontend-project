@@ -1,8 +1,9 @@
 import { create } from "apisauce";
 import authStorage from "../auth/storage";
+import settings from "../config/settings";
 
 const apiClient = create({
-  baseURL: "http://192.168.100.24:8000/",
+  baseURL: settings.apiUrl,
   timeout: 10000,
 });
 

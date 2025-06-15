@@ -1,6 +1,3 @@
-import Bugsnag from '@bugsnag/expo';
-Bugsnag.start();
-
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -11,8 +8,13 @@ import UserListScreen from "./app/screens/UserListScreen";
 import AuthContext from "./app/auth/context";
 import { useEffect, useState } from "react";
 import authStorage from "./app/auth/storage";
+import logger from "./app/utility/logger";
+
+logger.start()
 
 export default function App() {
+
+  logger.log (new Error("Error in App"))
   const [user, setUser] = useState();
   const [isReady, setIsReady] = useState(false);
 
