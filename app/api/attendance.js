@@ -23,6 +23,9 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
   }
 
   return apiClient.post(endPoint, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
     onUploadProgress,
   });
 };

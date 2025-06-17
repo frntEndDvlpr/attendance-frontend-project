@@ -22,7 +22,7 @@ function AttendanceLogScreen({ navigation }) {
   const [attendanceRange, setAttendanceRange] = useState([]);
   const [isAtProjectLocation, setIsAtProjectLocation] = useState(false);
   const [currentProjectTitle, setCurrentProjectTitle] = useState("");
-  const [employeeId, setEmployeeId] = useState("");
+  const [employee, setEmployee] = useState("");
   const [photo, setphoto] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -84,8 +84,8 @@ function AttendanceLogScreen({ navigation }) {
       //console.log("Project Locations:", projectsLocation);
       const attendanceRange = user.projects.map((project) => project.range);
       setAttendanceRange(attendanceRange);
-      const employeeId = user.id;
-      setEmployeeId(employeeId);
+      const employee = user.id;
+      setEmployee(employee);
       //console.log("Employee ID:", employeeId);
       //console.log("Attendance Range:", attendanceRange);
     }
@@ -195,7 +195,7 @@ function AttendanceLogScreen({ navigation }) {
     const isoDateTime = momentDateTime.toISOString();
 
     const attendanceData = {
-      employee_id: employeeId,
+      employee,
       att_date_time: isoDateTime,
       location: currentProjectTitle,
       selfie: {
