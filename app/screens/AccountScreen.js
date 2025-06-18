@@ -13,7 +13,7 @@ function AccountScreen(props) {
 
   const handelLogout = () => {
     setUser(null);
-    authStorage.removeTokem();
+    authStorage.removeToken();
   };
 
   /*   employees = () => {

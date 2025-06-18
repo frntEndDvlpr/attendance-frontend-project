@@ -41,7 +41,6 @@
     "formik": "^2.4.6",
     "g": "^2.0.1",
     "jwt-decode": "^4.0.0",
-    "lottie-react-native": "7.2.2",
     "moment-timezone": "^0.5.47",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -60,7 +59,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-web": "^0.20.0",
     "sharp-cli": "^5.1.0",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "lottie-react-native": "7.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -24,7 +24,7 @@ const getUser = async () => {
   return token ? jwtDecode(token) : null;
 };
 
-const removeTokem = async () => {
+const removeToken = async () => {
   try {
     await SecureStore.deleteItemAsync(key);
   } catch (error) {
@@ -32,4 +32,4 @@ const removeTokem = async () => {
   }
 };
 
-export default { getToken, getUser, storeToken, removeTokem };
+export default { getToken, getUser, storeToken, removeToken };
