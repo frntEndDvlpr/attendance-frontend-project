@@ -24,17 +24,20 @@ function LoginScreen() {
   const [loginFailed, setLoginFailed] = useState(false);
   const authContext = useContext(AuthContext);
 
+  // Function to handle the form submission for user login
   const handelSubmit = async ({ username, password }) => {
-    const result = await AuthApi.login(username, password);
-    if (!result.ok) {
-      setLoginFailed(true);
-      return console.log(result.problem);
-    }
-    setLoginFailed(false);
-    const user = jwtDecode(result.data.access);
-    authContext.setUser(user);
-    authStorage.storeToken(result.data.access);
-  };
+  const result = await AuthApi.login(username, password);
+  if (!result.ok) {
+    setLoginFailed(true);
+    return;
+  }
+  setLoginFailed(false);
+  const access = result.data.access;
+  const refresh = result.data.refresh;
+  const user = jwtDecode(access);
+  authContext.setUser(user);
+  await authStorage.storeTokens(access, refresh);
+};
 
   return (
     <View style={styles.container}>

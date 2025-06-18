@@ -1,37 +1,28 @@
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
-
+import NavigationTheme from "./app/navigation/NavigationTheme";
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import AppNavigator from "./app/navigation/AppNavigator";
-import NavigationTheme from "./app/navigation/NavigationTheme";
-import UserListScreen from "./app/screens/UserListScreen";
+
+import { AuthProvider } from "./app/auth/context";
+import { useContext } from "react";
 import AuthContext from "./app/auth/context";
-import { useEffect, useState } from "react";
-import authStorage from "./app/auth/storage";
 import logger from "./app/utility/logger";
 
-logger.start()
+logger.start();
+
+// A small wrapper to access context and render correct navigator
+function Main() {
+  const { user } = useContext(AuthContext);
+  return user ? <AppNavigator /> : <AuthNavigator />;
+}
 
 export default function App() {
-
-  const [user, setUser] = useState();
-  const [isReady, setIsReady] = useState(false);
-
-  const restoreUser = async () => {
-    const user = await authStorage.getUser();
-    if (user) setUser(user);
-  };
-
-  useEffect(() => {
-    restoreUser();
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthProvider>
       <NavigationContainer theme={NavigationTheme}>
-        {user ? <AppNavigator /> : <AuthNavigator />}
-        {/* <UserListScreen /> */}
+        <Main />
       </NavigationContainer>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
