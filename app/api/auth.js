@@ -10,12 +10,48 @@ const adduser = (user, onUploadProgress) => {
   data.append("email", user.email);
   data.append("password", user.password);
 
-  console.log("Sending data to server:", data);
+  // Only append image if it exists
+  if (user.imageUri) {
+    const uriParts = user.imageUri.split(".");
+    const fileType = uriParts[uriParts.length - 1];
+
+    data.append("profile_image", {
+      uri: user.imageUri,
+      name: `photo.${fileType}`,
+      type: `image/${fileType}`,
+    });
+  }
 
   return apiClient.post(endPoint, data, {
     onUploadProgress: (event) => {
       const progress = event.loaded / event.total;
-      onUploadProgress(progress);
+      if (onUploadProgress) onUploadProgress(progress);
+    },
+  });
+};
+
+const updateUser = (id, user, onUploadProgress) => {
+  const data = new FormData();
+
+  // Add fields that are allowed to update
+  if (user.name) data.append("username", user.name);
+  if (user.email) data.append("email", user.email);
+  if (user.password) data.append("password", user.password);
+
+  // Only include is_staff during update
+  if (typeof user.is_staff === "boolean") {
+    data.append("is_staff", user.is_staff ? "true" : "false");
+  }
+
+  // Do NOT send imageUri or image data
+
+  return apiClient.put(`${endPoint}${id}/`, data, {
+    onUploadProgress: (event) => {
+      const progress = event.loaded / event.total;
+      if (onUploadProgress) onUploadProgress(progress);
+    },
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
   });
 };
@@ -31,4 +67,4 @@ const refreshToken = (refresh) =>
 // Deleting a user from the server API
 const deleteUser = (id) => apiClient.delete(endPoint + id + "/");
 
-export default { login, adduser, getUsers, deleteUser, refreshToken };
+export default { login, adduser, getUsers, deleteUser, refreshToken, updateUser };

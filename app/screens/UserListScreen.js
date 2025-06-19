@@ -12,7 +12,7 @@ import AppScreen from "../components/AppScreen";
 import colors from "../config/colors";
 import employeesApi from "../api/employees";
 
-function UserListScreen(props) {
+function UserListScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -156,7 +156,10 @@ function UserListScreen(props) {
             designation={item.designation}
             department={item.department}
             projects={item.projects}
-            onPress={() => {}}
+            onPress={() => {navigation.navigate("UserForm", {
+              user: item,
+              onGoBack: loadUsers,
+            })}}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}

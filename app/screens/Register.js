@@ -28,10 +28,10 @@ const validationSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
-  imageUri: Yup.mixed().required("Profile Picture is required"),
+  imageUri: Yup.mixed(),
 });
 
-function RegisterScreen(navigation) {
+function RegisterScreen({ navigation }) {
   const [imageUri, setImageUri] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [query, setQuery] = useState("");
@@ -100,7 +100,7 @@ function RegisterScreen(navigation) {
 
     if (!result.ok) {
       console.log(result.problem);
-      //console.log(dataToSubmit);
+      console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the employee!");
     }
@@ -108,7 +108,7 @@ function RegisterScreen(navigation) {
     setProgress(1);
     setTimeout(() => {
       setUploadVisible(false);
-      //navigation.goBack();
+      navigation.navigate("Login");
     }, 2000);
   };
 

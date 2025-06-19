@@ -9,17 +9,17 @@ import TaskListIcon from "../components/TaskListIcon";
 function SettingsScreen({ navigation }) {
   return (
     <View style={styles.mainContainer}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Company")}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("User")}>
         <View style={styles.container}>
           <AppIcon
-            name="city-variant-outline"
+            name="account-group"
             backgroundColor={colors.secondary}
           />
           <View style={styles.innerContainer}>
-            <AppText style={styles.titl}>Company</AppText>
+            <AppText style={styles.titl}>Users</AppText>
             <ListItemSeparator />
             <AppText style={styles.subTitle}>
-              register your company details
+              Manage your users details
             </AppText>
           </View>
           <TaskListIcon
@@ -33,11 +33,11 @@ function SettingsScreen({ navigation }) {
         onPress={() => navigation.navigate("Employees")}
       >
         <View style={styles.container}>
-          <AppIcon name="account-group" backgroundColor={colors.primary} />
+          <AppIcon name="account-tie" backgroundColor={colors.primary} />
           <View style={styles.innerContainer}>
             <AppText style={styles.titl}>Employees</AppText>
             <ListItemSeparator />
-            <AppText style={styles.subTitle}>Just a long text to test</AppText>
+            <AppText style={styles.subTitle}>Manage your employees details</AppText>
           </View>
           <TaskListIcon
             name="chevron-right"
@@ -55,7 +55,7 @@ function SettingsScreen({ navigation }) {
           <View style={styles.innerContainer}>
             <AppText style={styles.titl}>Projects</AppText>
             <ListItemSeparator />
-            <AppText style={styles.subTitle}>Just a long text to test</AppText>
+            <AppText style={styles.subTitle}>Manage your projects details</AppText>
           </View>
           <TaskListIcon
             name="chevron-right"
