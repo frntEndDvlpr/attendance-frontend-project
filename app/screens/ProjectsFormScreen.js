@@ -61,6 +61,16 @@ function ProjectsFormScreen({ navigation, route }) {
     })();
   }, []);
 
+  useEffect(() => {
+  if (project?.location?.latitude && project?.location?.longitude) {
+    setSelectedLocation({
+      latitude: project.location.latitude,
+      longitude: project.location.longitude,
+    });
+  }
+}, [project]);
+
+
   // Handling selected location
   const handelSelectedLocation = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
