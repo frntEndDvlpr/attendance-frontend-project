@@ -31,13 +31,26 @@ function LoginScreen() {
     setLoginFailed(true);
     return;
   }
+
   setLoginFailed(false);
-  const access = result.data.access;
-  const refresh = result.data.refresh;
-  const user = jwtDecode(access);
-  authContext.setUser(user);
+  const { access, refresh } = result.data;
+
+  // 1. Store tokens
   await authStorage.storeTokens(access, refresh);
+
+  // 2. Fetch full user profile (includes is_staff)
+  const profileRes = await AuthApi.getMe(access);
+  if (!profileRes.ok) {
+    setLoginFailed(true);
+    return;
+  }
+
+  const userProfile = profileRes.data;
+
+  // 3. Set full user object in context
+  authContext.setUser(userProfile);
 };
+
 
   return (
     <View style={styles.container}>

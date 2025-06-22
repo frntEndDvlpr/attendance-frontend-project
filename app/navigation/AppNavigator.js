@@ -1,66 +1,63 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, StyleSheet } from "react-native";
 
 import AccountScreen from "../screens/AccountScreen";
-import colors from "../config/colors";
 import SettingsNavigator from "./SettingsNavigator";
-import { View, StyleSheet } from "react-native";
 import AttendanceNavigator from "./AttendanceNavigator";
+import colors from "../config/colors";
+import AuthContext from "../auth/context";
 
-const BottomTap = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
 
-const AppNavigator = () => (
-  <BottomTap.Navigator initialRouteName="TasksListings">
-    <BottomTap.Screen
-      name="Account"
-      component={AccountScreen}
-      options={{
-        title: "Account",
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons
-            name="account"
-            color={colors.primary}
-            size={size}
-          />
-        ),
-      }}
-    />
-    <BottomTap.Screen
-      name="TasksListings"
-      component={AttendanceNavigator}
-      options={{
-        title: "Attendance",
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <View style={styles.container}>
-            <MaterialCommunityIcons
-              name="account-clock-outline"
-              color={colors.white}
-              size={35}
-            />
-          </View>
-        ),
-      }}
-    />
-    <BottomTap.Screen
-      name="settings"
-      component={SettingsNavigator}
-      options={{
-        title: "Settings",
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons
-            name="cog"
-            color={colors.primary}
-            size={size}
-          />
-        ),
-      }}
-    />
-  </BottomTap.Navigator>
-);
+const AppNavigator = () => {
+  const { user } = useContext(AuthContext); // ✅ Now inside function
+
+  return (
+    <BottomTab.Navigator initialRouteName="TasksListings">
+      <BottomTab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{
+          title: "Account",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={colors.primary} size={size} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="TasksListings"
+        component={AttendanceNavigator}
+        options={{
+          title: "Attendance",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <View style={styles.container}>
+              <MaterialCommunityIcons
+                name="account-clock-outline"
+                color={colors.white}
+                size={35}
+              />
+            </View>
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Settings"
+        component={SettingsNavigator}
+        options={{
+          title: "Settings",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="cog" color={colors.primary} size={size} />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -74,7 +71,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 60,
   },
-  outerContainer: { alignItems: "flex-end" },
 });
 
 export default AppNavigator;

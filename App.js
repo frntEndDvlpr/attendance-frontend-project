@@ -8,9 +8,22 @@ import { AuthProvider } from "./app/auth/context";
 import { useContext } from "react";
 import AuthContext from "./app/auth/context";
 
-// A small wrapper to access context and render correct navigator
+import { View, ActivityIndicator } from "react-native";
+import AppText from "./app/components/AppText";
+
+// A wrapper to show appropriate screen based on user auth state
 function Main() {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+        <AppText>Loading user profile...</AppText>
+      </View>
+    );
+  }
+
   return user ? <AppNavigator /> : <AuthNavigator />;
 }
 

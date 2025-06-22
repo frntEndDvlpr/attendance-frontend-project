@@ -9,6 +9,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const loadUser = async () => {
     try {
@@ -70,6 +71,16 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     loadUser();
+  }, []);
+
+  const restoreUser = async () => {
+    const storedUser = await authStorage.getUser();
+    if (storedUser) setUser(storedUser);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    restoreUser();
   }, []);
 
   return (
