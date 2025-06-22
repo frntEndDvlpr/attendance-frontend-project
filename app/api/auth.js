@@ -4,6 +4,17 @@ const endPoint = "auth/users/";
 
 const getUsers = () => apiClient.get(endPoint);
 
+const getMe = (token) => {
+  // If token is provided, use it to fetch user details
+  if (token) {
+    return apiClient.get("auth/users/me/", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+}
+
 const adduser = (user, onUploadProgress) => {
   const data = new FormData();
   data.append("username", user.name);
@@ -67,4 +78,4 @@ const refreshToken = (refresh) =>
 // Deleting a user from the server API
 const deleteUser = (id) => apiClient.delete(endPoint + id + "/");
 
-export default { login, adduser, getUsers, deleteUser, refreshToken, updateUser };
+export default { login, adduser, getUsers, deleteUser, refreshToken, updateUser, getMe };

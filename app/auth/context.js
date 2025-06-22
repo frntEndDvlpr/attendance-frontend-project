@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { AppState } from "react-native";
 import Bugsnag from "@bugsnag/expo";
 import authStorage from "./storage";
-import authApi from "../api/auth";
+import authApi from "../api/auth"; // should include getMe()
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
@@ -10,20 +10,29 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Load user from token on app start
   const loadUser = async () => {
     try {
       const token = await authStorage.getAccessToken();
       if (token) {
+        // ✅ Decode to verify token format
         const decoded = jwtDecode(token);
-        setUser(decoded);
+        console.log("Decoded token:", decoded);
+
+        // ✅ Fetch full user details (with is_staff, employee, etc.)
+        const result = await authApi.getMe(token);
+        if (result.ok) {
+          console.log("Full user profile:", result.data);
+          setUser(result.data);  // ✅ Full user info including is_staff
+        } else {
+          console.log("Failed to fetch user details:", result.problem);
+        }
       }
     } catch (error) {
       Bugsnag.notify(error);
+      console.log("Error loading user:", error);
     }
   };
 
-  // Refresh token logic
   const refreshToken = async () => {
     const refresh = await authStorage.getRefreshToken();
     if (!refresh) return logout();
@@ -32,19 +41,23 @@ export const AuthProvider = ({ children }) => {
     if (result.ok && result.data?.access) {
       await authStorage.storeTokens(result.data.access, refresh);
       const decoded = jwtDecode(result.data.access);
-      setUser(decoded);
+      console.log("Token refreshed:", decoded);
+
+      const userResult = await authApi.getMe(result.data.access);
+      if (userResult.ok) {
+        console.log("Refreshed user profile:", userResult.data);
+        setUser(userResult.data);
+      }
     } else {
-      logout(); // If refresh fails
+      logout();
     }
   };
 
-  // Logout function
   const logout = async () => {
     setUser(null);
     await authStorage.removeTokens();
   };
 
-  // Try to refresh token when app comes to foreground
   useEffect(() => {
     const subscription = AppState.addEventListener("change", async (nextAppState) => {
       if (nextAppState === "active") {
@@ -55,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.remove();
   }, []);
 
-  // On mount, load the user
   useEffect(() => {
     loadUser();
   }, []);

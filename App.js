@@ -7,9 +7,6 @@ import AppNavigator from "./app/navigation/AppNavigator";
 import { AuthProvider } from "./app/auth/context";
 import { useContext } from "react";
 import AuthContext from "./app/auth/context";
-import logger from "./app/utility/logger";
-
-logger.start();
 
 // A small wrapper to access context and render correct navigator
 function Main() {
