@@ -16,18 +16,19 @@ const validationSchema = Yup.object().shape({
   title: Yup.string().required().label("Title"),
   description: Yup.string().required().label("Description"),
   start_date: Yup.string().notRequired().nullable().label("Start Date"),
-  end_date: Yup.string().label("End Date"),
+  end_date: Yup.string().nullable().label("End Date"),
   client: Yup.string().nullable().label("Client"),
-  location: Yup.object()
-    .shape({
-      latitude: Yup.number().nullable().notRequired().label("Latitude"),
-      longitude: Yup.number().nullable().notRequired().label("Longitude"),
-    })
+  latitude: Yup.string()
+    .matches(/^[-+]?[0-9]*\.?[0-9]+$/, "Invalid latitude")
     .nullable()
-    .notRequired()
-    .label("Location"),
+    .label("Latitude"),
+  longitude: Yup.string()
+    .matches(/^[-+]?[0-9]*\.?[0-9]+$/, "Invalid longitude")
+    .nullable()
+    .label("Longitude"),
   attendanceRange: Yup.number().nullable().label("Attendance Range"),
 });
+
 
 function ProjectsFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -78,57 +79,65 @@ function ProjectsFormScreen({ navigation, route }) {
   };
 
   const initialValues = {
-    title: project?.title || "",
-    description: project?.description || "",
-    start_date: project?.start_date || "",
-    end_date: project?.end_date || "",
-    client: project?.client || "",
-    location: project?.location || { latitude: null, longitude: null },
-    attendanceRange: attendanceRange,
-  };
+  title: project?.title || "",
+  description: project?.description || "",
+  start_date: project?.start_date || "",
+  end_date: project?.end_date || "",
+  client: project?.client || "",
+  latitude: project?.location?.latitude?.toString() || "",
+  longitude: project?.location?.longitude?.toString() || "",
+  attendanceRange: attendanceRange,
+};
+
 
   // Handling submission form
   const handleSubmit = async (projectData) => {
-    let result;
-    setProgress(0);
-    setUploadVisible(true);
+  setProgress(0);
+  setUploadVisible(true);
 
-    const dataToSubmit = {
-      ...projectData,
-      location: selectedLocation
-        ? {
-            latitude: selectedLocation.latitude,
-            longitude: selectedLocation.longitude,
-          }
-        : projectData.location,
-      attendanceRange: attendanceRange,
-    };
+  const parsedLat = parseFloat(projectData.latitude);
+  const parsedLng = parseFloat(projectData.longitude);
 
-    if (project) {
-      result = await projectApi.updateProject(
-        project.id,
-        dataToSubmit,
-        (progress) => setProgress(progress)
-      );
-    } else {
-      result = await projectApi.addProject(dataToSubmit, (progress) =>
-        setProgress(progress)
-      );
-    }
+  const manualLocation =
+    !isNaN(parsedLat) && !isNaN(parsedLng)
+      ? { latitude: parsedLat, longitude: parsedLng }
+      : selectedLocation;
 
-    if (!result.ok) {
-      console.log(dataToSubmit);
-      setUploadVisible(false);
-      return alert("Could not save the project!");
-    }
-
-    setProgress(1);
-    if (route.params?.onGoBack) route.params.onGoBack();
-    setTimeout(() => {
-      setUploadVisible(false);
-      navigation.goBack();
-    }, 2000);
+  const dataToSubmit = {
+    ...projectData,
+    location: manualLocation,
+    attendanceRange,
   };
+
+  delete dataToSubmit.latitude;
+  delete dataToSubmit.longitude;
+
+  let result;
+  if (project) {
+    result = await projectApi.updateProject(
+      project.id,
+      dataToSubmit,
+      (progress) => setProgress(progress)
+    );
+  } else {
+    result = await projectApi.addProject(dataToSubmit, (progress) =>
+      setProgress(progress)
+    );
+  }
+
+  if (!result.ok) {
+    setUploadVisible(false);
+    return alert("Could not save the project!");
+  }
+
+  setProgress(1);
+  if (route.params?.onGoBack) route.params.onGoBack();
+  setTimeout(() => {
+    setUploadVisible(false);
+    navigation.goBack();
+  }, 2000);
+};
+
 
   return (
     <View style={styles.container}>
@@ -202,22 +211,33 @@ function ProjectsFormScreen({ navigation, route }) {
         </View>
         <ScrollView>
           <AppForm
-            initialValues={initialValues}
-            onSubmit={handleSubmit}
-            validationSchema={validationSchema}
-          >
-            <TaskFormField
-              name="title"
-              placeholder="Title"
-              maxLength={100}
-              autoFocus
-            />
-            <TaskFormField name="description" placeholder="Description" />
-            <AppDateTimePicker name="start_date" placeholder="Start Date" />
-            <AppDateTimePicker name="end_date" placeholder="End Date" />
-            <TaskFormField name="client" placeholder="Client" />
-            <SubmitButton title={project ? "Update" : "Save"} />
-          </AppForm>
+  initialValues={initialValues}
+  onSubmit={handleSubmit}
+  validationSchema={validationSchema}
+>
+  <TaskFormField
+    name="latitude"
+    placeholder="Latitude"
+    keyboardType="decimal-pad"
+  />
+  <TaskFormField
+    name="longitude"
+    placeholder="Longitude"
+    keyboardType="decimal-pad"
+  />
+  <TaskFormField
+    name="title"
+    placeholder="Title"
+    maxLength={100}
+    autoFocus
+  />
+  <TaskFormField name="description" placeholder="Description" />
+  <AppDateTimePicker name="start_date" placeholder="Start Date" />
+  <AppDateTimePicker name="end_date" placeholder="End Date" />
+  <TaskFormField name="client" placeholder="Client" />
+  <SubmitButton title={project ? "Update" : "Save"} />
+</AppForm>
+
         </ScrollView>
       </View>
     </View>
