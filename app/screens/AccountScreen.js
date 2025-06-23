@@ -39,7 +39,7 @@ function AccountScreen(props) {
         />
         <ListItemSeparator />
         <AccountListItem
-          title="My Requests"
+          title="My Corrections Requests"
           iconName="file-document-edit-outline"
           rightIcon="chevron-right"
           backgroundColor={colors.secondary}

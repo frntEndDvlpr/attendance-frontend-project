@@ -47,7 +47,10 @@ function AttendanceLogScreen({ navigation }) {
       setResponse(response.problem);
     } else {
       setError(false);
-      setAttendaceLogs(response.data);
+      const filteredLogs = response.data.filter(
+        (log) => log.employee === employee
+      );
+      setAttendaceLogs(filteredLogs);
       //console.log("Success:", response.data);
     }
   };
@@ -69,11 +72,20 @@ function AttendanceLogScreen({ navigation }) {
   };
 
   useFocusEffect(
-    useCallback(() => {
-      loadMyProfile();
-      loadAttendaceLogs();
-    }, [])
-  );
+  useCallback(() => {
+    const fetchData = async () => {
+      await loadMyProfile();
+    };
+    fetchData();
+  }, [])
+);
+
+useEffect(() => {
+  if (employee) {
+    loadAttendaceLogs();
+  }
+}, [employee]);
+
 
   // Extract the project locations and attendance ranges from the user's profile
   useEffect(() => {
@@ -299,6 +311,7 @@ function AttendanceLogScreen({ navigation }) {
               location={item.location}
               status={item.status}
               total_hours={item.total_hours}
+              employee={item.employee}
               onPress={() => console.log("Log selected", item)}
             />
           )}
