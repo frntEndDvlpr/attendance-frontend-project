@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";
 
-import AccountScreen from "../screens/AccountScreen";
 import SettingsNavigator from "./SettingsNavigator";
 import AttendanceNavigator from "./AttendanceNavigator";
 import colors from "../config/colors";
 import AuthContext from "../auth/context";
+import ProfileNavigator from "./ProfileNavigator";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -17,8 +17,8 @@ const AppNavigator = () => {
   return (
     <BottomTab.Navigator initialRouteName="TasksListings">
       <BottomTab.Screen
-        name="Account"
-        component={AccountScreen}
+        name="Profile"
+        component={ProfileNavigator}
         options={{
           title: "Account",
           headerShown: false,

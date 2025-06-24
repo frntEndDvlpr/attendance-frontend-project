@@ -211,32 +211,32 @@ function ProjectsFormScreen({ navigation, route }) {
         </View>
         <ScrollView>
           <AppForm
-  initialValues={initialValues}
-  onSubmit={handleSubmit}
-  validationSchema={validationSchema}
->
-  <TaskFormField
-    name="latitude"
-    placeholder="Latitude"
-    keyboardType="decimal-pad"
-  />
-  <TaskFormField
-    name="longitude"
-    placeholder="Longitude"
-    keyboardType="decimal-pad"
-  />
-  <TaskFormField
-    name="title"
-    placeholder="Title"
-    maxLength={100}
-    autoFocus
-  />
-  <TaskFormField name="description" placeholder="Description" />
-  <AppDateTimePicker name="start_date" placeholder="Start Date" />
-  <AppDateTimePicker name="end_date" placeholder="End Date" />
-  <TaskFormField name="client" placeholder="Client" />
-  <SubmitButton title={project ? "Update" : "Save"} />
-</AppForm>
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <TaskFormField
+              name="latitude"
+              placeholder="Latitude"
+              keyboardType="decimal-pad"
+            />
+            <TaskFormField
+              name="longitude"
+              placeholder="Longitude"
+              keyboardType="decimal-pad"
+            />
+            <TaskFormField
+              name="title"
+              placeholder="Title"
+              maxLength={100}
+              autoFocus
+            />
+            <TaskFormField name="description" placeholder="Description" />
+            <AppDateTimePicker name="start_date" placeholder="Start Date" />
+            <AppDateTimePicker name="end_date" placeholder="End Date" />
+            <TaskFormField name="client" placeholder="Client" />
+            <SubmitButton title={project ? "Update" : "Save"} />
+          </AppForm>
 
         </ScrollView>
       </View>

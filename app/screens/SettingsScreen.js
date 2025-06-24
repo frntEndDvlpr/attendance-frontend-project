@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+
 import AppText from "../components/AppText";
 import AppIcon from "../components/AppIcon";
 import colors from "../config/colors";

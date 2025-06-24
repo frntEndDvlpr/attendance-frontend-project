@@ -8,19 +8,19 @@ import ProfileCard from "../components/ProfileCard";
 import AccountListItem from "../components/AccountListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 
-function AccountScreen(props) {
+function AccountScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-
+  
   const handelLogout = () => {
     setUser(null);
     authStorage.removeTokens();
   };
-
+  
   /*   employees = () => {
     user.employee;
-  }; */
-
-  return (
+    }; */
+    
+    return (
     <View style={styles.container}>
       <ProfileCard
         entifire={user.user_id}
@@ -43,7 +43,8 @@ function AccountScreen(props) {
           iconName="file-document-edit-outline"
           rightIcon="chevron-right"
           backgroundColor={colors.secondary}
-          onPress={() => console.log()}
+          onPress={() => navigation.navigate("CorrectionRequest")}
+          
         />
         <ListItemSeparator />
         <AccountListItem
@@ -60,10 +61,12 @@ function AccountScreen(props) {
         backgroundColor={colors.danger}
         onPress={handelLogout}
       />
+      
 
       {/* <Button title="Logout" onPress={handelLogout} /> */}
     </View>
   );
+  
 }
 
 const styles = StyleSheet.create({

@@ -26,7 +26,10 @@ const addAttendanceLogs = (attendance, onUploadProgress) => {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-    onUploadProgress,
+    onUploadProgress: (event) => {
+      const progress = event.loaded / event.total;
+      onUploadProgress(progress);
+    },
   });
 };
 
