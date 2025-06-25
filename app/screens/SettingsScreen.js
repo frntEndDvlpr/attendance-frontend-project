@@ -70,6 +70,22 @@ function SettingsScreen({ navigation }) {
           />
         </View>
       </TouchableWithoutFeedback>
+
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("Projecs")}>
+        <View style={styles.container}>
+          <AppIcon name="file-check-outline" backgroundColor={colors.blue} />
+          <View style={styles.innerContainer}>
+            <AppText style={styles.titl}>Approvals</AppText>
+            <ListItemSeparator />
+            <AppText style={styles.subTitle}>Review approval requests.</AppText>
+          </View>
+          <TaskListIcon
+            name="chevron-right"
+            iconColor={colors.darkGrey}
+            size={50}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 }
