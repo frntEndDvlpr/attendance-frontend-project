@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import EmployeeNavigator from "../../app/navigation/EmployeeNavigator";
 import ProjectNavigator from "../../app/navigation/ProjectNavigator";
-import AppNavigator from "./AppNavigator";
 import SettingsScreen from "../screens/SettingsScreen";
 import UserNavigator from "./UserNavigator";
+import CorrectionRequestListScreen from "../screens/CorrectionRequestListScreen";
 
 const Stak = createNativeStackNavigator();
 
@@ -26,6 +26,12 @@ const SettingsNavigator = () => (
       name="Projecs"
       component={ProjectNavigator}
       options={{ headerShown: false }}
+    />
+    <Stak.Screen
+      name="CorrectionRequest"
+      component={CorrectionRequestListScreen}
+      initialParams={{ fromSettings: true }}
+      //options={{ headerShown: false }}
     />
   </Stak.Navigator>
 );

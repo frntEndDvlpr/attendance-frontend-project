@@ -71,7 +71,7 @@ function SettingsScreen({ navigation }) {
         </View>
       </TouchableWithoutFeedback>
 
-      <TouchableWithoutFeedback onPress={() => navigation.navigate("Projecs")}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("CorrectionRequest")}>
         <View style={styles.container}>
           <AppIcon name="file-check-outline" backgroundColor={colors.blue} />
           <View style={styles.innerContainer}>
