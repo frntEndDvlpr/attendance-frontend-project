@@ -76,7 +76,7 @@ function EmployeeFormScreen({ navigation, route }) {
       ? await employeesApi.updateEmployee(
           employee.id,
           dataToSubmit,
-          setProgress
+          setProgress,
         )
       : await employeesApi.addEmployee(dataToSubmit, setProgress);
 

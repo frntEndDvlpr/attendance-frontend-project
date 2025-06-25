@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
+import * as Yup from "yup";
 
-import AppTimePicker from '../components/AppTimePicker';
-import { AppForm, AppFormField, SubmitButton } from '../components/forms';
-import AppDateTimePicker from '../components/AppDateTimePicker';
-import correctionRequestApi from '../api/CorrectionRequest';
-import employeeApi from '../api/employees';
+import AppTimePicker from "../components/AppTimePicker";
+import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import AppDateTimePicker from "../components/AppDateTimePicker";
+import correctionRequestApi from "../api/CorrectionRequest";
+import employeeApi from "../api/employees";
+import AppText from "../components/AppText";
+import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
   employee: Yup.number().required().label("Employee ID"),
@@ -20,13 +22,20 @@ function CorrectionRequestFormScreen({ navigation, route }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [employee, setEmployee] = useState(null);
+  const [employeeName, setEmployeeName] = useState("");
+
+  const correctionRequest = route?.params?.correctionRequest || null;
   const correctionId = route?.params?.id;
+  const status = correctionRequest?.status?.toLowerCase();
+
+  const isFinalized = status === "approved" || status === "rejected";
 
   useEffect(() => {
     const loadProfile = async () => {
       const response = await employeeApi.getEmployeesProfile();
       if (response.ok) {
-        setEmployee(response.data.id); // ✅ fixed early access to undefined state
+        setEmployee(response.data.id);
+        setEmployeeName(response.data.name);
       } else {
         console.error("Failed to load employee profile", response.problem);
       }
@@ -43,18 +52,18 @@ function CorrectionRequestFormScreen({ navigation, route }) {
       result = await correctionRequestApi.updateCorrectionRequest(
         correctionId,
         requestData,
-        (progress) => setProgress(progress)
+        (progress) => setProgress(progress),
       );
     } else {
       result = await correctionRequestApi.addCorrectionRequest(
         requestData,
-        (progress) => setProgress(progress)
+        (progress) => setProgress(progress),
       );
     }
 
     if (!result.ok) {
       console.log(result.problem);
-      console.log("Data sent",result.data);
+      console.log("Data sent", result.data);
       setUploadVisible(false);
       return alert("Could not submit the correction request!");
     }
@@ -67,7 +76,6 @@ function CorrectionRequestFormScreen({ navigation, route }) {
     }, 2000);
   };
 
-  // ✅ Don't show form until employee is loaded to avoid validation errors
   if (employee === null) {
     return (
       <View style={styles.loadingContainer}>
@@ -76,16 +84,32 @@ function CorrectionRequestFormScreen({ navigation, route }) {
     );
   }
 
+  const handleUploadDone = () => {
+    setUploadVisible(false);
+    if (route.params?.onGoBack) route.params.onGoBack();
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
+        {employeeName && (
+          <AppText style={styles.employeeNameAsTitle}>{employeeName}</AppText>
+        )}
+
+        <UploadScreen
+          onDone={handleUploadDone}
+          progress={progress}
+          visible={uploadVisible}
+        />
+
         <AppForm
           initialValues={{
             employee: employee,
-            reason: '',
-            punch_type: '',
-            date: '',
-            corrected_time: '',
+            reason: correctionRequest?.reason || "",
+            punch_type: correctionRequest?.punch_type || "",
+            date: correctionRequest?.date || "",
+            corrected_time: correctionRequest?.corrected_time || "",
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
@@ -115,7 +139,23 @@ function CorrectionRequestFormScreen({ navigation, route }) {
             placeholder="Corrected Time (HH:MM)"
             icon="clock-time-four"
           />
-          <SubmitButton title="Submit Correction" />
+
+          {isFinalized ? (
+            <View
+              style={[
+                styles.statusBadge,
+                status === "approved"
+                  ? styles.approvedBadge
+                  : styles.rejectedBadge,
+              ]}
+            >
+              <Text style={styles.statusText}>
+                {status === "approved" ? "Approved" : "Rejected"}
+              </Text>
+            </View>
+          ) : (
+            <SubmitButton title={correctionRequest ? "Update" : "Submit"} />
+          )}
         </AppForm>
       </ScrollView>
     </View>
@@ -126,12 +166,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  employeeNameAsTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  statusBadge: {
+    marginTop: 20,
+    padding: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  approvedBadge: {
+    backgroundColor: "#4CAF50", // Green
+  },
+  rejectedBadge: {
+    backgroundColor: "#f44336", // Red
+  },
+  statusText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
 

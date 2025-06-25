@@ -49,7 +49,7 @@ function CorrectionRequestListScreen({ navigation, route }) {
         );
       }
 
-      setCorrectionRequests(data.sort((a, b) => a.id - b.id)); // Oldest first (top), newest last
+      setCorrectionRequests(data.sort((b, a) => a.id - b.id)); // Oldest first (top), newest last
     }
   };
 
@@ -131,6 +131,12 @@ function CorrectionRequestListScreen({ navigation, route }) {
             punch_type={item.punch_type}
             reason={item.reason}
             status={item.status}
+            onPress={() => {
+              navigation.navigate("CorrectionRequestForm", {
+                correctionRequest: item,
+                onGoBack: loadCorrectionRequests,
+              });
+            }}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}
