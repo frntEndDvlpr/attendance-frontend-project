@@ -21,6 +21,7 @@ import authApi from "../api/auth";
 import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
+  employee: Yup.number().label("Employee Id"),
   employee_name: Yup.string().label("Employee Name"),
   name: Yup.string().required().label("Username"),
   email: Yup.string().required().email().label("Email"),
@@ -38,16 +39,20 @@ function RegisterScreen({ navigation }) {
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [progress, setProgress] = useState(0);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  console.log("Selected Employee", selectedEmployee);
 
   const fetchEmployees = async () => {
     const result = await employeesApi.getEmployees();
     if (result.ok) {
-      const employeeNames = result.data.map((employee) => ({
+      const employeeObj = result.data.map((employee) => ({
+        id: employee.id,
         name: employee.name,
         email: employee.email,
       }));
-      setEmployees(employeeNames);
-      console.log("Employee Names", employeeNames);
+      setEmployees(employeeObj);
+      console.log("Employee", employeeObj);
     } else {
       alert("Could not fetch employees");
       console.error("Could not fetch employees");
@@ -92,17 +97,17 @@ function RegisterScreen({ navigation }) {
     setProgress(0);
     setUploadVisible(true);
 
-    const dataToSubmit = { ...userData };
+    const dataToSubmit = { ...userData, employee: selectedEmployee.id };
 
     result = await authApi.adduser(dataToSubmit, (progress) =>
-      setProgress(progress)
+      setProgress(progress),
     );
 
     if (!result.ok) {
       console.log(result.problem);
       console.log(dataToSubmit);
       setUploadVisible(false);
-      return alert("Could not save the employee!");
+      return alert("Could not save the user!");
     }
 
     setProgress(1);
@@ -135,7 +140,7 @@ function RegisterScreen({ navigation }) {
                   },
                 },
                 { text: "Cancel" },
-              ]
+              ],
             );
           }}
         />
@@ -166,7 +171,7 @@ function RegisterScreen({ navigation }) {
               setQuery(text);
               if (text) {
                 const filtered = employees.filter((employee) =>
-                  employee.name.toLowerCase().includes(text.toLowerCase())
+                  employee.name.toLowerCase().includes(text.toLowerCase()),
                 );
                 setFilteredEmployees(filtered);
               } else {
@@ -181,6 +186,7 @@ function RegisterScreen({ navigation }) {
                   item={item}
                   setQuery={setQuery}
                   setFilteredEmployees={setFilteredEmployees}
+                  setSelectedEmployee={setSelectedEmployee} // Pass setSelectedEmployee here
                 />
               ),
             }}
@@ -225,19 +231,26 @@ function RegisterScreen({ navigation }) {
   );
 }
 
-function EmployeeItem({ item, setQuery, setFilteredEmployees }) {
+// EmployeeItem component to render each employee in the autocomplete list
+function EmployeeItem({
+  item: employeeItem,
+  setQuery,
+  setFilteredEmployees,
+  setSelectedEmployee,
+}) {
   const { setFieldValue } = useFormikContext();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        setQuery(item.name);
+        setQuery(employeeItem.name);
         setFilteredEmployees([]);
-        setFieldValue("name", item.name);
-        setFieldValue("email", item.email);
+        setFieldValue("name", employeeItem.name);
+        setFieldValue("email", employeeItem.email);
+        setSelectedEmployee(employeeItem); // Now this function is available as a prop
       }}
     >
-      <Text style={styles.itemText}>{item.name}</Text>
+      <Text style={styles.itemText}>{employeeItem.name}</Text>
     </TouchableOpacity>
   );
 }

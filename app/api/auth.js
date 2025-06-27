@@ -13,13 +13,14 @@ const getMe = (token) => {
       },
     });
   }
-}
+};
 
 const adduser = (user, onUploadProgress) => {
   const data = new FormData();
   data.append("username", user.name);
   data.append("email", user.email);
   data.append("password", user.password);
+  data.append("employee", user.employee);
 
   // Only append image if it exists
   if (user.imageUri) {
@@ -48,6 +49,7 @@ const updateUser = (id, user, onUploadProgress) => {
   if (user.name) data.append("username", user.name);
   if (user.email) data.append("email", user.email);
   if (user.password) data.append("password", user.password);
+  if (user.employee) data.append("employee", user.employee);
 
   // Only include is_staff during update
   if (typeof user.is_staff === "boolean") {
@@ -72,10 +74,18 @@ const login = (username, password) =>
   apiClient.post("token/", { username, password });
 
 // Function to refresh the token using the refresh token
-const refreshToken = (refresh) => 
+const refreshToken = (refresh) =>
   apiClient.post("/token/refresh/", { refresh });
 
 // Deleting a user from the server API
 const deleteUser = (id) => apiClient.delete(endPoint + id + "/");
 
-export default { login, adduser, getUsers, deleteUser, refreshToken, updateUser, getMe };
+export default {
+  login,
+  adduser,
+  getUsers,
+  deleteUser,
+  refreshToken,
+  updateUser,
+  getMe,
+};
