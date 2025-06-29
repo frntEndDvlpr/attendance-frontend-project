@@ -3,11 +3,13 @@ import {
   Alert,
   StyleSheet,
   View,
-  TextInput,
-  FlatList,
   TouchableOpacity,
   Text,
   Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
@@ -130,116 +132,127 @@ function RegisterScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <ImageInput
-          imageUri={imageUri}
-          handlePress={() => {
-            Alert.alert(
-              "Select an image",
-              "Would you like to take a photo or choose one from your library?",
-              [
-                {
-                  text: "Take Photo",
-                  onPress: () => {
-                    TakePhoto();
-                  },
-                },
-                {
-                  text: "Choose from Library",
-                  onPress: () => {
-                    openMediaLibrary();
-                  },
-                },
-                { text: "Cancel" },
-              ],
-            );
-          }}
-        />
-      </View>
-      <UploadScreen
-        onDone={() => setUploadVisible(false)}
-        progress={progress}
-        visible={uploadVisible}
-      />
-      <AppForm
-        initialValues={{
-          employee_name: "",
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          imageUri: null,
-        }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        <FormObserver query={query} imageUri={imageUri} />
-        <View style={styles.autocompleteContainer}>
-          <Autocomplete
-            data={filteredEmployees}
-            defaultValue={query}
-            onChangeText={(text) => {
-              setQuery(text);
-              if (text) {
-                const filtered = employees.filter((employee) =>
-                  employee.name.toLowerCase().includes(text.toLowerCase()),
-                );
-                setFilteredEmployees(filtered);
-              } else {
-                setFilteredEmployees([]);
-              }
-            }}
-            placeholder="Select Employee"
-            flatListProps={{
-              keyExtractor: (_, idx) => idx.toString(),
-              renderItem: ({ item }) => (
-                <EmployeeItem
-                  item={item}
-                  setQuery={setQuery}
-                  setFilteredEmployees={setFilteredEmployees}
-                  setSelectedEmployee={setSelectedEmployee} // Pass setSelectedEmployee here
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            <View style={styles.imageContainer}>
+              <ImageInput
+                imageUri={imageUri}
+                handlePress={() => {
+                  Alert.alert(
+                    "Select an image",
+                    "Would you like to take a photo or choose one from your library?",
+                    [
+                      {
+                        text: "Take Photo",
+                        onPress: () => {
+                          TakePhoto();
+                        },
+                      },
+                      {
+                        text: "Choose from Library",
+                        onPress: () => {
+                          openMediaLibrary();
+                        },
+                      },
+                      { text: "Cancel" },
+                    ],
+                  );
+                }}
+              />
+            </View>
+            <UploadScreen
+              onDone={() => setUploadVisible(false)}
+              progress={progress}
+              visible={uploadVisible}
+            />
+            <AppForm
+              initialValues={{
+                employee_name: "",
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                imageUri: null,
+              }}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+            >
+              <FormObserver query={query} imageUri={imageUri} />
+              <View style={styles.autocompleteContainer}>
+                <Autocomplete
+                  data={filteredEmployees}
+                  defaultValue={query}
+                  onChangeText={(text) => {
+                    setQuery(text);
+                    if (text) {
+                      const filtered = employees.filter((employee) =>
+                        employee.name
+                          .toLowerCase()
+                          .includes(text.toLowerCase()),
+                      );
+                      setFilteredEmployees(filtered);
+                    } else {
+                      setFilteredEmployees([]);
+                    }
+                  }}
+                  placeholder="Select Employee"
+                  flatListProps={{
+                    keyExtractor: (_, idx) => idx.toString(),
+                    renderItem: ({ item }) => (
+                      <EmployeeItem
+                        item={item}
+                        setQuery={setQuery}
+                        setFilteredEmployees={setFilteredEmployees}
+                      />
+                    ),
+                  }}
+                  containerStyle={styles.autocompleteContainerStyle}
+                  inputContainerStyle={styles.autocompleteInputContainerStyle}
+                  listStyle={styles.autocompleteListStyle}
                 />
-              ),
-            }}
-            containerStyle={styles.autocompleteContainerStyle}
-            inputContainerStyle={styles.autocompleteInputContainerStyle}
-            listStyle={styles.autocompleteListStyle}
-          />
-        </View>
-        <AppFormField
-          name="name"
-          placeholder="Username"
-          maxLength={100}
-          autoFocus
-          icon="account"
-        />
-        <AppFormField
-          name="email"
-          placeholder="Email"
-          keyboardType="email-address"
-          icon="email"
-          autoCapitalize="none"
-          autoCorrect={false}
-          textContentType="emailAddress"
-        />
-        <AppFormField
-          name="password"
-          placeholder="Password"
-          icon="lock"
-          secureTextEntry
-          textContentType="password"
-        />
-        <AppFormField
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          icon="lock"
-          secureTextEntry
-          textContentType="password"
-        />
-        <SubmitButton title="Register" />
-      </AppForm>
-    </View>
+              </View>
+              <AppFormField
+                name="name"
+                placeholder="Username"
+                maxLength={100}
+                autoFocus
+                icon="account"
+              />
+              <AppFormField
+                name="email"
+                placeholder="Email"
+                keyboardType="email-address"
+                icon="email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="emailAddress"
+              />
+              <AppFormField
+                name="password"
+                placeholder="Password"
+                icon="lock"
+                secureTextEntry
+                textContentType="password"
+              />
+              <AppFormField
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                icon="lock"
+                secureTextEntry
+                textContentType="password"
+              />
+              <SubmitButton title="Register" />
+            </AppForm>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -312,6 +325,11 @@ const styles = StyleSheet.create({
   itemText: {
     padding: 10,
     fontSize: 18,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingBottom: 40,
   },
 });
 

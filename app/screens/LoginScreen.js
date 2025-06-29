@@ -1,5 +1,14 @@
 import React, { useContext, useState } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import {
+  Button,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { jwtDecode } from "jwt-decode";
@@ -26,73 +35,82 @@ function LoginScreen() {
 
   // Function to handle the form submission for user login
   const handelSubmit = async ({ username, password }) => {
-  const result = await AuthApi.login(username, password);
-  if (!result.ok) {
-    setLoginFailed(true);
-    return;
-  }
+    const result = await AuthApi.login(username, password);
+    if (!result.ok) {
+      setLoginFailed(true);
+      return;
+    }
 
-  setLoginFailed(false);
-  const { access, refresh } = result.data;
+    setLoginFailed(false);
+    const { access, refresh } = result.data;
 
-  // 1. Store tokens
-  await authStorage.storeTokens(access, refresh);
+    // 1. Store tokens
+    await authStorage.storeTokens(access, refresh);
 
-  // 2. Fetch full user profile (includes is_staff)
-  const profileRes = await AuthApi.getMe(access);
-  if (!profileRes.ok) {
-    setLoginFailed(true);
-    return;
-  }
+    // 2. Fetch full user profile (includes is_staff)
+    const profileRes = await AuthApi.getMe(access);
+    if (!profileRes.ok) {
+      setLoginFailed(true);
+      return;
+    }
 
-  const userProfile = profileRes.data;
+    const userProfile = profileRes.data;
 
-  // 3. Set full user object in context
-  authContext.setUser(userProfile);
-};
-
+    // 3. Set full user object in context
+    authContext.setUser(userProfile);
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.icon}>
-        <MaterialCommunityIcons
-          name="account"
-          size={150}
-          color={colors.secondary}
-        />
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="account"
+                size={150}
+                color={colors.secondary}
+              />
+            </View>
 
-      <AppErrorMasage
-        error="Invalid username and/or password!"
-        visible={loginFailed}
-      />
-      <AppForm
-        initialValues={{ username: "", password: "" }}
-        onSubmit={handelSubmit}
-        validationSchema={validationSchema}
-      >
-        <AppFormField
-          autoFocus
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="account"
-          name="username"
-          placeholder="Username"
-          //textContentType="emailAddress"
-        />
-        <AppFormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          name="password"
-          placeholder="Password"
-          secureTextEntry
-          textContentType="password"
-        />
-        <SubmitButton title="login" />
-      </AppForm>
-      <Button title="Forgot Your Password?" />
-    </View>
+            <AppErrorMasage
+              error="Invalid username and/or password!"
+              visible={loginFailed}
+            />
+            <AppForm
+              initialValues={{ username: "", password: "" }}
+              onSubmit={handelSubmit}
+              validationSchema={validationSchema}
+            >
+              <AppFormField
+                autoFocus
+                autoCapitalize="none"
+                autoCorrect={false}
+                icon="account"
+                name="username"
+                placeholder="Username"
+                //textContentType="emailAddress"
+              />
+              <AppFormField
+                autoCapitalize="none"
+                autoCorrect={false}
+                icon="lock"
+                name="password"
+                placeholder="Password"
+                secureTextEntry
+                textContentType="password"
+              />
+              <SubmitButton title="login" />
+            </AppForm>
+            <Button title="Forgot Your Password?" />
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -103,6 +121,11 @@ const styles = StyleSheet.create({
   icon: {
     alignItems: "center",
     marginTop: 0,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingBottom: 40,
   },
 });
 

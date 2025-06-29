@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import colors from "../config/colors";
 import AuthContext from "../auth/context";
@@ -10,18 +10,18 @@ import ListItemSeparator from "../components/ListItemSeparator";
 
 function AccountScreen({ navigation }) {
   const { user, setUser } = useContext(AuthContext);
-  
+
   const handelLogout = () => {
     setUser(null);
     authStorage.removeTokens();
   };
-  
+
   /*   employees = () => {
     user.employee;
     }; */
-    
-    return (
-    <View style={styles.container}>
+
+  return (
+    <ScrollView style={styles.container}>
       <ProfileCard
         entifire={user.user_id}
         name="Abbas Muhammad"
@@ -44,7 +44,6 @@ function AccountScreen({ navigation }) {
           rightIcon="chevron-right"
           backgroundColor={colors.secondary}
           onPress={() => navigation.navigate("CorrectionRequest")}
-          
         />
         <ListItemSeparator />
         <AccountListItem
@@ -61,12 +60,10 @@ function AccountScreen({ navigation }) {
         backgroundColor={colors.danger}
         onPress={handelLogout}
       />
-      
 
       {/* <Button title="Logout" onPress={handelLogout} /> */}
-    </View>
+    </ScrollView>
   );
-  
 }
 
 const styles = StyleSheet.create({

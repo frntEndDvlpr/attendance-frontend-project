@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  TouchableWithoutFeedback,
+} from "react-native";
 import * as Yup from "yup";
 
 import AppTimePicker from "../components/AppTimePicker";
-import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import {
+  AppForm,
+  AppFormField,
+  SubmitButton,
+  AppRadioGroup,
+} from "../components/forms";
 import AppDateTimePicker from "../components/AppDateTimePicker";
 import correctionRequestApi from "../api/CorrectionRequest";
 import employeeApi from "../api/employees";
@@ -25,7 +39,8 @@ function CorrectionRequestFormScreen({ navigation, route }) {
   const [employeeName, setEmployeeName] = useState("");
 
   const correctionRequest = route?.params?.correctionRequest || null;
-  const correctionId = route?.params?.id;
+  const correctionId = correctionRequest?.id || route?.params?.id;
+
   const status = correctionRequest?.status?.toLowerCase();
 
   const isFinalized = status === "approved" || status === "rejected";
@@ -91,74 +106,87 @@ function CorrectionRequestFormScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        {employeeName && (
-          <AppText style={styles.employeeNameAsTitle}>{employeeName}</AppText>
-        )}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.container}>
+            {employeeName && (
+              <AppText style={styles.employeeNameAsTitle}>
+                {employeeName}
+              </AppText>
+            )}
 
-        <UploadScreen
-          onDone={handleUploadDone}
-          progress={progress}
-          visible={uploadVisible}
-        />
+            <UploadScreen
+              onDone={handleUploadDone}
+              progress={progress}
+              visible={uploadVisible}
+            />
 
-        <AppForm
-          initialValues={{
-            employee: employee,
-            reason: correctionRequest?.reason || "",
-            punch_type: correctionRequest?.punch_type || "",
-            date: correctionRequest?.date || "",
-            corrected_time: correctionRequest?.corrected_time || "",
-          }}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          <AppFormField
-            name="reason"
-            placeholder="Reason for Correction"
-            maxLength={500}
-            icon="note-text"
-            multiline
-            numberOfLines={3}
-          />
-          <AppFormField
-            name="punch_type"
-            placeholder="Punch Type (IN/OUT)"
-            maxLength={3}
-            icon="clock"
-          />
-          <AppDateTimePicker
-            name="date"
-            placeholder="Date"
-            mode="date"
-            icon="calendar-today"
-          />
-          <AppTimePicker
-            name="corrected_time"
-            placeholder="Corrected Time (HH:MM)"
-            icon="clock-time-four"
-          />
-
-          {isFinalized ? (
-            <View
-              style={[
-                styles.statusBadge,
-                status === "approved"
-                  ? styles.approvedBadge
-                  : styles.rejectedBadge,
-              ]}
+            <AppForm
+              initialValues={{
+                employee: employee,
+                reason: correctionRequest?.reason || "",
+                punch_type: correctionRequest?.punch_type || "",
+                date: correctionRequest?.date || "",
+                corrected_time: correctionRequest?.corrected_time || "",
+              }}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
             >
-              <Text style={styles.statusText}>
-                {status === "approved" ? "Approved" : "Rejected"}
-              </Text>
-            </View>
-          ) : (
-            <SubmitButton title={correctionRequest ? "Update" : "Submit"} />
-          )}
-        </AppForm>
-      </ScrollView>
-    </View>
+              <AppFormField
+                name="reason"
+                placeholder="Reason for Correction"
+                maxLength={500}
+                icon="note-text"
+                multiline
+                numberOfLines={3}
+                autoFocus
+              />
+              <AppRadioGroup
+                name="punch_type"
+                options={[
+                  { label: "IN", value: "IN" },
+                  { label: "OUT", value: "OUT" },
+                ]}
+              />
+
+              <AppDateTimePicker
+                name="date"
+                placeholder="Date"
+                mode="date"
+                icon="calendar-today"
+              />
+              <AppTimePicker
+                name="corrected_time"
+                placeholder="Corrected Time (HH:MM)"
+                icon="clock-time-four"
+              />
+
+              {isFinalized ? (
+                <View
+                  style={[
+                    styles.statusBadge,
+                    status === "approved"
+                      ? styles.approvedBadge
+                      : styles.rejectedBadge,
+                  ]}
+                >
+                  <Text style={styles.statusText}>
+                    {status === "approved" ? "Approved" : "Rejected"}
+                  </Text>
+                </View>
+              ) : (
+                <SubmitButton title={correctionRequest ? "Update" : "Submit"} />
+              )}
+            </AppForm>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -195,6 +223,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingBottom: 40,
   },
 });
 

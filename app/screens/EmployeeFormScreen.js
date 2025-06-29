@@ -2,7 +2,16 @@
   It includes form validation, image upload functionality, and integrates with the employees API to save data. */
 
 import React, { useState, useEffect } from "react";
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import * as Yup from "yup";
 
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
@@ -103,82 +112,98 @@ function EmployeeFormScreen({ navigation, route }) {
   };
 
   return (
-    <AppScreen style={styles.container}>
-      <ScrollView>
-        <UploadScreen
-          onDone={handleUploadDone}
-          progress={progress}
-          visible={uploadVisible}
-        />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <AppScreen style={styles.container}>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <UploadScreen
+              onDone={handleUploadDone}
+              progress={progress}
+              visible={uploadVisible}
+            />
 
-        <View style={styles.imageContainer}>
-          <ImageInput
-            imageUri={selectedPhoto?.uri}
-            handlePress={() => {
-              Alert.alert("Select an image", "Camera or Library?", [
-                { text: "Take Photo", onPress: pickImageFromCamera },
-                { text: "Choose from Library", onPress: pickImageFromLibrary },
-                { text: "Cancel", style: "cancel" },
-              ]);
-            }}
-          />
-        </View>
+            <View style={styles.imageContainer}>
+              <ImageInput
+                imageUri={selectedPhoto?.uri}
+                handlePress={() => {
+                  Alert.alert("Select an image", "Camera or Library?", [
+                    { text: "Take Photo", onPress: pickImageFromCamera },
+                    {
+                      text: "Choose from Library",
+                      onPress: pickImageFromLibrary,
+                    },
+                    { text: "Cancel", style: "cancel" },
+                  ]);
+                }}
+              />
+            </View>
 
-        <AppForm
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          <AppFormField
-            name="name"
-            placeholder="Full Name"
-            maxLength={100}
-            autoFocus
-          />
-          <AppFormField
-            name="employeeCode"
-            placeholder="Employee Code"
-            maxLength={10}
-            icon="account"
-          />
-          <AppFormField
-            name="email"
-            placeholder="Email"
-            keyboardType="email-address"
-            icon="email"
-          />
-          <AppFormField
-            name="phone"
-            placeholder="Phone"
-            icon="phone"
-            keyboardType="phone-pad"
-          />
-          <AppFormField name="designation" placeholder="Designation" />
-          <AppFormField name="department" placeholder="Department" />
-          <AppPicker
-            icon="apps"
-            items={projects}
-            placeholder="Select Projects"
-            selectedItems={selectedProjects}
-            onSelectItems={setSelectedProjects}
-          />
-          <AppPicker
-            icon="account"
-            items={user}
-            placeholder="Select User"
-            selectedItems={selectedUser}
-            onSelectItems={setSelectedUser}
-          />
-          <SubmitButton title={employee ? "Update" : "Save"} />
-        </AppForm>
-      </ScrollView>
-    </AppScreen>
+            <AppForm
+              initialValues={initialValues}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+            >
+              <AppFormField
+                name="name"
+                placeholder="Full Name"
+                maxLength={100}
+                autoFocus
+              />
+              <AppFormField
+                name="employeeCode"
+                placeholder="Employee Code"
+                maxLength={10}
+                icon="account"
+              />
+              <AppFormField
+                name="email"
+                placeholder="Email"
+                keyboardType="email-address"
+                icon="email"
+              />
+              <AppFormField
+                name="phone"
+                placeholder="Phone"
+                icon="phone"
+                keyboardType="phone-pad"
+              />
+              <AppFormField name="designation" placeholder="Designation" />
+              <AppFormField name="department" placeholder="Department" />
+              <AppPicker
+                icon="apps"
+                items={projects}
+                placeholder="Select Projects"
+                selectedItems={selectedProjects}
+                onSelectItems={setSelectedProjects}
+              />
+              <AppPicker
+                icon="account"
+                items={user}
+                placeholder="Select User"
+                selectedItems={selectedUser}
+                onSelectItems={setSelectedUser}
+              />
+              <SubmitButton title={employee ? "Update" : "Save"} />
+            </AppForm>
+          </ScrollView>
+        </AppScreen>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { marginHorizontal: 10 },
   imageContainer: { marginVertical: 50, alignSelf: "center" },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingBottom: 40,
+  },
 });
 
 export default EmployeeFormScreen;
