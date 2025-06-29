@@ -87,6 +87,13 @@ function EmployeeFormScreen({ navigation, route }) {
       console.log("API response:", result.problem);
       return alert("Could not save the employee!");
     }
+
+    setProgress(1);
+    if (route.params?.onGoBack) route.params.onGoBack();
+    setTimeout(() => {
+      setUploadVisible(false);
+      navigation.goBack();
+    }, 2000);
   };
 
   const handleUploadDone = () => {

@@ -12,6 +12,7 @@ const buildFormData = (employee) => {
   const data = new FormData();
 
   Object.entries(employee).forEach(([key, value]) => {
+    if (key === "photo") return;
     if (Array.isArray(value)) {
       value.forEach((v) => {
         data.append(key, v.toString());
@@ -51,7 +52,7 @@ const addEmployee = (employee, onUploadProgress) => {
 const updateEmployee = (id, employee, onUploadProgress) => {
   const data = buildFormData(employee);
 
-  return apiClient.put(`${endPoint}${id}/`, data, {
+  return apiClient.patch(`${endPoint}${id}/`, data, {
     headers: { "Content-Type": "multipart/form-data" },
     onUploadProgress: (event) =>
       onUploadProgress && onUploadProgress(event.loaded / event.total),

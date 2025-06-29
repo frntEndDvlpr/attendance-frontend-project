@@ -103,6 +103,18 @@ function RegisterScreen({ navigation }) {
       setProgress(progress),
     );
 
+    //Update the selected employee's profile with the captured photo
+    if (imageUri && selectedEmployee?.id) {
+      try {
+        await employeesApi.updateEmployee(selectedEmployee.id, {
+          photo: imageUri,
+        });
+      } catch (error) {
+        console.error("Failed to update employee photo:", error);
+        alert("NOTE!", "User created, but employee's photo did not updated");
+      }
+    }
+
     if (!result.ok) {
       console.log(result.problem);
       console.log(dataToSubmit);
