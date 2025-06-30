@@ -23,7 +23,11 @@ const addCorrectionRequest = (correctionRequest, onUploadProgress) => {
 };
 
 // Update an existing correction request
-const updateCorrectionRequest = (id, correctionRequestData, onUploadProgress) => {
+const updateCorrectionRequest = (
+  id,
+  correctionRequestData,
+  onUploadProgress,
+) => {
   const data = new FormData();
   data.append("employee", correctionRequestData.employee); // employee_id
   data.append("reason", correctionRequestData.reason);
@@ -39,6 +43,9 @@ const updateCorrectionRequest = (id, correctionRequestData, onUploadProgress) =>
   });
 };
 
+const reviewCorrectionRequest = (id, decision) =>
+  apiClient.post(`/api/correction-requests/${id}/review/`, { decision });
+
 // Delete a correction request
 const deleteCorrectionRequest = (id) => {
   return apiClient.delete(`${endPoint}${id}/`);
@@ -49,4 +56,5 @@ export default {
   addCorrectionRequest,
   updateCorrectionRequest,
   deleteCorrectionRequest,
+  reviewCorrectionRequest,
 };

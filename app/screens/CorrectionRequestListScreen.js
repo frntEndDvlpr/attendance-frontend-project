@@ -11,6 +11,8 @@ import CorrectionRequestListItem from "../components/CorrectionRequestListItem";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
 import AddTaskButton from "../components/AddTaskButton";
 import AuthContext from "../auth/context";
+import CorrectionRequestReviewModal from "../components/CorrectionRequestReviewModal";
+import CorrectionRequestApi from "../api/CorrectionRequest";
 
 function CorrectionRequestListScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,9 @@ function CorrectionRequestListScreen({ navigation, route }) {
   const [error, setError] = useState(false);
   const [correctionRequests, setCorrectionRequests] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
   const { user } = useContext(AuthContext);
 
   const fromSettings = route?.params?.fromSettings;
@@ -132,10 +137,15 @@ function CorrectionRequestListScreen({ navigation, route }) {
             reason={item.reason}
             status={item.status}
             onPress={() => {
-              navigation.navigate("CorrectionRequestForm", {
-                correctionRequest: item,
-                onGoBack: loadCorrectionRequests,
-              });
+              if (fromSettings) {
+                setSelectedRequest(item);
+                setReviewModalVisible(true);
+              } else {
+                navigation.navigate("CorrectionRequestForm", {
+                  correctionRequest: item,
+                  onGoBack: loadCorrectionRequests,
+                });
+              }
             }}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
@@ -155,6 +165,28 @@ function CorrectionRequestListScreen({ navigation, route }) {
           }
         />
       )}
+
+      <CorrectionRequestReviewModal
+        visible={reviewModalVisible}
+        request={selectedRequest}
+        onClose={() => setReviewModalVisible(false)}
+        onApprove={async () => {
+          const response = await CorrectionRequestApi.reviewCorrectionRequest(
+            selectedRequest.id,
+            "APPROVED",
+          );
+          setReviewModalVisible(false);
+          loadCorrectionRequests();
+        }}
+        onReject={async () => {
+          const response = await correctionRequestsApi.reviewCorrectionRequest(
+            selectedRequest.id,
+            "REJECTED",
+          );
+          setReviewModalVisible(false);
+          loadCorrectionRequests();
+        }}
+      />
     </>
   );
 }
