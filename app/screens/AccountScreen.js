@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 
 import colors from "../config/colors";
 import AuthContext from "../auth/context";
@@ -7,9 +7,23 @@ import authStorage from "../auth/storage";
 import ProfileCard from "../components/ProfileCard";
 import AccountListItem from "../components/AccountListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
+import employeesApi from "../api/employees";
 
 function AccountScreen({ navigation }) {
+  const [profile, setProfile] = useState(null);
   const { user, setUser } = useContext(AuthContext);
+
+  const loadEmployeeProfile = async () => {
+    const response = await employeesApi.getEmployeesProfile();
+
+    if (!response.ok) return alert("Error", "Failed to get employee's profile");
+    setProfile(response.data);
+    console.log("employee", response.data);
+  };
+
+  useEffect(() => {
+    loadEmployeeProfile();
+  }, []);
 
   const handelLogout = () => {
     setUser(null);
@@ -22,12 +36,18 @@ function AccountScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <ProfileCard
-        entifire={user.user_id}
-        name="Abbas Muhammad"
-        position="Software Engineer"
-        email="abbassalama2@gmail.com"
-        image={require("../assets/Mr.Bean2.jpg")}
+      <FlatList
+        data={profile ? [profile] : []}
+        keyExtractor={(employee) => employee.id.toString()}
+        renderItem={({ item }) => (
+          <ProfileCard
+            entifire={item.employeeCode}
+            name={item.name}
+            position={item.designation}
+            email={item.email}
+            image={item.photo}
+          />
+        )}
       />
       <View style={styles.list}>
         <AccountListItem

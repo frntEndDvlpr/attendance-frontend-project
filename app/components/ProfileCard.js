@@ -2,12 +2,14 @@ import React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import AppText from "./AppText";
 import colors from "../config/colors";
+import settings from "../config/settings";
 
-function ProfileCard({ name, position, email, image, entifire }) {
+function ProfileCard({ name, position, email, image, entifire: employeeCode }) {
+  const BASE_URL = settings.apiUrl;
   return (
     <View style={styles.container}>
-      <Image source={image} style={styles.image} />
-      <AppText style={styles.name}>{entifire}</AppText>
+      <Image source={{ uri: BASE_URL + image }} style={styles.image} />
+      <AppText style={styles.name}>{employeeCode}</AppText>
       <AppText style={styles.name}>{name}</AppText>
       <AppText style={styles.emailPosition}>{position}</AppText>
       <AppText style={styles.emailPosition}>{email}</AppText>
