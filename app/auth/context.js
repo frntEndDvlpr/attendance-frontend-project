@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         const result = await authApi.getMe(token);
         if (result.ok) {
           console.log("Full user profile:", result.data);
-          setUser(result.data);  // ✅ Full user info including is_staff
+          setUser(result.data); // ✅ Full user info including is_staff
         } else {
           console.log("Failed to fetch user details:", result.problem);
         }
@@ -49,8 +49,6 @@ export const AuthProvider = ({ children }) => {
         console.log("Refreshed user profile:", userResult.data);
         setUser(userResult.data);
       }
-    } else {
-      logout();
     }
   };
 
@@ -60,11 +58,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", async (nextAppState) => {
-      if (nextAppState === "active") {
-        await refreshToken();
-      }
-    });
+    const subscription = AppState.addEventListener(
+      "change",
+      async (nextAppState) => {
+        if (nextAppState === "active") {
+          await refreshToken();
+        }
+      },
+    );
 
     return () => subscription.remove();
   }, []);

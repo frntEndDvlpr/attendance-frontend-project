@@ -209,6 +209,7 @@ function RegisterScreen({ navigation }) {
                         item={item}
                         setQuery={setQuery}
                         setFilteredEmployees={setFilteredEmployees}
+                        setSelectedEmployee={setSelectedEmployee}
                       />
                     ),
                   }}
