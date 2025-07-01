@@ -18,7 +18,6 @@ function AccountScreen({ navigation }) {
 
     if (!response.ok) return alert("Error", "Failed to get employee's profile");
     setProfile(response.data);
-    console.log("employee", response.data);
   };
 
   useEffect(() => {

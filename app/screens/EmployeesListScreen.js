@@ -41,7 +41,7 @@ function EmployeesListScreen({ navigation }) {
 
     const response = await employeesApi.deleteEmployee(
       employee.id,
-      setProgress
+      setProgress,
     );
     setUploadVisible(false);
 
@@ -62,7 +62,7 @@ function EmployeesListScreen({ navigation }) {
       [
         { text: "Cancel", style: "cancel" },
         { text: "Yes", onPress: () => handleDelete(employee) },
-      ]
+      ],
     );
   };
 

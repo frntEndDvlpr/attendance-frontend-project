@@ -18,7 +18,7 @@ const EmployeeNavigator = () => (
       name="EmployeeForm"
       component={EmployeeFormScreen}
       options={{
-        headerTitle: () => <AppText>New Employee</AppText>,
+        headerTitle: () => <AppText>Employee Form</AppText>,
         headerBackTitle: "Dismiss",
       }}
     />
