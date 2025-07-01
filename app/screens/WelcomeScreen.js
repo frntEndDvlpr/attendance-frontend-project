@@ -14,7 +14,7 @@ function WelcomeScreen({ navigation }) {
       <View style={styles.logoContainer}>
         <Image
           style={styles.welcomeLogo}
-          source={require("../assets/SOMS-logo.png")}
+          source={require("../assets/soms_logo.png")}
         />
         <Text style={styles.tagLine}>
           Effortless, Intelligent Attendance Tracking
