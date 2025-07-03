@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList } from "react-native";
+import { Alert, FlatList } from "react-native"; // 🔥 updated
 
 import authApi from "../api/auth";
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -24,26 +24,29 @@ function UserListScreen({ navigation }) {
 
   useEffect(() => {
     loadUsers();
-    //console.log(users);
   }, []);
 
-  //const sortedUsers = users.sort((a, b) => b.id - a.id);
+  // 🔥 added: Refresh users when screen regains focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      loadUsers(); // 🔥 added
+    });
 
-  // Get users list from the server
+    return unsubscribe; // 🔥 added
+  }, [navigation]); // 🔥 added
+
   const loadUsers = async () => {
-    setLoading(true); // Start loading
-    const response = await authApi.getUsers(); // Get users
-    setLoading(false); // Stop loading
+    setLoading(true);
+    const response = await authApi.getUsers();
+    setLoading(false);
 
     if (!response.ok) {
       setError(true);
       console.log(response.problem);
-      //console.log(response.data);
       setResponse(response.problem);
     } else {
       setError(false);
       setUsers(response.data);
-      //console.log("Success:", response.data);
     }
   };
 
@@ -52,10 +55,8 @@ function UserListScreen({ navigation }) {
 
     if (response.ok) {
       setEmployees(response.data);
-      //console.log(response.data);
     } else {
       alert("Could not load employees");
-      //console.log(response.data);
     }
   };
 
@@ -63,12 +64,11 @@ function UserListScreen({ navigation }) {
     fetchEmployees();
   }, []);
 
-  // Delete a user
   const handleDelete = async (user) => {
     setProgress(0);
     setUploadVisible(true);
     const response = await authApi.deleteUser(user.id, (progress) =>
-      setProgress(progress)
+      setProgress(progress),
     );
     setUploadVisible(false);
 
@@ -83,10 +83,8 @@ function UserListScreen({ navigation }) {
     setProgress(1);
     setUploadVisible(false);
     setUsers(user.filter((u) => u.id !== user.id));
-    user.filter;
   };
 
-  // Confirm before deleting an employee
   const confirmDelete = (user) => {
     Alert.alert(
       "Confirm Delete",
@@ -101,16 +99,14 @@ function UserListScreen({ navigation }) {
           onPress: () => handleDelete(user),
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
   return (
     <AppScreen>
-      {/* Display loading bar while data is being fetched from the server */}
       {loading && <ActivityIndicator visible={true} />}
 
-      {/* Display error message if data could not be fetched from the server */}
       {error && !loading && (
         <HeaderAlert
           error={"NETWORK ERROR: Couldn't retrieve or update the users list."}
@@ -122,7 +118,6 @@ function UserListScreen({ navigation }) {
         />
       )}
 
-      {/* Display "No users found!" message if there are no users */}
       {!loading && !error && users.length === 0 && (
         <HeaderAlert
           error="No users! Click on the + button to add a new employee."
@@ -134,7 +129,6 @@ function UserListScreen({ navigation }) {
         />
       )}
 
-      {/* Display the upload screen */}
       <UploadScreen
         onDone={() => {
           setUploadVisible(false);
@@ -143,7 +137,6 @@ function UserListScreen({ navigation }) {
         visible={uploadVisible}
       />
 
-      {/* Display the list of users */}
       <FlatList
         data={users}
         keyExtractor={(user) => user.id.toString()}
@@ -156,10 +149,11 @@ function UserListScreen({ navigation }) {
             designation={item.designation}
             department={item.department}
             projects={item.projects}
-            onPress={() => {navigation.navigate("UserForm", {
-              user: item,
-              onGoBack: loadUsers,
-            })}}
+            onPress={() => {
+              navigation.navigate("UserForm", {
+                user: item, // 🔥 updated: removed onGoBack
+              });
+            }}
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}

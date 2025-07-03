@@ -11,7 +11,7 @@ const Stak = createNativeStackNavigator();
 
 const SettingsNavigator = () => (
   <Stak.Navigator>
-    <Stak.Screen name="Settings" component={SettingsScreen} />
+    <Stak.Screen name="SettingsHome" component={SettingsScreen} />
     <Stak.Screen
       name="User"
       component={UserNavigator}

@@ -2,8 +2,7 @@ import { create } from "apisauce";
 import authStorage from "../auth/storage";
 import settings from "../config/settings";
 import Bugsnag from "@bugsnag/expo";
-import authApi from "./auth";
-import { jwtDecode } from "jwt-decode";
+import tokenService from "./tokenService";
 
 const apiClient = create({
   baseURL: settings.apiUrl,
@@ -28,7 +27,7 @@ apiClient.addResponseTransform(async (response) => {
     const refreshToken = await authStorage.getRefreshToken();
     if (!refreshToken) return;
 
-    const refreshResponse = await authApi.refreshToken(refreshToken);
+    const refreshResponse = await tokenService.refreshToken(refreshToken);
 
     if (refreshResponse.ok && refreshResponse.data?.access) {
       const newAccessToken = refreshResponse.data.access;

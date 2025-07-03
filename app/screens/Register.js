@@ -6,21 +6,17 @@ import {
   TouchableOpacity,
   Text,
   Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import * as Yup from "yup";
 import * as ImagePicker from "expo-image-picker";
 import Autocomplete from "react-native-autocomplete-input";
-import { useFormikContext } from "formik";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
 import ImageInput from "../components/ImageInput";
 import employeesApi from "../api/employees";
 import authApi from "../api/auth";
 import UploadScreen from "./UploadScreen";
+import { useFormikContext } from "formik";
 
 const validationSchema = Yup.object().shape({
   employee: Yup.number().label("Employee Id"),
@@ -43,8 +39,6 @@ function RegisterScreen({ navigation }) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  console.log("Selected Employee", selectedEmployee);
-
   const fetchEmployees = async () => {
     const result = await employeesApi.getEmployees();
     if (result.ok) {
@@ -54,7 +48,6 @@ function RegisterScreen({ navigation }) {
         email: employee.email,
       }));
       setEmployees(employeeObj);
-      console.log("Employee", employeeObj);
     } else {
       alert("Could not fetch employees");
       console.error("Could not fetch employees");
@@ -95,17 +88,14 @@ function RegisterScreen({ navigation }) {
   }, []);
 
   const handleSubmit = async (userData) => {
-    let result;
     setProgress(0);
     setUploadVisible(true);
-
     const dataToSubmit = { ...userData, employee: selectedEmployee.id };
 
-    result = await authApi.adduser(dataToSubmit, (progress) =>
+    const result = await authApi.adduser(dataToSubmit, (progress) =>
       setProgress(progress),
     );
 
-    //Update the selected employee's profile with the captured photo
     if (imageUri && selectedEmployee?.id) {
       try {
         await employeesApi.updateEmployee(selectedEmployee.id, {
@@ -113,13 +103,11 @@ function RegisterScreen({ navigation }) {
         });
       } catch (error) {
         console.error("Failed to update employee photo:", error);
-        alert("NOTE!", "User created, but employee's photo did not updated");
+        alert("NOTE!", "User created, but employee's photo did not update");
       }
     }
 
     if (!result.ok) {
-      console.log(result.problem);
-      console.log(dataToSubmit);
       setUploadVisible(false);
       return alert("Could not save the user!");
     }
@@ -132,13 +120,61 @@ function RegisterScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <>
+      <AppForm
+        initialValues={{
+          employee_name: "",
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          imageUri: null,
+        }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        <FormikInjector>
+          {({ setFieldValue }) => (
+            <>
+              <Autocomplete
+                data={filteredEmployees}
+                defaultValue={query}
+                onChangeText={(text) => {
+                  setQuery(text);
+                  if (text) {
+                    const filtered = employees.filter((employee) =>
+                      employee.name.toLowerCase().includes(text.toLowerCase()),
+                    );
+                    setFilteredEmployees(filtered);
+                  } else {
+                    setFilteredEmployees([]);
+                  }
+                }}
+                placeholder="Select Employee"
+                flatListProps={{
+                  keyExtractor: (_, idx) => idx.toString(),
+                  renderItem: ({ item }) => (
+                    <EmployeeItem
+                      item={item}
+                      setQuery={setQuery}
+                      setFilteredEmployees={setFilteredEmployees}
+                      setSelectedEmployee={setSelectedEmployee}
+                      setFieldValue={setFieldValue}
+                    />
+                  ),
+                }}
+                containerStyle={styles.autocompleteContainerStyle}
+                inputContainerStyle={styles.autocompleteInputContainerStyle}
+                listStyle={styles.autocompleteListStyle}
+              />
+            </>
+          )}
+        </FormikInjector>
+
+        <KeyboardAwareScrollView
+          enableOnAndroid
+          contentContainerStyle={styles.scrollContainer}
+        >
           <View style={styles.container}>
             <View style={styles.imageContainer}>
               <ImageInput
@@ -150,15 +186,11 @@ function RegisterScreen({ navigation }) {
                     [
                       {
                         text: "Take Photo",
-                        onPress: () => {
-                          TakePhoto();
-                        },
+                        onPress: () => TakePhoto(),
                       },
                       {
                         text: "Choose from Library",
-                        onPress: () => {
-                          openMediaLibrary();
-                        },
+                        onPress: () => openMediaLibrary(),
                       },
                       { text: "Cancel" },
                     ],
@@ -166,106 +198,60 @@ function RegisterScreen({ navigation }) {
                 }}
               />
             </View>
+
             <UploadScreen
               onDone={() => setUploadVisible(false)}
               progress={progress}
               visible={uploadVisible}
             />
-            <AppForm
-              initialValues={{
-                employee_name: "",
-                name: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-                imageUri: null,
-              }}
-              onSubmit={handleSubmit}
-              validationSchema={validationSchema}
-            >
-              <FormObserver query={query} imageUri={imageUri} />
-              <View style={styles.autocompleteContainer}>
-                <Autocomplete
-                  data={filteredEmployees}
-                  defaultValue={query}
-                  onChangeText={(text) => {
-                    setQuery(text);
-                    if (text) {
-                      const filtered = employees.filter((employee) =>
-                        employee.name
-                          .toLowerCase()
-                          .includes(text.toLowerCase()),
-                      );
-                      setFilteredEmployees(filtered);
-                    } else {
-                      setFilteredEmployees([]);
-                    }
-                  }}
-                  placeholder="Select Employee"
-                  flatListProps={{
-                    keyExtractor: (_, idx) => idx.toString(),
-                    renderItem: ({ item }) => (
-                      <EmployeeItem
-                        item={item}
-                        setQuery={setQuery}
-                        setFilteredEmployees={setFilteredEmployees}
-                        setSelectedEmployee={setSelectedEmployee}
-                      />
-                    ),
-                  }}
-                  containerStyle={styles.autocompleteContainerStyle}
-                  inputContainerStyle={styles.autocompleteInputContainerStyle}
-                  listStyle={styles.autocompleteListStyle}
-                />
-              </View>
-              <AppFormField
-                name="name"
-                placeholder="Username"
-                maxLength={100}
-                autoFocus
-                icon="account"
-              />
-              <AppFormField
-                name="email"
-                placeholder="Email"
-                keyboardType="email-address"
-                icon="email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                textContentType="emailAddress"
-              />
-              <AppFormField
-                name="password"
-                placeholder="Password"
-                icon="lock"
-                secureTextEntry
-                textContentType="password"
-              />
-              <AppFormField
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                icon="lock"
-                secureTextEntry
-                textContentType="password"
-              />
-              <SubmitButton title="Register" />
-            </AppForm>
+
+            <FormObserver query={query} imageUri={imageUri} />
+
+            <AppFormField
+              name="name"
+              placeholder="Username"
+              maxLength={100}
+              autoFocus
+              icon="account"
+            />
+            <AppFormField
+              name="email"
+              placeholder="Email"
+              keyboardType="email-address"
+              icon="email"
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType="emailAddress"
+            />
+            <AppFormField
+              name="password"
+              placeholder="Password"
+              icon="lock"
+              secureTextEntry
+              textContentType="password"
+            />
+            <AppFormField
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              icon="lock"
+              secureTextEntry
+              textContentType="password"
+            />
+            <SubmitButton title="Register" />
           </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+      </AppForm>
+    </>
   );
 }
 
-// EmployeeItem component to render each employee in the autocomplete list
 function EmployeeItem({
   item: employeeItem,
   setQuery,
   setFilteredEmployees,
   setSelectedEmployee,
+  setFieldValue,
 }) {
-  const { setFieldValue } = useFormikContext();
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -273,7 +259,7 @@ function EmployeeItem({
         setFilteredEmployees([]);
         setFieldValue("name", employeeItem.name);
         setFieldValue("email", employeeItem.email);
-        setSelectedEmployee(employeeItem); // Now this function is available as a prop
+        setSelectedEmployee(employeeItem);
       }}
     >
       <Text style={styles.itemText}>{employeeItem.name}</Text>
@@ -295,6 +281,11 @@ function FormObserver({ query, imageUri }) {
   return null;
 }
 
+function FormikInjector({ children }) {
+  const formik = useFormikContext();
+  return children(formik);
+}
+
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
@@ -304,14 +295,10 @@ const styles = StyleSheet.create({
     marginVertical: 50,
     alignSelf: "center",
   },
-  autocompleteContainer: {
-    marginBottom: 50,
-  },
   autocompleteContainerStyle: {
-    flex: 1,
-    left: 0,
     position: "absolute",
-    right: 0,
+    left: 20,
+    right: 20,
     top: 0,
     zIndex: 1,
   },
@@ -328,8 +315,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
+    paddingTop: 100,
     paddingBottom: 40,
   },
 });

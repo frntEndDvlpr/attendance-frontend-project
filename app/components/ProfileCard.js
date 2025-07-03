@@ -18,7 +18,11 @@ function ProfileCard({ name, position, email, image, entifire: employeeCode }) {
 }
 
 const styles = StyleSheet.create({
-  container: { alignItems: "center", paddingTop: 100 },
+  container: {
+    alignItems: "center",
+    paddingTop: 50,
+    marginBottom: -150,
+  },
   image: { height: 150, width: 150, borderRadius: 75, marginBottom: 10 },
   name: { fontSize: 20, fontWeight: "bold", color: colors.black },
   emailPosition: { fontSize: 17 },

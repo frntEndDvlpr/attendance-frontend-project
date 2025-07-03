@@ -34,7 +34,7 @@ function AccountScreen({ navigation }) {
     }; */
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={profile ? [profile] : []}
         keyExtractor={(employee) => employee.id.toString()}
@@ -48,40 +48,42 @@ function AccountScreen({ navigation }) {
           />
         )}
       />
-      <View style={styles.list}>
+      <ScrollView>
+        <View style={styles.list}>
+          <AccountListItem
+            title="My Attendance Logs"
+            iconName="format-list-bulleted"
+            rightIcon="chevron-right"
+            backgroundColor={colors.blue}
+            onPress={() => console.log()}
+          />
+          <ListItemSeparator />
+          <AccountListItem
+            title="My Corrections Requests"
+            iconName="file-document-edit-outline"
+            rightIcon="chevron-right"
+            backgroundColor={colors.secondary}
+            onPress={() => navigation.navigate("CorrectionRequest")}
+          />
+          <ListItemSeparator />
+          <AccountListItem
+            title="My Leaves"
+            iconName="airplane-clock"
+            rightIcon="chevron-right"
+            backgroundColor={colors.primary}
+            onPress={() => console.log()}
+          />
+        </View>
         <AccountListItem
-          title="My Attendance Logs"
-          iconName="format-list-bulleted"
-          rightIcon="chevron-right"
-          backgroundColor={colors.blue}
-          onPress={() => console.log()}
+          title="Log Out"
+          iconName="logout"
+          backgroundColor={colors.danger}
+          onPress={handelLogout}
         />
-        <ListItemSeparator />
-        <AccountListItem
-          title="My Corrections Requests"
-          iconName="file-document-edit-outline"
-          rightIcon="chevron-right"
-          backgroundColor={colors.secondary}
-          onPress={() => navigation.navigate("CorrectionRequest")}
-        />
-        <ListItemSeparator />
-        <AccountListItem
-          title="My Leaves"
-          iconName="airplane-clock"
-          rightIcon="chevron-right"
-          backgroundColor={colors.primary}
-          onPress={() => console.log()}
-        />
-      </View>
-      <AccountListItem
-        title="Log Out"
-        iconName="logout"
-        backgroundColor={colors.danger}
-        onPress={handelLogout}
-      />
+      </ScrollView>
 
       {/* <Button title="Logout" onPress={handelLogout} /> */}
-    </ScrollView>
+    </View>
   );
 }
 
@@ -91,9 +93,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
   },
   list: {
-    marginTop: 50,
+    marginTop: 0,
     borderRadius: 100,
-    paddingBottom: 70,
+    paddingBottom: 40,
   },
 });
 

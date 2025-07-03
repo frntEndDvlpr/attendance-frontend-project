@@ -98,24 +98,22 @@ function EmployeeFormScreen({ navigation, route }) {
     }
 
     setProgress(1);
-    if (route.params?.onGoBack) route.params.onGoBack();
     setTimeout(() => {
       setUploadVisible(false);
-      navigation.goBack();
+      navigation.goBack(); // 🔥 updated
     }, 2000);
   };
 
   const handleUploadDone = () => {
     setUploadVisible(false);
-    if (route.params?.onGoBack) route.params.onGoBack();
-    navigation.goBack();
+    navigation.goBack(); // 🔥 updated
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0} // adjust if needed
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <AppScreen style={styles.container}>

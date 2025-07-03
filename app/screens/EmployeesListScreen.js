@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, Alert } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // <-- added import
 import ActivityIndicator from "../components/ActivityIndicator";
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -31,9 +32,12 @@ function EmployeesListScreen({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    loadEmployees();
-  }, []);
+  // Reload employees when screen comes into focus (fix non-serializable warning)
+  useFocusEffect(
+    useCallback(() => {
+      loadEmployees();
+    }, []),
+  );
 
   const handleDelete = async (employee) => {
     setProgress(0);
@@ -109,7 +113,7 @@ function EmployeesListScreen({ navigation }) {
             onPress={() =>
               navigation.navigate("EmployeeForm", {
                 employee: item,
-                onGoBack: loadEmployees,
+                // onGoBack removed here to fix warning
               })
             }
             renderRightActions={() => (
@@ -122,8 +126,8 @@ function EmployeesListScreen({ navigation }) {
         ItemSeparatorComponent={ListItemSeparator}
       />
       <AddTaskButton
-        onPress={() =>
-          navigation.navigate("EmployeeForm", { onGoBack: loadEmployees })
+        onPress={
+          () => navigation.navigate("EmployeeForm") // onGoBack removed here too
         }
       />
     </>

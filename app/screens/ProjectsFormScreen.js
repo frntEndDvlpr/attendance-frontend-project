@@ -137,7 +137,6 @@ function ProjectsFormScreen({ navigation, route }) {
     }
 
     setProgress(1);
-    if (route.params?.onGoBack) route.params.onGoBack();
     setTimeout(() => {
       setUploadVisible(false);
       navigation.goBack();

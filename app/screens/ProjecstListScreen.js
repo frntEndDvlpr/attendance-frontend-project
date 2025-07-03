@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 
 import ListItemSeparator from "../components/ListItemSeparator";
 import ListItemDeleteAction from "../components/ListItemDeleteAction";
@@ -11,90 +11,79 @@ import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
 import colors from "../config/colors";
 
-function ProjecstListScreen({ navigation }) {
-  const [projects, setprojects] = useState([]);
+function ProjectsListScreen({ navigation }) {
+  const [projects, setProjects] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(false);
-  const [response, setResponse] = useState(false);
-
-  // Sort Projects list descending based on the 'id'
-  const sortedProjects = projects.sort((a, b) => a.id - b.id);
-
-  // Get employees list from the server
-  const loadProjects = async () => {
-    setLoading(true); // Start loading
-    const response = await projectApi.getProjects(); // Get employees
-    setLoading(false); // Stop loading
-
-    if (!response.ok) {
-      setError(true);
-      console.log(response.problem);
-      setResponse(response.problem);
-    } else {
-      setError(false);
-      setprojects(response.data);
-      //console.log("Success:", response.data);
-    }
-  };
+  const [responseError, setResponseError] = useState(null);
 
   useEffect(() => {
     loadProjects();
   }, []);
 
-  // Delete a project
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      loadProjects(); // 🔥 added
+    });
+
+    return unsubscribe; // 🔥 added
+  }, [navigation]); // 🔥 added
+
+  const loadProjects = async () => {
+    setLoading(true);
+    const response = await projectApi.getProjects();
+    setLoading(false);
+
+    if (!response.ok) {
+      setError(true);
+      setResponseError(response.problem);
+      return;
+    }
+
+    setError(false);
+    setProjects(response.data.sort((a, b) => b.id - a.id));
+  };
+
   const handleDelete = async (project) => {
     setProgress(0);
     setUploadVisible(true);
-    const response = await projectApi.deleteProject(project.id, (progress) =>
-      setProgress(progress)
-    );
+    const response = await projectApi.deleteProject(project.id, setProgress);
     setUploadVisible(false);
 
     if (!response.ok) {
-      setUploadVisible(false);
-      return Alert.alert("Fail", "Faiel to delet the project", [
+      return Alert.alert("Fail", "Failed to delete the project", [
         { text: "Retry", onPress: () => handleDelete(project) },
         { text: "Cancel", style: "cancel" },
       ]);
     }
 
     setProgress(1);
-    setUploadVisible(false);
-    setprojects(projects.filter((e) => e.id !== project.id));
-    projects.filter;
+    setProjects((prev) => prev.filter((p) => p.id !== project.id));
   };
 
-  // Confirm before deleting a project
   const confirmDelete = (project) => {
     Alert.alert(
       "Confirm Delete",
       "Are you sure you want to delete this project?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: () => handleDelete(project),
-        },
+        { text: "Cancel", style: "cancel" },
+        { text: "Yes", onPress: () => handleDelete(project) },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
   return (
-    <>
-      {/* Display loading bar while data is being fetched from the server */}
+    <View style={{ flex: 1 }}>
       {loading && <ActivityIndicator visible={true} />}
 
-      {/* Display error message if data could not be fetched from the server */}
       {error && !loading && (
         <HeaderAlert
           error={
+            responseError ||
             "NETWORK ERROR: Couldn't retrieve or update the projects list."
           }
           backgroundColor={colors.danger}
@@ -105,7 +94,6 @@ function ProjecstListScreen({ navigation }) {
         />
       )}
 
-      {/* Display "No projects found!" message if there are no employees */}
       {!loading && !error && projects.length === 0 && (
         <HeaderAlert
           error="No projects! Click on the + button to add a new project."
@@ -117,16 +105,12 @@ function ProjecstListScreen({ navigation }) {
         />
       )}
 
-      {/* Display the upload screen */}
       <UploadScreen
-        onDone={() => {
-          setUploadVisible(false);
-        }}
+        onDone={() => setUploadVisible(false)}
         progress={progress}
         visible={uploadVisible}
       />
 
-      {/* Display the list of projects */}
       <FlatList
         data={projects}
         keyExtractor={(project) => project.id.toString()}
@@ -139,12 +123,11 @@ function ProjecstListScreen({ navigation }) {
             client={item.client}
             location={item.location}
             attendanceRange={item.attendanceRange}
-            onPress={() => {
+            onPress={() =>
               navigation.navigate("ProjectForm", {
                 project: item,
-                onGoBack: loadProjects,
-              });
-            }}
+              })
+            }
             renderRightActions={() => (
               <ListItemDeleteAction onPress={() => confirmDelete(item)} />
             )}
@@ -152,17 +135,12 @@ function ProjecstListScreen({ navigation }) {
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        onRefresh={() => {
-          loadProjects();
-        }}
+        onRefresh={loadProjects}
       />
-      <AddTaskButton
-        onPress={() =>
-          navigation.navigate("ProjectForm", { onGoBack: loadProjects })
-        }
-      />
-    </>
+
+      <AddTaskButton onPress={() => navigation.navigate("ProjectForm")} />
+    </View>
   );
 }
 
-export default ProjecstListScreen;
+export default ProjectsListScreen;

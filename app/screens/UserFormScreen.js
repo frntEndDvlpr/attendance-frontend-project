@@ -92,7 +92,6 @@ function UserFormScreen({ navigation, route }) {
 
   const handleUploadDone = () => {
     setUploadVisible(false);
-    if (route.params?.onGoBack) route.params.onGoBack();
     navigation.goBack();
   };
 
